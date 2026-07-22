@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
-  <title id="title">VibTools License Management System</title>
+  <title id="title">Licora — Central License Management System</title>
   <desc id="desc">Repository banner with a shield and connected key nodes.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -21,8 +21,8 @@
     <path d="M105 122v50m0-18h31m-31 0H78" stroke="#e0f2fe" stroke-width="14" stroke-linecap="round"/>
   </g>
   <g fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif">
-    <text x="350" y="115" font-size="40" font-weight="600" letter-spacing="3">VIBTOOLS</text>
-    <text x="350" y="184" font-size="53" font-weight="750">License Management System</text>
-    <text x="350" y="235" font-size="22" fill="#bfdbfe">Self-hosted PHP license server, administration, device control, and audit</text>
+    <text x="350" y="115" font-size="40" font-weight="600" letter-spacing="3">LICORA</text>
+    <text x="350" y="184" font-size="43" font-weight="750">Central License Management System</text>
+    <text x="350" y="235" font-size="22" fill="#bfdbfe">Open-source PHP licensing platform by Vib Tools</text>
   </g>
 </svg>

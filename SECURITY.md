@@ -6,7 +6,7 @@ The latest tagged public release receives security documentation and best-effort
 
 ## Reporting a vulnerability
 
-Send a private report to `hello@vib.tools` with:
+Send a private report to `support@vib.tools` with:
 
 - Affected file, endpoint, or admin action.
 - Reproduction steps using non-production data.

@@ -2,10 +2,10 @@
 
 ## Repository
 
-- **Name:** `license-management-system`
-- **Title:** VibTools License Management System
-- **Description:** Self-hosted PHP license server with API-key binding, device limits, admin dashboard, audit logs, backups, and MySQL/MariaDB support.
-- **Homepage:** `https://dev.vib.tools/`
+- **Name:** `Licora`
+- **Title:** Licora — Open-Source Central License Management System
+- **Description:** Licora is an open-source, self-hosted PHP and MySQL/MariaDB central license management system with license validation, API-key binding, device controls, administration, audit logs, and backups.
+- **Homepage:** `https://vib.tools/`
 - **Visibility:** Public
 - **Default branch:** `main`
 - **License:** MIT
@@ -16,8 +16,8 @@
 
 ## Release title
 
-`v5.0.0-github-ready - Sanitized Open Source Release`
+`v5.0.1 — Branding and Company Information Hotfix`
 
 ## Release summary
 
-Initial VibTools public release with a sanitized database schema, complete documentation, repository governance files, CI validation, security audit, and preserved application features.
+Documentation-only hotfix that applies the Licora product identity, corrects Vib Tools company information, updates repository links, and replaces the private support contact without changing application behavior.

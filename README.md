@@ -1,23 +1,23 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="VibTools License Management System" width="100%">
+  <img src="assets/banner.svg" alt="Licora — Central License Management System" width="100%">
 </p>
 
 <p align="center">
-  <a href="https://github.com/vibtools/license-management-system/releases"><img alt="Release" src="https://img.shields.io/github/v/release/vibtools/license-management-system?display_name=tag&sort=semver"></a>
-  <a href="https://github.com/vibtools/license-management-system/releases/latest"><img alt="Downloads" src="https://img.shields.io/github/downloads/vibtools/license-management-system/total"></a>
+  <a href="https://github.com/vibtools/Licora/releases"><img alt="Release" src="https://img.shields.io/github/v/release/vibtools/Licora?display_name=tag&sort=semver"></a>
+  <a href="https://github.com/vibtools/Licora/releases/latest"><img alt="Downloads" src="https://img.shields.io/github/downloads/vibtools/Licora/total"></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green"></a>
-  <a href="https://github.com/vibtools/license-management-system/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/vibtools/license-management-system?style=flat"></a>
-  <a href="https://github.com/vibtools/license-management-system/network/members"><img alt="Forks" src="https://img.shields.io/github/forks/vibtools/license-management-system?style=flat"></a>
-  <a href="https://github.com/vibtools/license-management-system/issues"><img alt="Issues" src="https://img.shields.io/github/issues/vibtools/license-management-system"></a>
+  <a href="https://github.com/vibtools/Licora/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/vibtools/Licora?style=flat"></a>
+  <a href="https://github.com/vibtools/Licora/network/members"><img alt="Forks" src="https://img.shields.io/github/forks/vibtools/Licora?style=flat"></a>
+  <a href="https://github.com/vibtools/Licora/issues"><img alt="Issues" src="https://img.shields.io/github/issues/vibtools/Licora"></a>
   <img alt="PHP" src="https://img.shields.io/badge/PHP-8.0%2B-777BB4?logo=php&logoColor=white">
   <img alt="Database" src="https://img.shields.io/badge/MySQL%20%2F%20MariaDB-required-4479A1?logo=mysql&logoColor=white">
 </p>
 
-# License Management System
+# Licora
 
-A self-hosted PHP and SQL application for issuing license keys, binding licenses to API keys or application scopes, enforcing device limits, administering access, and auditing license activity.
+**Licora** is an open-source, self-hosted PHP and MySQL/MariaDB central license management system for issuing software licenses, validating license access, binding licenses to API keys or application scopes, enforcing device limits, administering access, and auditing license activity.
 
-This repository is prepared for the **VibTools** open-source ecosystem. VibTools describes itself as an official open-source developer hub for projects, releases, downloads, templates, developer tools, and community contribution.
+Licora is maintained by **Vib Tools**. Vib Tools is a professional tools and digital services provider operating a secure online tools marketplace. The company provides secure online tools, license delivery, web services, marketing support, business consultation, and customer support for businesses and individuals.
 
 > **Security notice:** this is security-sensitive server software. Review [SECURITY.md](SECURITY.md), [docs/SECURITY_DEPLOYMENT.md](docs/SECURITY_DEPLOYMENT.md), and [audit/FORENSIC_AUDIT_REPORT.md](audit/FORENSIC_AUDIT_REPORT.md) before exposing it to the internet.
 
@@ -137,7 +137,8 @@ The validation script checks PHP syntax, JavaScript syntax when Node.js is avail
 - [Maintenance](docs/MAINTENANCE.md)
 - [Release guide](docs/RELEASE.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
-- [Release notes](RELEASE_NOTES.md)
+- [v5.0.1 release notes](RELEASE_NOTES-v5.0.1.md)
+- [v5.0.0 release notes](RELEASE_NOTES.md)
 - [Forensic audit](audit/FORENSIC_AUDIT_REPORT.md)
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
@@ -156,18 +157,17 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md
 
 ## Support
 
-Use GitHub Issues for reproducible defects and `hello@vib.tools` for private security or ecosystem questions. See [SUPPORT.md](SUPPORT.md).
+Use GitHub Issues for reproducible defects and `support@vib.tools` for private security or project-support questions. See [SUPPORT.md](SUPPORT.md).
 
-## VibTools ecosystem
+## Maintained by Vib Tools
 
-- Official website: https://vib.tools/
-- Open-source projects: https://dev.vib.tools/
-- Developer hub: https://vibtools.github.io/
-- GitHub organization: https://github.com/vibtools
-- Free subdomain registration: https://ygit.net/
+- **Company:** Vib Tools
+- **Official website:** https://vib.tools/
+- **GitHub organization:** https://github.com/vibtools
+- **Support:** support@vib.tools
 
-These links identify the maintaining ecosystem; they do not imply endorsement of third-party deployments.
+Vib Tools provides secure online tools, license delivery, web services, marketing support, business consultation, and professional digital services. These references identify the project maintainer and do not imply endorsement of third-party deployments.
 
 ## License
 
-The software is released under the [MIT License](LICENSE). The VibTools name and branding are addressed separately in [NOTICE](NOTICE).
+The software is released under the [MIT License](LICENSE). The Vib Tools name and branding are addressed separately in [NOTICE](NOTICE).

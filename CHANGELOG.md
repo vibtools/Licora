@@ -8,6 +8,24 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Resolve the security and correctness items listed in the forensic audit through separate reviewed pull requests.
 
+## [5.0.1] - 2026-07-22
+
+### Fixed
+
+- Corrected the product identity from the placeholder license-system name to **Licora**.
+- Replaced the inaccurate open-source-hub company description with the verified Vib Tools company description from the official website.
+- Updated repository badges and links to `vibtools/Licora`.
+- Updated private support and security contact information to `support@vib.tools`.
+
+### Changed
+
+- Updated the repository banner, maintainer references, NOTICE, and recommended GitHub metadata.
+- Removed unrelated ecosystem links from the project-maintainer section.
+
+### Compatibility
+
+- No PHP application logic, API behavior, database schema, migration, or runtime configuration was changed.
+
 ## [5.0.0-github-ready] - 2026-07-22
 
 ### Added

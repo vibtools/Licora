@@ -6,7 +6,7 @@ Use GitHub Issues for reproducible installation defects, runtime errors, compati
 
 ## Private support
 
-Use `hello@vib.tools` for security disclosures or ecosystem questions that should not be public.
+Use `support@vib.tools` for security disclosures or project-support questions that should not be public.
 
 ## Out of scope
 
