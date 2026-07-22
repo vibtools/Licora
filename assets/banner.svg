@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
+  <title id="title">VibTools License Management System</title>
+  <desc id="desc">Repository banner with a shield and connected key nodes.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="320" rx="28" fill="url(#bg)"/>
+  <circle cx="1080" cy="55" r="150" fill="#ffffff" opacity="0.04"/>
+  <circle cx="1030" cy="280" r="210" fill="#22d3ee" opacity="0.06"/>
+  <g transform="translate(90 55)">
+    <path d="M105 0 200 34v70c0 72-39 123-95 157C49 227 10 176 10 104V34Z" fill="url(#shield)"/>
+    <path d="M105 32 169 55v50c0 51-25 89-64 116-39-27-64-65-64-116V55Z" fill="#0f172a" opacity="0.92"/>
+    <circle cx="105" cy="102" r="23" fill="#e0f2fe"/>
+    <path d="M105 122v50m0-18h31m-31 0H78" stroke="#e0f2fe" stroke-width="14" stroke-linecap="round"/>
+  </g>
+  <g fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif">
+    <text x="350" y="115" font-size="40" font-weight="600" letter-spacing="3">VIBTOOLS</text>
+    <text x="350" y="184" font-size="53" font-weight="750">License Management System</text>
+    <text x="350" y="235" font-size="22" fill="#bfdbfe">Self-hosted PHP license server, administration, device control, and audit</text>
+  </g>
+</svg>

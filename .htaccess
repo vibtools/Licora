@@ -1,0 +1,11 @@
+Options -Indexes
+
+<FilesMatch "^(\.env|config\.php|config\.local\.php|config\.sample\.php|database\.sql|composer\.(json|lock))$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule (^|/)\.env$ - [F,L]
+RewriteRule ^includes/(config|database|security|auth|functions|validation).*\.php$ - [F,L]
+</IfModule>

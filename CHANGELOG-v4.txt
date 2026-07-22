@@ -1,0 +1,14 @@
+License System Version 4
+
+- API endpoints preserved: /api/verify.php and /api/check_license.php URLs, methods, input names, and JSON key names were not removed or renamed.
+- Existing database tables/columns were not removed or renamed. Version 4 uses additive migration only.
+- Added Audit Trail page and audit_trail table support.
+- Added Admin Role Permission: super_admin, manager, viewer. Viewer is read-only through backend permission guard.
+- Added License Risk Score based on device/IP usage.
+- Updated device-limit verification: when active device limit is full, new device registration is blocked instead of logging out old devices.
+- Added API key app scope: API keys can have app_name/scope_label; licenses can be bound to an app_scope.
+- Added Backup & Export page for licenses, devices, logs CSV and database SQL backup.
+- Added Bulk License actions: activate, suspend, extend, export, delete, and bulk create.
+- Added Advanced Dashboard charts: daily API requests, expired trend, top used licenses.
+- Added System Health page: database, PHP version, writable paths, cron/config checks.
+- Added Admin Roles page.

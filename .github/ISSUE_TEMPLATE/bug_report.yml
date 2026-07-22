@@ -1,0 +1,52 @@
+name: Bug report
+description: Report a reproducible defect without sharing secrets or personal data.
+title: "[Bug]: "
+labels: [bug, triage]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include live license keys, API keys, passwords, device fingerprints, production SQL dumps, or personal data.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v5.0.0 or commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Installer
+        - Admin panel
+        - Verification API
+        - Legacy API
+        - Database or migrations
+        - Cron maintenance
+        - Documentation or release tooling
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Include sanitized steps, expected behavior, and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: PHP version, database version, web server, browser, operating system
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Safety checks
+      options:
+        - label: I removed secrets and personal data.
+          required: true
+        - label: I searched existing issues first.
+          required: true

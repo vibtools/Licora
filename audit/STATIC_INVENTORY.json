@@ -1,0 +1,3778 @@
+{
+  "notice": "Sanitized structural inventory generated from the untouched source. Raw deployment rows, source-line security payloads, and retired deployment URLs are intentionally excluded from the public package.",
+  "summary": {
+    "file_count": 51,
+    "total_bytes": 747126,
+    "php_file_count": 28,
+    "php_class_count": 6,
+    "php_function_count": 82,
+    "js_file_count": 1,
+    "css_file_count": 1,
+    "sql_file_count": 6,
+    "external_url_count": 55
+  },
+  "files": [
+    {
+      "path": ".htaccess",
+      "bytes": 345,
+      "lines": 11,
+      "sha256": "42fefc267226e79f6429ffcd875fd888d95d1a46057cef981e89de400c9abeea"
+    },
+    {
+      "path": "CHANGELOG-v4.txt",
+      "bytes": 1126,
+      "lines": 14,
+      "sha256": "9376c9c3f32600bd67323891df5a07f8cd80d0bab92e8be9cf6675a454e1f532"
+    },
+    {
+      "path": "CHANGELOG-v5-fix.txt",
+      "bytes": 1920,
+      "lines": 29,
+      "sha256": "bc85da1c9ce69b1065566281d3a624d89d37ddc32ae9ff93b6e68fefb6bdb6f8"
+    },
+    {
+      "path": "CHANGELOG-v5-hotfix-2.txt",
+      "bytes": 757,
+      "lines": 12,
+      "sha256": "805c8879ebc89ad60b8777f391b24b81aa0cb7711e3486798efccd55556c1bb8"
+    },
+    {
+      "path": "CHANGELOG-v5-ui-admin-update.txt",
+      "bytes": 1640,
+      "lines": 28,
+      "sha256": "238628978ba1e4bbb0937e56198796cb161a51c8e55b1be3070e066e7795da74"
+    },
+    {
+      "path": "CHANGELOG-v5.txt",
+      "bytes": 548,
+      "lines": 8,
+      "sha256": "1237e15fa60ff6a537eb570175bd78f469432ae96076eabce2c7dbe81cad53d1"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1368,
+      "lines": 38,
+      "sha256": "26df66e7881c9058c9d7a55ce5ad7b92da889ac1c5e43588325c8b094e0e623c"
+    },
+    {
+      "path": "admin/admins.php",
+      "bytes": 13325,
+      "lines": 199,
+      "sha256": "1d714882a5cb96a2e87ab95d6f072df81dc4a3cc53430605f7207e611eb56d16"
+    },
+    {
+      "path": "admin/api_keys.php",
+      "bytes": 20851,
+      "lines": 302,
+      "sha256": "b7531e719403fae7ddf277c0377b010faf13acebec1209628ee53bf63e6b0f9d"
+    },
+    {
+      "path": "admin/assets/css/admin-ui.css",
+      "bytes": 16520,
+      "lines": 401,
+      "sha256": "a18773b97f793cd86c011df1fe9bf472613749f26660a9e9a4220582e89d5913"
+    },
+    {
+      "path": "admin/assets/js/admin-ui.js",
+      "bytes": 14482,
+      "lines": 283,
+      "sha256": "5722297eec36a653241520b19a2217f9c4653aa43f6c1db6d05758264201e5da"
+    },
+    {
+      "path": "admin/audit.php",
+      "bytes": 2785,
+      "lines": 14,
+      "sha256": "5c6e5b54f2b49c89709e1a2330833c39614769e5ad92e7988fdb7a0a50a12c02"
+    },
+    {
+      "path": "admin/backup.php",
+      "bytes": 8428,
+      "lines": 145,
+      "sha256": "76734989e5e98797b77f5666ea1ea080de09f5add4a6c784c5d6c27b3e350385"
+    },
+    {
+      "path": "admin/device.php",
+      "bytes": 10969,
+      "lines": 139,
+      "sha256": "d01b4de6c7323f2fdced6ee035b67220c84ae03bd92f1829794fd42094a4ceba"
+    },
+    {
+      "path": "admin/health.php",
+      "bytes": 2411,
+      "lines": 16,
+      "sha256": "3348dee0b9c0440d748696af81c0d0ac80b735fdd0908022d9061e551cd2f64c"
+    },
+    {
+      "path": "admin/includes/navbar.php",
+      "bytes": 4343,
+      "lines": 78,
+      "sha256": "3aedbf7212e6ae6eaaec2ef8aec0271386414b9d50f5a107fb7a6ab70fc19da3"
+    },
+    {
+      "path": "admin/index.php",
+      "bytes": 20274,
+      "lines": 367,
+      "sha256": "dcb155f5b6a9d403e58f6a26b7dded66f305f64b7ffb7a992343e44c803c6373"
+    },
+    {
+      "path": "admin/license.php",
+      "bytes": 35694,
+      "lines": 538,
+      "sha256": "1a5eb5fcbbb4156352f6d37155ea198f4f1b734b6d30fc57a20a2626a698925e"
+    },
+    {
+      "path": "admin/login.php",
+      "bytes": 5064,
+      "lines": 112,
+      "sha256": "a87eb4405f3f4d5341acc61b83a01b77cf032d5852049274d63bdbe0bebd12e3"
+    },
+    {
+      "path": "admin/logout.php",
+      "bytes": 128,
+      "lines": 9,
+      "sha256": "651988383d943abfdd6882235e9a6381584da9bc1302d466e80b7f7e62d5f22f"
+    },
+    {
+      "path": "admin/logs.php",
+      "bytes": 8941,
+      "lines": 112,
+      "sha256": "5043274e72f1a9020190c2fd26b0885ec838152328a83987dc4bfb01dab13846"
+    },
+    {
+      "path": "admin/settings.php",
+      "bytes": 17365,
+      "lines": 191,
+      "sha256": "9e360f4f0e5f34bc70afa04fd46cd12cc440c6ba1ef3f0a9dce6477a9c2066d0"
+    },
+    {
+      "path": "api/check_license.php",
+      "bytes": 1159,
+      "lines": 36,
+      "sha256": "2ab7054d5cd72ed7d9c0600c16c5a81f1f9d240ad9dc6ac58e34d9a9b5ac9801"
+    },
+    {
+      "path": "api/verify.php",
+      "bytes": 14660,
+      "lines": 437,
+      "sha256": "95a9e124208b19f63b2c2e55d0fbcbbf62290e339e634b93a4de949793b2c33a"
+    },
+    {
+      "path": "config.sample.php",
+      "bytes": 507,
+      "lines": 9,
+      "sha256": "a9eae6e20ace9ca8f57d609ad994e31721190ced3d6c57aafab1d5fc602a5107"
+    },
+    {
+      "path": "cron/check_expiring.php",
+      "bytes": 1177,
+      "lines": 33,
+      "sha256": "39325b6f610857d1fb37ccf80d8b46f1bf1ea91221fea6a1ab4a003c7c1a86ea"
+    },
+    {
+      "path": "cron/cleanup.php",
+      "bytes": 2313,
+      "lines": 54,
+      "sha256": "dd72218f06dece11d2edeb059d405342927d03914b5907a31d5b40d4fdde2c18"
+    },
+    {
+      "path": "database.sql",
+      "bytes": 464861,
+      "lines": 3257,
+      "sha256": "f70cd0adb5229a49cc87d7b6fb27defc2388b7843b43534735e328a7e484f053"
+    },
+    {
+      "path": "includes/.htaccess",
+      "bytes": 19,
+      "lines": 1,
+      "sha256": "fa28d421a28ed9b6f4b997d5119c2b8adbacff6e2dd119a179b71230f9664934"
+    },
+    {
+      "path": "includes/admin_helpers.php",
+      "bytes": 5311,
+      "lines": 141,
+      "sha256": "65fc47297c3628d1225ec0ff720e962c0b07c22bdc9f46ddb5bfbc5863a2947b"
+    },
+    {
+      "path": "includes/auth.php",
+      "bytes": 8023,
+      "lines": 205,
+      "sha256": "baf547a0faa836cf519a9b54455fd251bebd9f0230db3c81cd7411509197e21e"
+    },
+    {
+      "path": "includes/config.php",
+      "bytes": 3530,
+      "lines": 92,
+      "sha256": "ac4443ca68e169f82ac69ceaf2ceae47913ab8e59639fc3977401a38f32e3f76"
+    },
+    {
+      "path": "includes/database.php",
+      "bytes": 1252,
+      "lines": 36,
+      "sha256": "26e5a6094285cc911ba9b4aadd59a9f4037cab1ddc703c1c958bbde5594e7a94"
+    },
+    {
+      "path": "includes/functions.php",
+      "bytes": 21921,
+      "lines": 527,
+      "sha256": "be572293fca6c6e8196f1a0166470267641552251c45fbf85cc8c8342520c29d"
+    },
+    {
+      "path": "includes/security.php",
+      "bytes": 5334,
+      "lines": 140,
+      "sha256": "4ba62d184d01a937a0957e0ef679dcd713d610df55ed9d106f0b14d44286a3fa"
+    },
+    {
+      "path": "includes/validation.php",
+      "bytes": 2405,
+      "lines": 71,
+      "sha256": "d770dbeb324ea6daa06c0ba400b42e0162a412d7bb3e217825da30a77f0e8866"
+    },
+    {
+      "path": "index.php",
+      "bytes": 1438,
+      "lines": 27,
+      "sha256": "af0652a968328b36c389e451a158b9ba412de4a0cf290af9e572f8deeed9c229"
+    },
+    {
+      "path": "install.php",
+      "bytes": 8923,
+      "lines": 188,
+      "sha256": "efb3edd07b1873bce5011f63c4b21e3da7ca940251e95de6d3a31f9eb0f8c3c2"
+    },
+    {
+      "path": "licensesystem",
+      "bytes": 1344,
+      "lines": 26,
+      "sha256": "1df08b9e7e699c319fc55a745767db2cc8279fc5a01fd67bff6553b70a31e0e4"
+    },
+    {
+      "path": "migration-v4.sql",
+      "bytes": 1375,
+      "lines": 35,
+      "sha256": "a45793f40329da0b48e71a2c2da19b9b1c17457fe00000d18007ea8cd59cb243"
+    },
+    {
+      "path": "migration-v5-fix.sql",
+      "bytes": 687,
+      "lines": 12,
+      "sha256": "16cf4e0beae4e13e91003c439377893becaec8876718e8e02dad2801104b96f3"
+    },
+    {
+      "path": "migration-v5-hotfix.sql",
+      "bytes": 585,
+      "lines": 11,
+      "sha256": "e735acebfdad6254ca8fc6d6bbec28af2d35db41d6bf43fa77da1e2605e8ed62"
+    },
+    {
+      "path": "migration-v5.sql",
+      "bytes": 656,
+      "lines": 14,
+      "sha256": "2622592c14de6621cf0695dd76fb21957cc1ea49dcf338c44e0c4f3cdd93eef0"
+    },
+    {
+      "path": "migration.sql",
+      "bytes": 286,
+      "lines": 3,
+      "sha256": "3da777f815bb3bc5e766be01cc5872ef1630623e4da3e4fa8f4f0b0716fa6db0"
+    },
+    {
+      "path": "php-lint-navfix.txt",
+      "bytes": 1422,
+      "lines": 22,
+      "sha256": "922255e9a15399929f634fc931d09f6416186d1314b8f7033fe122c426da8c42"
+    },
+    {
+      "path": "php-lint-ui-fix.txt",
+      "bytes": 1422,
+      "lines": 22,
+      "sha256": "b8064d6e1cb8bcc292fe17deef7b02c6b8567a3d05cb92be3bab82baa09ba438"
+    },
+    {
+      "path": "php-lint-v3.txt",
+      "bytes": 1422,
+      "lines": 22,
+      "sha256": "ae9ca159ec9c6aef9b9f530e0e1bb0d7c095bf1f62eb71db51a3a62a2cf47735"
+    },
+    {
+      "path": "php-lint-v5-fix.txt",
+      "bytes": 1341,
+      "lines": 27,
+      "sha256": "835c21c9584fd769dfee34e9ab8bdb002b257365b8a7ebe0508f3a70b9131966"
+    },
+    {
+      "path": "php-lint-v5-hotfix-2.txt",
+      "bytes": 1827,
+      "lines": 27,
+      "sha256": "f71078edab315560bc504964e07500832a8ba214c2dfa46e5bbe1386dad070d6"
+    },
+    {
+      "path": "php-lint-v5.txt",
+      "bytes": 1341,
+      "lines": 27,
+      "sha256": "835c21c9584fd769dfee34e9ab8bdb002b257365b8a7ebe0508f3a70b9131966"
+    },
+    {
+      "path": "php-lint.txt",
+      "bytes": 1301,
+      "lines": 20,
+      "sha256": "282dbdccc91a903e56fe923e3071d9dbf9962f473e057e7628a58fbe55b5b863"
+    }
+  ],
+  "php": {
+    "admin/admins.php": {
+      "classes": [],
+      "functions": [
+        {
+          "name": "valid_admin_role",
+          "visibility": "global",
+          "static": false,
+          "line": 14,
+          "params": "$role"
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/admin_helpers.php'",
+          "line": 5
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 21
+        },
+        {
+          "kind": "require",
+          "target": "Delete()",
+          "line": 24
+        },
+        {
+          "kind": "require",
+          "target": "d.'",
+          "line": 31
+        },
+        {
+          "kind": "require",
+          "target": "Delete()",
+          "line": 48
+        },
+        {
+          "kind": "require",
+          "target": "Delete()",
+          "line": 74
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 107
+        },
+        {
+          "kind": "require",
+          "target": "d maxlength=\"50\"></div>",
+          "line": 166
+        },
+        {
+          "kind": "require",
+          "target": "d minlength=\"6\"></div>",
+          "line": 168
+        },
+        {
+          "kind": "require",
+          "target": "d maxlength=\"50\"></div>",
+          "line": 185
+        }
+      ],
+      "superglobals": {
+        "$_POST": [
+          21,
+          23,
+          25,
+          26,
+          27,
+          28,
+          47,
+          49,
+          50,
+          51,
+          52,
+          53,
+          73,
+          75
+        ],
+        "$_SERVER": [
+          20
+        ],
+        "$_SESSION": [
+          13
+        ]
+      },
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 8
+        }
+      ],
+      "forms": [
+        {
+          "line": 141,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" data-confirm=\"Delete this admin user?\" class=\"d-inline\""
+        },
+        {
+          "line": 161,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" class=\"needs-validation\" novalidate"
+        },
+        {
+          "line": 179,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" class=\"needs-validation\" novalidate"
+        }
+      ],
+      "post_handling": true,
+      "csrf_mentions": 10,
+      "auth_mentions": 2,
+      "role_mentions": 57
+    },
+    "admin/api_keys.php": {
+      "classes": [],
+      "functions": [
+        {
+          "name": "detected_api_base_url",
+          "visibility": "global",
+          "static": false,
+          "line": 21,
+          "params": ""
+        },
+        {
+          "name": "testAPIKey",
+          "visibility": "global",
+          "static": false,
+          "line": 164,
+          "params": "$apiKey, $db, $url"
+        },
+        {
+          "name": "copyApiKey",
+          "visibility": "global",
+          "static": false,
+          "line": 298,
+          "params": ""
+        },
+        {
+          "name": "openTestModal",
+          "visibility": "global",
+          "static": false,
+          "line": 299,
+          "params": "id,key"
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/functions.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 5
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/admin_helpers.php'",
+          "line": 6
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 41
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 42
+        },
+        {
+          "kind": "require",
+          "target": "d'",
+          "line": 49
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 77
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 98
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 99
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 123
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 124
+        },
+        {
+          "kind": "require",
+          "target": "Delete()",
+          "line": 133
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 134
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 211
+        },
+        {
+          "kind": "require",
+          "target": "d><div class=\"invalid-feedback\">API key name is required.</div></div>",
+          "line": 233
+        }
+      ],
+      "superglobals": {
+        "$_GET": [
+          122,
+          124,
+          125,
+          132,
+          134,
+          135,
+          143,
+          145
+        ],
+        "$_POST": [
+          40,
+          42,
+          43,
+          44,
+          45,
+          46,
+          76,
+          77,
+          78,
+          79,
+          97,
+          99,
+          100,
+          101,
+          102
+        ],
+        "$_SERVER": [
+          23,
+          25,
+          26,
+          40,
+          76,
+          97
+        ],
+        "$_SESSION": [
+          66,
+          143,
+          144,
+          150
+        ]
+      },
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 10
+        },
+        {
+          "value": "Location: api_keys.php?new_key=$keyId",
+          "line": 67
+        }
+      ],
+      "forms": [
+        {
+          "line": 230,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" id=\"api-key-form\" class=\"needs-validation\" novalidate"
+        },
+        {
+          "line": 267,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" class=\"d-flex flex-column gap-1\" data-no-spinner"
+        },
+        {
+          "line": 293,
+          "method": "POST",
+          "action": "",
+          "attrs": "id=\"testApiForm\" method=\"POST\""
+        }
+      ],
+      "post_handling": true,
+      "csrf_mentions": 20,
+      "auth_mentions": 2,
+      "role_mentions": 0
+    },
+    "admin/audit.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/admin_helpers.php'",
+          "line": 5
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 14
+        }
+      ],
+      "superglobals": {},
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 7
+        }
+      ],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 2,
+      "role_mentions": 0
+    },
+    "admin/backup.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/admin_helpers.php'",
+          "line": 5
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 13
+        },
+        {
+          "kind": "require",
+          "target": "Delete()",
+          "line": 27
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 70
+        }
+      ],
+      "superglobals": {
+        "$_GET": [
+          11,
+          12
+        ]
+      },
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 8
+        },
+        {
+          "value": "Content-Type:text/plain; charset=utf-8",
+          "line": 28
+        },
+        {
+          "value": "Content-Disposition: attachment; filename=",
+          "line": 29
+        }
+      ],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 2,
+      "role_mentions": 1
+    },
+    "admin/device.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/functions.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/admin_helpers.php'",
+          "line": 5
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 28
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 29
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 38
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 39
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 50
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 51
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 60
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 61
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 93
+        },
+        {
+          "kind": "require",
+          "target": "d><?php foreach ($deviceClearOptions as $key => $option): ?><option value=\"<?php echo Security::escape($key)",
+          "line": 137
+        }
+      ],
+      "superglobals": {
+        "$_GET": [
+          14,
+          27,
+          29,
+          30,
+          37,
+          39,
+          40,
+          49,
+          51,
+          52,
+          59,
+          61,
+          62
+        ],
+        "$_SESSION": [
+          42
+        ]
+      },
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 9
+        }
+      ],
+      "forms": [
+        {
+          "line": 137,
+          "method": "GET",
+          "action": "",
+          "attrs": "method=\"GET\""
+        }
+      ],
+      "post_handling": false,
+      "csrf_mentions": 16,
+      "auth_mentions": 2,
+      "role_mentions": 0
+    },
+    "admin/health.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 4
+        },
+        {
+          "kind": "include",
+          "target": "s/config.local.php'), file_exists(dirname(__DIR__).'/includes/config.local.php')?'Found':'Not found']",
+          "line": 13
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 16
+        }
+      ],
+      "superglobals": {},
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 5
+        }
+      ],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 2,
+      "role_mentions": 0
+    },
+    "admin/includes/navbar.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once __DIR__ . '/../../includes/auth.php'",
+          "line": 3
+        }
+      ],
+      "superglobals": {
+        "$_SERVER": [
+          6
+        ]
+      },
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 1,
+      "role_mentions": 1
+    },
+    "admin/index.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/functions.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 5
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 78
+        }
+      ],
+      "superglobals": {},
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 9
+        }
+      ],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 2,
+      "role_mentions": 0
+    },
+    "admin/license.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/functions.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/admin_helpers.php'",
+          "line": 5
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 49
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 50
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 85
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 86
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 98
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 99
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 112
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 113
+        },
+        {
+          "kind": "require",
+          "target": "Delete()",
+          "line": 131
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 132
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 143
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 153
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 154
+        },
+        {
+          "kind": "require",
+          "target": "Delete()",
+          "line": 155
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 159
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 160
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 222
+        },
+        {
+          "kind": "require",
+          "target": "d>",
+          "line": 263
+        },
+        {
+          "kind": "require",
+          "target": "d.</div>",
+          "line": 264
+        },
+        {
+          "kind": "require",
+          "target": "d>",
+          "line": 280
+        },
+        {
+          "kind": "require",
+          "target": "d.</div>",
+          "line": 281
+        },
+        {
+          "kind": "require",
+          "target": "d>",
+          "line": 323
+        },
+        {
+          "kind": "require",
+          "target": "d>",
+          "line": 327
+        },
+        {
+          "kind": "require",
+          "target": "d>",
+          "line": 331
+        },
+        {
+          "kind": "require",
+          "target": "d>",
+          "line": 502
+        },
+        {
+          "kind": "require",
+          "target": "d.</div>",
+          "line": 503
+        }
+      ],
+      "superglobals": {
+        "$_GET": [
+          18,
+          84,
+          86,
+          87,
+          88,
+          111,
+          113,
+          114,
+          130,
+          132,
+          133
+        ],
+        "$_POST": [
+          48,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          97,
+          99,
+          100,
+          101,
+          142,
+          143,
+          144,
+          145,
+          154,
+          158,
+          160,
+          161,
+          162,
+          163,
+          164,
+          165
+        ],
+        "$_SERVER": [
+          48,
+          97,
+          142,
+          158
+        ],
+        "$_SESSION": [
+          74,
+          122,
+          186
+        ]
+      },
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 9
+        }
+      ],
+      "forms": [
+        {
+          "line": 257,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" class=\"needs-validation\" novalidate"
+        },
+        {
+          "line": 316,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" class=\"needs-validation\" novalidate"
+        },
+        {
+          "line": 357,
+          "method": "GET",
+          "action": "",
+          "attrs": "method=\"GET\" class=\"d-flex gap-2\" data-no-spinner"
+        },
+        {
+          "line": 399,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" id=\"bulkLicenseForm\" class=\"d-flex flex-wrap gap-2 align-items-center mb-3\" data-no-spinner"
+        },
+        {
+          "line": 495,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" class=\"needs-validation\" novalidate"
+        }
+      ],
+      "post_handling": true,
+      "csrf_mentions": 30,
+      "auth_mentions": 2,
+      "role_mentions": 0
+    },
+    "admin/login.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/config.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 14
+        },
+        {
+          "kind": "require",
+          "target": "d autofocus><div class=\"invalid-feedback\">Username is required.</div>",
+          "line": 75
+        },
+        {
+          "kind": "require",
+          "target": "d><div class=\"invalid-feedback\">Password is required.</div>",
+          "line": 83
+        }
+      ],
+      "superglobals": {
+        "$_POST": [
+          14,
+          15,
+          16
+        ],
+        "$_SERVER": [
+          13
+        ]
+      },
+      "headers": [
+        {
+          "value": "Location: index.php",
+          "line": 8
+        },
+        {
+          "value": "Location: index.php",
+          "line": 21
+        }
+      ],
+      "forms": [
+        {
+          "line": 69,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" class=\"needs-validation\" novalidate"
+        }
+      ],
+      "post_handling": true,
+      "csrf_mentions": 4,
+      "auth_mentions": 2,
+      "role_mentions": 0
+    },
+    "admin/logout.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        }
+      ],
+      "superglobals": {},
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 7
+        }
+      ],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 1,
+      "role_mentions": 0
+    },
+    "admin/logs.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/functions.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/admin_helpers.php'",
+          "line": 5
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 33
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_GET['csrf_token'] ?? '')",
+          "line": 34
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 67
+        },
+        {
+          "kind": "require",
+          "target": "d><?php foreach ($logClearOptions as $key => $option): ?><option value=\"<?php echo Security::escape($key)",
+          "line": 110
+        }
+      ],
+      "superglobals": {
+        "$_GET": [
+          17,
+          18,
+          19,
+          32,
+          34,
+          35,
+          36,
+          41
+        ]
+      },
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 9
+        }
+      ],
+      "forms": [
+        {
+          "line": 78,
+          "method": "GET",
+          "action": "",
+          "attrs": "method=\"GET\" class=\"row g-3\" data-no-spinner"
+        },
+        {
+          "line": 110,
+          "method": "GET",
+          "action": "",
+          "attrs": "method=\"GET\""
+        }
+      ],
+      "post_handling": false,
+      "csrf_mentions": 4,
+      "auth_mentions": 2,
+      "role_mentions": 0
+    },
+    "admin/settings.php": {
+      "classes": [],
+      "functions": [
+        {
+          "name": "detected_api_base_url",
+          "visibility": "global",
+          "static": false,
+          "line": 17,
+          "params": ""
+        },
+        {
+          "name": "detected_root_url",
+          "visibility": "global",
+          "static": false,
+          "line": 26,
+          "params": ""
+        },
+        {
+          "name": "save_setting",
+          "visibility": "global",
+          "static": false,
+          "line": 35,
+          "params": "$db, $key, $value"
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/auth.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/functions.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/admin_helpers.php'",
+          "line": 5
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 6
+        },
+        {
+          "kind": "require",
+          "target": "Manage()",
+          "line": 74
+        },
+        {
+          "kind": "require",
+          "target": "CSRFToken($_POST['csrf_token'] ?? '')",
+          "line": 75
+        },
+        {
+          "kind": "include",
+          "target": "'includes/navbar.php'",
+          "line": 133
+        },
+        {
+          "kind": "require",
+          "target": "d></div>",
+          "line": 147
+        },
+        {
+          "kind": "require",
+          "target": "d><button class=\"btn btn-outline-primary\" type=\"button\" data-autofill-target=\"api-base-url\" data-autofill-value=\"<?php echo Security::escape($detectedApiBaseUrl)",
+          "line": 160
+        }
+      ],
+      "superglobals": {
+        "$_POST": [
+          73,
+          75,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99
+        ],
+        "$_SERVER": [
+          19,
+          21,
+          22,
+          28,
+          30,
+          31,
+          73
+        ]
+      },
+      "headers": [
+        {
+          "value": "Location: login.php",
+          "line": 10
+        }
+      ],
+      "forms": [
+        {
+          "line": 141,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\" id=\"settings-form\" class=\"needs-validation\" novalidate"
+        }
+      ],
+      "post_handling": true,
+      "csrf_mentions": 4,
+      "auth_mentions": 3,
+      "role_mentions": 0
+    },
+    "api/check_license.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/config.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/functions.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 4
+        }
+      ],
+      "superglobals": {
+        "$_SERVER": [
+          8
+        ]
+      },
+      "headers": [
+        {
+          "value": "Content-Type: application/json; charset=utf-8",
+          "line": 6
+        }
+      ],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "api/verify.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/config.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/security.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once '../includes/functions.php'",
+          "line": 5
+        },
+        {
+          "kind": "require",
+          "target": "d',",
+          "line": 181
+        }
+      ],
+      "superglobals": {
+        "$_SERVER": [
+          9,
+          10,
+          17,
+          23,
+          42,
+          43,
+          48,
+          49,
+          51,
+          75,
+          83,
+          93,
+          94,
+          96,
+          350,
+          397
+        ]
+      },
+      "headers": [
+        {
+          "value": "Content-Type: application/json; charset=utf-8",
+          "line": 7
+        },
+        {
+          "value": "Access-Control-Allow-Origin: ",
+          "line": 10
+        },
+        {
+          "value": "Vary: Origin",
+          "line": 11
+        },
+        {
+          "value": "Access-Control-Allow-Methods: POST, OPTIONS",
+          "line": 13
+        },
+        {
+          "value": "Access-Control-Allow-Headers: Content-Type, X-API-Key, X-API-KEY, x-api-key, Authorization",
+          "line": 14
+        }
+      ],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 7,
+      "role_mentions": 0
+    },
+    "config.sample.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [],
+      "superglobals": {},
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 3,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "cron/check_expiring.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 2
+        }
+      ],
+      "superglobals": {},
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "cron/cleanup.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once '../includes/database.php'",
+          "line": 2
+        }
+      ],
+      "superglobals": {},
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "includes/admin_helpers.php": {
+      "classes": [
+        "AdminHelpers"
+      ],
+      "functions": [
+        {
+          "name": "tableExists",
+          "visibility": "public",
+          "static": true,
+          "line": 6,
+          "params": "$table"
+        },
+        {
+          "name": "columnExists",
+          "visibility": "public",
+          "static": true,
+          "line": 16,
+          "params": "$table, $col"
+        },
+        {
+          "name": "ensureColumn",
+          "visibility": "public",
+          "static": true,
+          "line": 47,
+          "params": "$table, $column, $definition"
+        },
+        {
+          "name": "ensureV5Schema",
+          "visibility": "public",
+          "static": true,
+          "line": 63,
+          "params": ""
+        },
+        {
+          "name": "role",
+          "visibility": "public",
+          "static": true,
+          "line": 72,
+          "params": ""
+        },
+        {
+          "name": "canManage",
+          "visibility": "public",
+          "static": true,
+          "line": 76,
+          "params": ""
+        },
+        {
+          "name": "canDelete",
+          "visibility": "public",
+          "static": true,
+          "line": 80,
+          "params": ""
+        },
+        {
+          "name": "requireManage",
+          "visibility": "public",
+          "static": true,
+          "line": 84,
+          "params": ""
+        },
+        {
+          "name": "requireDelete",
+          "visibility": "public",
+          "static": true,
+          "line": 91,
+          "params": ""
+        },
+        {
+          "name": "audit",
+          "visibility": "public",
+          "static": true,
+          "line": 98,
+          "params": "$type, $id, $action, $details = ''"
+        },
+        {
+          "name": "csv",
+          "visibility": "public",
+          "static": true,
+          "line": 128,
+          "params": "$name, $headers, $rows"
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once __DIR__ . '/database.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once __DIR__ . '/security.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "Manage() {",
+          "line": 85
+        },
+        {
+          "kind": "require",
+          "target": "Delete() {",
+          "line": 92
+        }
+      ],
+      "superglobals": {
+        "$_SERVER": [
+          113
+        ],
+        "$_SESSION": [
+          74,
+          102
+        ]
+      },
+      "headers": [
+        {
+          "value": "Content-Type:text/csv; charset=utf-8",
+          "line": 130
+        },
+        {
+          "value": "Content-Disposition: attachment; filename=",
+          "line": 131
+        }
+      ],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 0,
+      "role_mentions": 8
+    },
+    "includes/auth.php": {
+      "classes": [
+        "Auth"
+      ],
+      "functions": [
+        {
+          "name": "__construct",
+          "visibility": "public",
+          "static": false,
+          "line": 9,
+          "params": ""
+        },
+        {
+          "name": "adminLogin",
+          "visibility": "public",
+          "static": false,
+          "line": 15,
+          "params": "$username, $password"
+        },
+        {
+          "name": "isAdminLoggedIn",
+          "visibility": "public",
+          "static": false,
+          "line": 73,
+          "params": ""
+        },
+        {
+          "name": "adminLogout",
+          "visibility": "public",
+          "static": false,
+          "line": 84,
+          "params": ""
+        },
+        {
+          "name": "checkFailedLogins",
+          "visibility": "private",
+          "static": false,
+          "line": 98,
+          "params": ""
+        },
+        {
+          "name": "logFailedLogin",
+          "visibility": "private",
+          "static": false,
+          "line": 114,
+          "params": "$username, $reason"
+        },
+        {
+          "name": "incrementFailedAttempts",
+          "visibility": "private",
+          "static": false,
+          "line": 127,
+          "params": "$username"
+        },
+        {
+          "name": "resetFailedAttempts",
+          "visibility": "private",
+          "static": false,
+          "line": 151,
+          "params": "$username"
+        },
+        {
+          "name": "logAdminAction",
+          "visibility": "public",
+          "static": false,
+          "line": 161,
+          "params": "$admin_id, $action, $details"
+        },
+        {
+          "name": "getUserId",
+          "visibility": "public",
+          "static": false,
+          "line": 175,
+          "params": ""
+        },
+        {
+          "name": "getRole",
+          "visibility": "public",
+          "static": false,
+          "line": 178,
+          "params": ""
+        },
+        {
+          "name": "canManage",
+          "visibility": "public",
+          "static": false,
+          "line": 180,
+          "params": ""
+        },
+        {
+          "name": "canDelete",
+          "visibility": "public",
+          "static": false,
+          "line": 181,
+          "params": ""
+        },
+        {
+          "name": "getUsername",
+          "visibility": "public",
+          "static": false,
+          "line": 183,
+          "params": ""
+        },
+        {
+          "name": "checkSessionValidity",
+          "visibility": "public",
+          "static": false,
+          "line": 188,
+          "params": ""
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once 'config.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once 'database.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once 'security.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once 'admin_helpers.php'",
+          "line": 5
+        }
+      ],
+      "superglobals": {
+        "$_SERVER": [
+          48,
+          77,
+          122
+        ],
+        "$_SESSION": [
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          74,
+          77,
+          86,
+          89,
+          176,
+          179,
+          184,
+          195,
+          201
+        ]
+      },
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 2,
+      "auth_mentions": 7,
+      "role_mentions": 11
+    },
+    "includes/config.php": {
+      "classes": [],
+      "functions": [
+        {
+          "name": "env_value",
+          "visibility": "global",
+          "static": false,
+          "line": 24,
+          "params": "$key, $default = ''"
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once $localConfig",
+          "line": 20
+        },
+        {
+          "kind": "require",
+          "target": "_once $file",
+          "line": 67
+        }
+      ],
+      "superglobals": {
+        "$_SERVER": [
+          4
+        ]
+      },
+      "headers": [
+        {
+          "value": "Content-Type: application/json; charset=utf-8",
+          "line": 79
+        }
+      ],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 3,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "includes/database.php": {
+      "classes": [
+        "Database"
+      ],
+      "functions": [
+        {
+          "name": "__construct",
+          "visibility": "private",
+          "static": false,
+          "line": 7,
+          "params": ""
+        },
+        {
+          "name": "getInstance",
+          "visibility": "public",
+          "static": true,
+          "line": 24,
+          "params": ""
+        },
+        {
+          "name": "close",
+          "visibility": "public",
+          "static": true,
+          "line": 31,
+          "params": ""
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once 'config.php'",
+          "line": 2
+        }
+      ],
+      "superglobals": {},
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "includes/functions.php": {
+      "classes": [
+        "LicenseSystem"
+      ],
+      "functions": [
+        {
+          "name": "__construct",
+          "visibility": "public",
+          "static": false,
+          "line": 9,
+          "params": ""
+        },
+        {
+          "name": "createLicense",
+          "visibility": "public",
+          "static": false,
+          "line": 15,
+          "params": "$hours, $device_limit = 1, $admin_id = null, $notes = '', $app_scope = '', $api_key_id = null"
+        },
+        {
+          "name": "verifyLicense",
+          "visibility": "public",
+          "static": false,
+          "line": 80,
+          "params": "$license_key, $device_hash = null, $api_key_id = null"
+        },
+        {
+          "name": "registerDevice",
+          "visibility": "private",
+          "static": false,
+          "line": 202,
+          "params": "$license_id, $device_hash"
+        },
+        {
+          "name": "logoutOldestDevice",
+          "visibility": "private",
+          "static": false,
+          "line": 240,
+          "params": "$license_id"
+        },
+        {
+          "name": "updateDeviceActivity",
+          "visibility": "private",
+          "static": false,
+          "line": 258,
+          "params": "$device_id"
+        },
+        {
+          "name": "getActiveDeviceCount",
+          "visibility": "private",
+          "static": false,
+          "line": 270,
+          "params": "$license_id"
+        },
+        {
+          "name": "getDeviceByHash",
+          "visibility": "private",
+          "static": false,
+          "line": 284,
+          "params": "$license_id, $device_hash"
+        },
+        {
+          "name": "generateLicenseKey",
+          "visibility": "private",
+          "static": false,
+          "line": 301,
+          "params": ""
+        },
+        {
+          "name": "updateTotalDevices",
+          "visibility": "private",
+          "static": false,
+          "line": 310,
+          "params": "$license_id"
+        },
+        {
+          "name": "updateLicenseStatus",
+          "visibility": "public",
+          "static": false,
+          "line": 331,
+          "params": "$license_id, $status"
+        },
+        {
+          "name": "extendLicense",
+          "visibility": "public",
+          "static": false,
+          "line": 350,
+          "params": "$license_id, $additional_hours"
+        },
+        {
+          "name": "blacklistLicense",
+          "visibility": "public",
+          "static": false,
+          "line": 372,
+          "params": "$license_key, $reason, $admin_id"
+        },
+        {
+          "name": "suspendLicenseByKey",
+          "visibility": "private",
+          "static": false,
+          "line": 395,
+          "params": "$license_key"
+        },
+        {
+          "name": "isBlacklisted",
+          "visibility": "private",
+          "static": false,
+          "line": 407,
+          "params": "$license_key, $device_hash = null"
+        },
+        {
+          "name": "addLog",
+          "visibility": "public",
+          "static": false,
+          "line": 430,
+          "params": "$license_id, $admin_id, $action, $details"
+        },
+        {
+          "name": "detectOS",
+          "visibility": "private",
+          "static": false,
+          "line": 447,
+          "params": ""
+        },
+        {
+          "name": "detectBrowser",
+          "visibility": "private",
+          "static": false,
+          "line": 460,
+          "params": ""
+        },
+        {
+          "name": "getStats",
+          "visibility": "public",
+          "static": false,
+          "line": 473,
+          "params": ""
+        },
+        {
+          "name": "getLicenseRiskScore",
+          "visibility": "public",
+          "static": false,
+          "line": 514,
+          "params": "$license_id"
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "_once 'database.php'",
+          "line": 2
+        },
+        {
+          "kind": "require",
+          "target": "_once 'security.php'",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "_once 'admin_helpers.php'",
+          "line": 4
+        },
+        {
+          "kind": "require",
+          "target": "_once 'validation.php'",
+          "line": 5
+        }
+      ],
+      "superglobals": {
+        "$_SERVER": [
+          204,
+          448,
+          461
+        ]
+      },
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "includes/security.php": {
+      "classes": [
+        "Security"
+      ],
+      "functions": [
+        {
+          "name": "sanitize",
+          "visibility": "public",
+          "static": true,
+          "line": 3,
+          "params": "$input"
+        },
+        {
+          "name": "escape",
+          "visibility": "public",
+          "static": true,
+          "line": 9,
+          "params": "$data"
+        },
+        {
+          "name": "generateToken",
+          "visibility": "public",
+          "static": true,
+          "line": 16,
+          "params": "$length = 32"
+        },
+        {
+          "name": "hashPassword",
+          "visibility": "public",
+          "static": true,
+          "line": 20,
+          "params": "$password"
+        },
+        {
+          "name": "verifyPassword",
+          "visibility": "public",
+          "static": true,
+          "line": 24,
+          "params": "$password, $hash"
+        },
+        {
+          "name": "passwordNeedsRehash",
+          "visibility": "public",
+          "static": true,
+          "line": 38,
+          "params": "$hash"
+        },
+        {
+          "name": "encryptionKey",
+          "visibility": "private",
+          "static": true,
+          "line": 42,
+          "params": ""
+        },
+        {
+          "name": "encrypt",
+          "visibility": "public",
+          "static": true,
+          "line": 47,
+          "params": "$data"
+        },
+        {
+          "name": "decrypt",
+          "visibility": "public",
+          "static": true,
+          "line": 54,
+          "params": "$data"
+        },
+        {
+          "name": "generateCSRFToken",
+          "visibility": "public",
+          "static": true,
+          "line": 69,
+          "params": ""
+        },
+        {
+          "name": "validateCSRFToken",
+          "visibility": "public",
+          "static": true,
+          "line": 76,
+          "params": "$token"
+        },
+        {
+          "name": "requireCSRFToken",
+          "visibility": "public",
+          "static": true,
+          "line": 80,
+          "params": "$token"
+        },
+        {
+          "name": "getClientIP",
+          "visibility": "public",
+          "static": true,
+          "line": 87,
+          "params": ""
+        },
+        {
+          "name": "generateDeviceHash",
+          "visibility": "public",
+          "static": true,
+          "line": 92,
+          "params": ""
+        },
+        {
+          "name": "validateLicenseFormat",
+          "visibility": "public",
+          "static": true,
+          "line": 103,
+          "params": "$key"
+        },
+        {
+          "name": "validateAPIKey",
+          "visibility": "public",
+          "static": true,
+          "line": 107,
+          "params": "$apiKey"
+        },
+        {
+          "name": "checkRateLimit",
+          "visibility": "public",
+          "static": true,
+          "line": 119,
+          "params": "$ip, $endpoint, $limit = 100"
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "CSRFToken($token) {",
+          "line": 81
+        }
+      ],
+      "superglobals": {
+        "$_SERVER": [
+          89,
+          95,
+          96,
+          97,
+          98
+        ],
+        "$_SESSION": [
+          71,
+          72,
+          74,
+          78
+        ]
+      },
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 10,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "includes/validation.php": {
+      "classes": [
+        "Validation"
+      ],
+      "functions": [
+        {
+          "name": "validateLicenseData",
+          "visibility": "public",
+          "static": false,
+          "line": 6,
+          "params": "$data"
+        },
+        {
+          "name": "validateLoginData",
+          "visibility": "public",
+          "static": false,
+          "line": 21,
+          "params": "$data"
+        },
+        {
+          "name": "validateAPIRequest",
+          "visibility": "public",
+          "static": false,
+          "line": 40,
+          "params": "$data"
+        },
+        {
+          "name": "getErrors",
+          "visibility": "public",
+          "static": false,
+          "line": 53,
+          "params": ""
+        },
+        {
+          "name": "getError",
+          "visibility": "public",
+          "static": false,
+          "line": 58,
+          "params": "$field"
+        },
+        {
+          "name": "getFormattedErrors",
+          "visibility": "public",
+          "static": false,
+          "line": 63,
+          "params": ""
+        }
+      ],
+      "includes": [
+        {
+          "kind": "require",
+          "target": "d'",
+          "line": 25
+        },
+        {
+          "kind": "require",
+          "target": "d'",
+          "line": 29
+        },
+        {
+          "kind": "require",
+          "target": "d'",
+          "line": 44
+        }
+      ],
+      "superglobals": {},
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "index.php": {
+      "classes": [],
+      "functions": [],
+      "includes": [],
+      "superglobals": {},
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "install.php": {
+      "classes": [],
+      "functions": [
+        {
+          "name": "installer_dsn",
+          "visibility": "global",
+          "static": false,
+          "line": 11,
+          "params": "$host, $dbName = ''"
+        }
+      ],
+      "includes": [
+        {
+          "kind": "include",
+          "target": "s/config.local.php')) {",
+          "line": 3
+        },
+        {
+          "kind": "require",
+          "target": "d.'",
+          "line": 39
+        },
+        {
+          "kind": "include",
+          "target": "s/config.php')",
+          "line": 57
+        },
+        {
+          "kind": "include",
+          "target": "s/config.local.php', $config_content) === false) {",
+          "line": 74
+        },
+        {
+          "kind": "include",
+          "target": "s/config.local.php.')",
+          "line": 75
+        },
+        {
+          "kind": "include",
+          "target": "s folder.'",
+          "line": 83
+        },
+        {
+          "kind": "require",
+          "target": "d>",
+          "line": 126
+        },
+        {
+          "kind": "require",
+          "target": "d>",
+          "line": 131
+        },
+        {
+          "kind": "require",
+          "target": "d>",
+          "line": 136
+        },
+        {
+          "kind": "require",
+          "target": "d tables.",
+          "line": 145
+        }
+      ],
+      "superglobals": {
+        "$_GET": [
+          7
+        ],
+        "$_POST": [
+          31,
+          32,
+          33,
+          34
+        ],
+        "$_SERVER": [
+          29
+        ]
+      },
+      "headers": [],
+      "forms": [
+        {
+          "line": 121,
+          "method": "POST",
+          "action": "",
+          "attrs": "method=\"POST\""
+        }
+      ],
+      "post_handling": true,
+      "csrf_mentions": 3,
+      "auth_mentions": 0,
+      "role_mentions": 0
+    },
+    "licensesystem": {
+      "classes": [],
+      "functions": [],
+      "includes": [
+        {
+          "kind": "include",
+          "target": "s/                # Core files",
+          "line": 13
+        }
+      ],
+      "superglobals": {},
+      "headers": [],
+      "forms": [],
+      "post_handling": false,
+      "csrf_mentions": 0,
+      "auth_mentions": 1,
+      "role_mentions": 0
+    }
+  },
+  "js": {
+    "admin/assets/js/admin-ui.js": {
+      "functions": [
+        {
+          "name": "ready",
+          "line": 6
+        },
+        {
+          "name": "setupNavbarFallback",
+          "line": 52
+        },
+        {
+          "name": "showLoader",
+          "line": 75
+        },
+        {
+          "name": "copyText",
+          "line": 87
+        },
+        {
+          "name": "setupAlertsAsToasts",
+          "line": 100
+        },
+        {
+          "name": "toast",
+          "line": 107
+        },
+        {
+          "name": "setupConfirmModal",
+          "line": 124
+        },
+        {
+          "name": "setupDatePickerBridge",
+          "line": 142
+        },
+        {
+          "name": "setupLicenseTable",
+          "line": 159
+        },
+        {
+          "name": "matches",
+          "line": 173
+        },
+        {
+          "name": "render",
+          "line": 181
+        },
+        {
+          "name": "updateBulk",
+          "line": 202
+        },
+        {
+          "name": "ready",
+          "line": 227
+        },
+        {
+          "name": "setupGenericPagination",
+          "line": 237
+        },
+        {
+          "name": "render",
+          "line": 257
+        }
+      ],
+      "events": [
+        {
+          "event": "DOMContentLoaded",
+          "line": 8
+        },
+        {
+          "event": "click",
+          "line": 24
+        },
+        {
+          "event": "submit",
+          "line": 32
+        },
+        {
+          "event": "click",
+          "line": 39
+        },
+        {
+          "event": "click",
+          "line": 58
+        },
+        {
+          "event": "click",
+          "line": 67
+        },
+        {
+          "event": "click",
+          "line": 133
+        },
+        {
+          "event": "change",
+          "line": 146
+        },
+        {
+          "event": "click",
+          "line": 153
+        },
+        {
+          "event": "click",
+          "line": 195
+        },
+        {
+          "event": "change",
+          "line": 209
+        },
+        {
+          "event": "change",
+          "line": 211
+        },
+        {
+          "event": "change",
+          "line": 220
+        },
+        {
+          "event": "DOMContentLoaded",
+          "line": 227
+        },
+        {
+          "event": "click",
+          "line": 230
+        },
+        {
+          "event": "click",
+          "line": 265
+        },
+        {
+          "event": "click",
+          "line": 271
+        },
+        {
+          "event": "click",
+          "line": 277
+        }
+      ],
+      "fetch_count": 0,
+      "storage": [
+        "localStorage"
+      ]
+    }
+  },
+  "css": {
+    "admin/assets/css/admin-ui.css": {
+      "selectors": [
+        {
+          "selector": ":root",
+          "line": 1
+        },
+        {
+          "selector": "html.ui-dark",
+          "line": 14
+        },
+        {
+          "selector": "body.admin-ui",
+          "line": 22
+        },
+        {
+          "selector": ".admin-ui .navbar",
+          "line": 30
+        },
+        {
+          "selector": ".admin-ui .navbar-brand",
+          "line": 36
+        },
+        {
+          "selector": ".admin-ui .nav-link",
+          "line": 37
+        },
+        {
+          "selector": ".admin-ui .nav-link.active, .admin-ui .nav-link:hover",
+          "line": 38
+        },
+        {
+          "selector": ".admin-shell",
+          "line": 39
+        },
+        {
+          "selector": ".page-hero",
+          "line": 40
+        },
+        {
+          "selector": ".page-hero h1, .page-hero h2",
+          "line": 48
+        },
+        {
+          "selector": ".page-hero p",
+          "line": 49
+        },
+        {
+          "selector": ".card, .modal-content, .dropdown-menu",
+          "line": 50
+        },
+        {
+          "selector": ".card-header",
+          "line": 57
+        },
+        {
+          "selector": ".card-header.bg-primary, .card-header.bg-success, .card-header.bg-dark, .table-dark",
+          "line": 63
+        },
+        {
+          "selector": ".form-control, .form-select, .input-group-text",
+          "line": 67
+        },
+        {
+          "selector": "html.ui-dark .form-control, html.ui-dark .form-select, html.ui-dark .input-group-text",
+          "line": 72
+        },
+        {
+          "selector": ".form-control:focus, .form-select:focus",
+          "line": 76
+        },
+        {
+          "selector": ".btn",
+          "line": 80
+        },
+        {
+          "selector": ".btn-primary, .btn-success, .btn-info, .btn-warning, .btn-danger",
+          "line": 81
+        },
+        {
+          "selector": ".btn-primary",
+          "line": 85
+        },
+        {
+          "selector": ".btn-success",
+          "line": 86
+        },
+        {
+          "selector": ".btn-info",
+          "line": 87
+        },
+        {
+          "selector": ".btn-warning",
+          "line": 88
+        },
+        {
+          "selector": ".btn-danger",
+          "line": 89
+        },
+        {
+          "selector": ".table",
+          "line": 90
+        },
+        {
+          "selector": ".table-responsive",
+          "line": 91
+        },
+        {
+          "selector": ".table > :not(caption) > * > *",
+          "line": 92
+        },
+        {
+          "selector": ".table-hover tbody tr:hover",
+          "line": 93
+        },
+        {
+          "selector": ".badge",
+          "line": 94
+        },
+        {
+          "selector": ".stat-card",
+          "line": 95
+        },
+        {
+          "selector": ".stat-card::after",
+          "line": 96
+        },
+        {
+          "selector": ".stat-icon",
+          "line": 97
+        },
+        {
+          "selector": ".stat-number",
+          "line": 98
+        },
+        {
+          "selector": ".bg-license",
+          "line": 99
+        },
+        {
+          "selector": ".bg-device",
+          "line": 100
+        },
+        {
+          "selector": ".bg-api",
+          "line": 101
+        },
+        {
+          "selector": ".bg-log",
+          "line": 102
+        },
+        {
+          "selector": ".bg-expired",
+          "line": 103
+        },
+        {
+          "selector": ".empty-state",
+          "line": 104
+        },
+        {
+          "selector": ".empty-state .empty-icon",
+          "line": 105
+        },
+        {
+          "selector": ".ui-toolbar",
+          "line": 106
+        },
+        {
+          "selector": ".ui-toolbar > *",
+          "line": 107
+        },
+        {
+          "selector": ".bulk-bar",
+          "line": 108
+        },
+        {
+          "selector": ".bulk-bar.is-visible",
+          "line": 109
+        },
+        {
+          "selector": ".copyable-code",
+          "line": 110
+        },
+        {
+          "selector": ".copyable-code code",
+          "line": 111
+        },
+        {
+          "selector": ".toast-container",
+          "line": 112
+        },
+        {
+          "selector": ".theme-toggle",
+          "line": 113
+        },
+        {
+          "selector": ".loading-overlay",
+          "line": 114
+        },
+        {
+          "selector": ".loading-overlay.show",
+          "line": 115
+        },
+        {
+          "selector": ".spinner-card",
+          "line": 116
+        },
+        {
+          "selector": ".login-page",
+          "line": 117
+        },
+        {
+          "selector": ".login-card",
+          "line": 118
+        },
+        {
+          "selector": ".login-header",
+          "line": 119
+        },
+        {
+          "selector": ".admin-shell",
+          "line": 121
+        },
+        {
+          "selector": ".page-hero",
+          "line": 122
+        },
+        {
+          "selector": ".card-header",
+          "line": 123
+        },
+        {
+          "selector": ".ui-toolbar",
+          "line": 124
+        },
+        {
+          "selector": ".table-responsive",
+          "line": 125
+        },
+        {
+          "selector": ".btn-group, .btn-group-vertical",
+          "line": 126
+        },
+        {
+          "selector": ".btn-group > .btn, .btn-group-vertical > .btn",
+          "line": 127
+        },
+        {
+          "selector": "/* v2 UI polish */ .admin-ui .navbar .container-fluid",
+          "line": 129
+        },
+        {
+          "selector": ".admin-ui .navbar-collapse",
+          "line": 132
+        },
+        {
+          "selector": ".admin-ui .navbar-nav",
+          "line": 133
+        },
+        {
+          "selector": ".admin-ui .navbar .dropdown-menu",
+          "line": 134
+        },
+        {
+          "selector": ".admin-ui .nav-link i",
+          "line": 135
+        },
+        {
+          "selector": ".admin-ui .navbar-collapse",
+          "line": 137
+        },
+        {
+          "selector": ".admin-ui .navbar-nav",
+          "line": 138
+        },
+        {
+          "selector": ".admin-ui .navbar .nav-link",
+          "line": 139
+        },
+        {
+          "selector": ".admin-ui .navbar .dropdown-menu",
+          "line": 140
+        },
+        {
+          "selector": ".settings-summary",
+          "line": 142
+        },
+        {
+          "selector": ".settings-summary > div",
+          "line": 143
+        },
+        {
+          "selector": ".settings-summary span",
+          "line": 144
+        },
+        {
+          "selector": ".settings-summary code",
+          "line": 145
+        },
+        {
+          "selector": ".api-key-display",
+          "line": 146
+        },
+        {
+          "selector": "html.ui-dark .api-key-display",
+          "line": 147
+        },
+        {
+          "selector": ".root-landing",
+          "line": 148
+        },
+        {
+          "selector": ".root-card",
+          "line": 149
+        },
+        {
+          "selector": ".root-icon",
+          "line": 150
+        },
+        {
+          "selector": "/* Navigation visibility/clickability fix Tailwind has a `.collapse",
+          "line": 151
+        },
+        {
+          "selector": "` utility. Because Tailwind is loaded after Bootstrap, it can hide Bootstrap's navbar collapse even when it is open. These scoped rules restore Bootstrap navbar behavior without touching backend/API code. */ .admin-ui .admin-topnav",
+          "line": 154
+        },
+        {
+          "selector": ".admin-ui .admin-navbar-collapse.collapse",
+          "line": 167
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .container-fluid",
+          "line": 170
+        },
+        {
+          "selector": ".admin-ui .admin-brand",
+          "line": 173
+        },
+        {
+          "selector": ".admin-ui .admin-brand .brand-icon",
+          "line": 183
+        },
+        {
+          "selector": ".admin-ui .admin-main-menu",
+          "line": 192
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .nav-link",
+          "line": 195
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .nav-link i",
+          "line": 209
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .nav-link:hover, .admin-ui .admin-topnav .nav-link:focus",
+          "line": 214
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .nav-link.active",
+          "line": 222
+        },
+        {
+          "selector": ".admin-ui .admin-user-menu",
+          "line": 228
+        },
+        {
+          "selector": ".admin-ui .admin-user-link",
+          "line": 231
+        },
+        {
+          "selector": ".admin-ui .theme-toggle",
+          "line": 235
+        },
+        {
+          "selector": ".admin-ui .theme-toggle:hover, .admin-ui .theme-toggle:focus",
+          "line": 244
+        },
+        {
+          "selector": ".admin-ui .admin-nav-toggler",
+          "line": 249
+        },
+        {
+          "selector": ".admin-ui .admin-nav-toggler:focus",
+          "line": 257
+        },
+        {
+          "selector": ".admin-ui .admin-nav-toggler .navbar-toggler-icon",
+          "line": 260
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .dropdown-menu",
+          "line": 265
+        },
+        {
+          "selector": "html.ui-dark .admin-ui .admin-topnav .dropdown-menu",
+          "line": 275
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .dropdown-item, .admin-ui .admin-topnav .dropdown-item-text",
+          "line": 280
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .dropdown-item",
+          "line": 285
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .dropdown-item:hover, .admin-ui .admin-topnav .dropdown-item:focus",
+          "line": 291
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .dropdown-divider",
+          "line": 296
+        },
+        {
+          "selector": ".admin-ui .admin-navbar-collapse.collapse",
+          "line": 300
+        },
+        {
+          "selector": ".admin-ui .admin-topnav",
+          "line": 307
+        },
+        {
+          "selector": ".admin-ui .admin-navbar-collapse",
+          "line": 310
+        },
+        {
+          "selector": ".admin-ui .admin-navbar-collapse.collapse:not(.show)",
+          "line": 319
+        },
+        {
+          "selector": ".admin-ui .admin-navbar-collapse.collapse.show, .admin-ui .admin-navbar-collapse.collapsing",
+          "line": 322
+        },
+        {
+          "selector": ".admin-ui .admin-main-menu, .admin-ui .admin-user-menu",
+          "line": 327
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .nav-link, .admin-ui .admin-user-link, .admin-ui .theme-toggle",
+          "line": 332
+        },
+        {
+          "selector": ".admin-ui .theme-toggle",
+          "line": 340
+        },
+        {
+          "selector": ".admin-ui .theme-toggle::after",
+          "line": 344
+        },
+        {
+          "selector": ".admin-ui .admin-topnav .dropdown-menu",
+          "line": 348
+        },
+        {
+          "selector": "/* V5 UI micro-update: backup page polish */ .backup-tile",
+          "line": 356
+        },
+        {
+          "selector": ".backup-tile:hover",
+          "line": 371
+        },
+        {
+          "selector": ".backup-tile .backup-icon",
+          "line": 377
+        },
+        {
+          "selector": ".backup-tile strong",
+          "line": 388
+        },
+        {
+          "selector": ".backup-tile small",
+          "line": 389
+        },
+        {
+          "selector": ".backup-tile em",
+          "line": 390
+        },
+        {
+          "selector": ".dark .backup-tile, [data-bs-theme=\"dark\"] .backup-tile",
+          "line": 391
+        },
+        {
+          "selector": ".dark .backup-tile:hover, [data-bs-theme=\"dark\"] .backup-tile:hover",
+          "line": 397
+        },
+        {
+          "selector": ".dark .backup-tile small, [data-bs-theme=\"dark\"] .backup-tile small",
+          "line": 399
+        }
+      ],
+      "media_queries": 4,
+      "keyframes": []
+    }
+  },
+  "sql": {
+    "database.sql": {
+      "creates": [
+        {
+          "table": "admin_users",
+          "line": 30
+        },
+        {
+          "table": "api_keys",
+          "line": 56
+        },
+        {
+          "table": "api_logs",
+          "line": 102
+        },
+        {
+          "table": "blacklist",
+          "line": 1668
+        },
+        {
+          "table": "devices",
+          "line": 1684
+        },
+        {
+          "table": "failed_logins",
+          "line": 1997
+        },
+        {
+          "table": "licenses",
+          "line": 2019
+        },
+        {
+          "table": "logs",
+          "line": 2105
+        },
+        {
+          "table": "rate_limits",
+          "line": 2971
+        },
+        {
+          "table": "settings",
+          "line": 2993
+        },
+        {
+          "table": "audit_trail",
+          "line": 3235
+        }
+      ],
+      "alters": [
+        {
+          "table": "admin_users",
+          "line": 3023
+        },
+        {
+          "table": "api_keys",
+          "line": 3031
+        },
+        {
+          "table": "api_logs",
+          "line": 3042
+        },
+        {
+          "table": "blacklist",
+          "line": 3052
+        },
+        {
+          "table": "devices",
+          "line": 3061
+        },
+        {
+          "table": "failed_logins",
+          "line": 3072
+        },
+        {
+          "table": "licenses",
+          "line": 3079
+        },
+        {
+          "table": "logs",
+          "line": 3092
+        },
+        {
+          "table": "rate_limits",
+          "line": 3102
+        },
+        {
+          "table": "settings",
+          "line": 3109
+        },
+        {
+          "table": "admin_users",
+          "line": 3121
+        },
+        {
+          "table": "api_keys",
+          "line": 3127
+        },
+        {
+          "table": "api_logs",
+          "line": 3133
+        },
+        {
+          "table": "blacklist",
+          "line": 3139
+        },
+        {
+          "table": "devices",
+          "line": 3145
+        },
+        {
+          "table": "failed_logins",
+          "line": 3151
+        },
+        {
+          "table": "licenses",
+          "line": 3157
+        },
+        {
+          "table": "logs",
+          "line": 3163
+        },
+        {
+          "table": "rate_limits",
+          "line": 3169
+        },
+        {
+          "table": "settings",
+          "line": 3175
+        },
+        {
+          "table": "api_keys",
+          "line": 3185
+        },
+        {
+          "table": "api_logs",
+          "line": 3191
+        },
+        {
+          "table": "blacklist",
+          "line": 3197
+        },
+        {
+          "table": "devices",
+          "line": 3203
+        },
+        {
+          "table": "licenses",
+          "line": 3209
+        },
+        {
+          "table": "logs",
+          "line": 3215
+        },
+        {
+          "table": "admin_users",
+          "line": 3225
+        },
+        {
+          "table": "api_keys",
+          "line": 3228
+        },
+        {
+          "table": "licenses",
+          "line": 3232
+        }
+      ],
+      "insert_statement_counts": {
+        "admin_users": 1,
+        "api_keys": 1,
+        "api_logs": 5,
+        "devices": 2,
+        "failed_logins": 1,
+        "licenses": 1,
+        "logs": 2,
+        "rate_limits": 1,
+        "settings": 2
+      },
+      "drop_tables": [],
+      "transactions": 2
+    },
+    "migration-v4.sql": {
+      "creates": [
+        {
+          "table": "audit_trail",
+          "line": 13
+        }
+      ],
+      "alters": [
+        {
+          "table": "admin_users",
+          "line": 3
+        },
+        {
+          "table": "api_keys",
+          "line": 6
+        },
+        {
+          "table": "licenses",
+          "line": 10
+        }
+      ],
+      "insert_statement_counts": {
+        "settings": 1
+      },
+      "drop_tables": [],
+      "transactions": 0
+    },
+    "migration-v5-fix.sql": {
+      "creates": [],
+      "alters": [
+        {
+          "table": "api_keys",
+          "line": 4
+        },
+        {
+          "table": "api_keys",
+          "line": 5
+        },
+        {
+          "table": "licenses",
+          "line": 6
+        },
+        {
+          "table": "licenses",
+          "line": 7
+        }
+      ],
+      "insert_statement_counts": {
+        "settings": 1
+      },
+      "drop_tables": [],
+      "transactions": 0
+    },
+    "migration-v5-hotfix.sql": {
+      "creates": [],
+      "alters": [
+        {
+          "table": "api_keys",
+          "line": 5
+        },
+        {
+          "table": "licenses",
+          "line": 9
+        }
+      ],
+      "insert_statement_counts": {},
+      "drop_tables": [],
+      "transactions": 0
+    },
+    "migration-v5.sql": {
+      "creates": [],
+      "alters": [
+        {
+          "table": "api_keys",
+          "line": 3
+        },
+        {
+          "table": "licenses",
+          "line": 7
+        }
+      ],
+      "insert_statement_counts": {
+        "settings": 1
+      },
+      "drop_tables": [],
+      "transactions": 0
+    },
+    "migration.sql": {
+      "creates": [],
+      "alters": [],
+      "insert_statement_counts": {},
+      "drop_tables": [],
+      "transactions": 0
+    }
+  },
+  "duplicates": [
+    {
+      "sha256": "835c21c9584fd769dfee34e9ab8bdb002b257365b8a7ebe0508f3a70b9131966",
+      "paths": [
+        "php-lint-v5-fix.txt",
+        "php-lint-v5.txt"
+      ]
+    }
+  ],
+  "security_hit_summary": {
+    "total": 162,
+    "by_file": {
+      "admin/admins.php": 6,
+      "admin/api_keys.php": 12,
+      "admin/audit.php": 1,
+      "admin/backup.php": 10,
+      "admin/device.php": 8,
+      "admin/health.php": 1,
+      "admin/index.php": 5,
+      "admin/license.php": 19,
+      "admin/login.php": 2,
+      "admin/logs.php": 3,
+      "admin/settings.php": 3,
+      "api/verify.php": 48,
+      "config.sample.php": 1,
+      "cron/check_expiring.php": 1,
+      "cron/cleanup.php": 1,
+      "includes/admin_helpers.php": 5,
+      "includes/auth.php": 2,
+      "includes/config.php": 3,
+      "includes/database.php": 1,
+      "includes/functions.php": 8,
+      "includes/security.php": 14,
+      "install.php": 8
+    },
+    "by_kind": {
+      "command_execution": 4,
+      "cors": 1,
+      "csrf": 59,
+      "debug_log": 55,
+      "direct_sql_query": 37,
+      "file_write": 1,
+      "password": 3,
+      "weak_hash": 2
+    }
+  },
+  "external_urls": [
+    {
+      "file": "README.md",
+      "url": "http://yourdomain.com/install.php`"
+    },
+    {
+      "file": "admin/admins.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/admins.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/admins.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/admins.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/api_keys.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/api_keys.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/api_keys.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/api_keys.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/assets/css/admin-ui.css",
+      "url": "http://www.w3.org/2000/svg"
+    },
+    {
+      "file": "admin/audit.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/audit.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/audit.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/audit.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/backup.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/backup.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/backup.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/backup.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/device.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/device.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/device.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/device.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/health.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/health.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/health.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/health.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/index.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/index.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/index.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/index.php",
+      "url": "https://cdn.jsdelivr.net/npm/chart.js"
+    },
+    {
+      "file": "admin/index.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/license.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/license.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/license.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/license.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/login.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/login.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/login.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/login.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/logs.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/logs.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/logs.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/logs.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "admin/settings.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "admin/settings.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "admin/settings.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "file": "admin/settings.php",
+      "url": "https://cdn.tailwindcss.com"
+    },
+    {
+      "file": "index.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "index.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "install.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    },
+    {
+      "file": "install.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    },
+    {
+      "file": "install.php",
+      "url": "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    }
+  ],
+  "redacted_private_deployment_url_count": 3
+}

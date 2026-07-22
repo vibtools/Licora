@@ -1,0 +1,28 @@
+CHANGELOG - V5 UI/Admin Specific Update
+
+1. Navigation menu
+- admin/includes/navbar.php থেকে Audit, Backup, Health menu item সরানো হয়েছে।
+- Dashboard, Licenses, Devices, Logs, API Keys, Settings, Admins menu অক্ষত রাখা হয়েছে।
+
+2. Settings shortcuts
+- admin/settings.php এর Management Shortcuts section-এ Audit Trail, Backup & Export, System Health link যোগ করা হয়েছে।
+
+3. Dashboard quick actions
+- admin/index.php এর Quick Actions section-এ Audit Trail, Backup, Health shortcut যোগ করা হয়েছে।
+
+4. Backup UI
+- admin/backup.php UI সম্পূর্ণ redesign করা হয়েছে।
+- Licenses CSV, Devices CSV, Logs CSV, Full Database SQL backup card layout যোগ হয়েছে।
+- Existing export query/logic/functionality অক্ষত রাখা হয়েছে।
+
+5. Admin page
+- admin/admins.php এ নতুন admin create feature যোগ হয়েছে।
+- existing admin edit feature যোগ হয়েছে: username, email, password, role।
+- admin delete feature যোগ হয়েছে।
+- current logged-in admin নিজেকে delete করতে পারবে না।
+- role column না থাকলে create/edit/delete basic admin account নিয়ে কাজ করবে, role warning দেখাবে।
+
+Unchanged
+- API endpoint, method, input parameter, output JSON structure unchanged.
+- Database table/column remove/rename/change করা হয়নি।
+- Existing feature remove করা হয়নি।

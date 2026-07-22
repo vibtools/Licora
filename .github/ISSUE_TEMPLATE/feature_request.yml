@@ -1,0 +1,30 @@
+name: Feature request
+description: Propose a backward-compatible improvement.
+title: "[Feature]: "
+labels: [enhancement, triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Explain the concrete workflow or limitation.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Explain how existing installations remain compatible.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: preservation
+    attributes:
+      label: Compatibility
+      options:
+        - label: This proposal does not require removing an existing feature.
+          required: true

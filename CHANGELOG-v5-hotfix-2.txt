@@ -1,0 +1,12 @@
+Version 5 App/Scope Hotfix 2
+
+- Fixed API Key App Name / Scope Label save/update failing when schema detection returned false.
+- Replaced strict pre-check blocking with direct INSERT/UPDATE and clear SQL error only if the connected database truly lacks the columns.
+- Improved column detection using information_schema with SHOW COLUMNS fallback.
+- License create and bulk create now load API key App/Scope options even if SHOW COLUMNS is blocked by hosting permissions.
+- License binding save no longer depends on schema pre-check; it writes directly to licenses.app_scope and licenses.api_key_id when the columns exist.
+- API endpoints remain unchanged.
+- No existing database table/column was removed or renamed.
+
+Included SQL:
+- migration-v5-hotfix.sql

@@ -1,0 +1,29 @@
+CHANGELOG - Version 5 App/Scope Hotfix
+
+১) API Key App Name & Scope Label Save Fix
+- admin/api_keys.php এখন page load-এর সময় প্রয়োজনীয় additive v5 columns ensure করে।
+- api_keys.app_name এবং api_keys.scope_label missing থাকলে safe ALTER TABLE দিয়ে যোগ করার চেষ্টা করবে।
+- create/update দুই ক্ষেত্রেই App Name এবং Scope Label database-এ save হবে।
+- save ব্যর্থ হলে silent ignore না করে admin page-এ পরিষ্কার error দেখাবে।
+
+২) License Create Allowed App/Scope/API Key Field Fix
+- admin/license.php-তে Allowed App / Scope / API Key selector সবসময় দেখা যাবে।
+- active API key না থাকলে warning দেখাবে, field hide করবে না।
+- license create করলে selected API key id licenses.api_key_id-এ এবং app/scope label licenses.app_scope-এ save হবে।
+
+৩) Bulk License Create UI Fix
+- bulk create form table toolbar থেকে আলাদা clean card-এ নেওয়া হয়েছে।
+- bulk_count, bulk_hours, bulk_device_limit, bulk_license_api_key_id input name একই রাখা হয়েছে।
+- Bulk-created license-ও selected API key/app scope-এর সাথে bind হবে।
+
+৪) Safe Schema Helper
+- includes/admin_helpers.php-এ ensureColumn() এবং ensureV5Schema() যোগ করা হয়েছে।
+- এটি শুধু missing additive column যোগ করে; কোনো table/column delete/rename/alter করে না।
+
+৫) API Contract
+- /api/verify.php untouched.
+- /api/check_license.php untouched.
+- URL, method, input name, JSON output key/type অপরিবর্তিত।
+
+৬) Verification
+- সব PHP ফাইলে syntax lint pass করেছে।

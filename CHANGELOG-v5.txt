@@ -1,0 +1,8 @@
+Version 5
+- API Key App Name / Scope Label is now editable on admin/api_keys.php.
+- License creation can bind a license to one specific API key/app.
+- Bulk license creation can bind generated licenses to one specific API key/app.
+- License verification now enforces licenses.api_key_id when present.
+- Scoped licenses without api_key_id still enforce app_scope against API key app_name/scope_label.
+- Existing endpoints, method names, JSON keys, and old unscoped license behavior are preserved.
+- Added migration-v5.sql with additive columns only.

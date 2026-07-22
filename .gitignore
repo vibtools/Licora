@@ -1,0 +1,34 @@
+# Private configuration and environment files
+.env
+.env.*
+!.env.example
+includes/config.local.php
+config.local.php
+
+# Logs, exports, backups, and generated operational data
+*.log
+logs/
+backups/
+exports/
+*.sql.gz
+*.zip
+!release/*.zip
+
+# Runtime and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test and analysis caches
+.phpunit.result.cache
+coverage/
+.cache/
+.tmp/
+tmp/
+
+# Dependency folders if maintainers add development tooling locally
+vendor/
+node_modules/
