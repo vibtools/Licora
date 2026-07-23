@@ -76,3 +76,13 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </div>
     </div>
 </nav>
+<?php if (AdminHelpers::hasTemporaryAdminCredentials()): ?>
+<div class="container-fluid mt-2">
+    <div class="alert alert-danger border-danger shadow-sm mb-2" role="alert">
+        <strong><i class="bi bi-exclamation-octagon-fill"></i> Critical security warning:</strong>
+        Temporary administrator credentials are still active for the <code>admin</code> account.
+        A Super Admin must change that account password before internet exposure.
+        Licora has not disabled, deleted, or changed the account automatically.
+    </div>
+</div>
+<?php endif; ?>

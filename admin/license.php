@@ -144,6 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
     $ids = array_values(array_filter(array_map('intval', $_POST['license_ids'] ?? [])));
     $bulkAction = $_POST['bulk_action'] ?? '';
     if ($bulkAction === 'export') {
+        AdminHelpers::requireManage();
         if (empty($ids)) { $stmt = $db->query("SELECT id, license_key, status, expires_at, device_limit, total_devices, created_at, notes FROM licenses ORDER BY created_at DESC"); }
         else { $ph = implode(',', array_fill(0, count($ids), '?')); $stmt = $db->prepare("SELECT id, license_key, status, expires_at, device_limit, total_devices, created_at, notes FROM licenses WHERE id IN ($ph) ORDER BY created_at DESC"); $stmt->execute($ids); }
         AdminHelpers::csv('licenses-export.csv', ['id','license_key','status','expires_at','device_limit','total_devices','created_at','notes'], $stmt->fetchAll(PDO::FETCH_NUM));

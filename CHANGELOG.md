@@ -8,6 +8,33 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Resolve the security and correctness items listed in the forensic audit through separate reviewed pull requests.
 
+## [5.0.1.1] - 2026-07-23
+
+### Security
+
+- Corrected `Authorization: Bearer TOKEN` parsing while preserving `X-API-Key`, raw authorization-token, and JSON API-key compatibility.
+- Enforced Viewer read-only behavior for license export, API-key testing, and full API-key display.
+- Added installed-state detection and CSRF protection to the existing installer flow.
+- Added a critical admin-panel warning when the seeded temporary administrator credentials remain active.
+- Added authenticated, versioned `v2:` encryption while preserving decryption of existing legacy encrypted values.
+- Enforced the existing 30-minute inactivity timeout on every authenticated admin-page check.
+- Serialized rate-limit counter updates with MySQL/MariaDB advisory locks and retained the previous implementation as a compatibility fallback.
+- Added permission-denial/session-invalidation audit events and removed API-key values/hash prefixes from development logs.
+- Added backward-compatible `nosniff` and same-origin referrer-policy headers.
+
+### Added
+
+- `tests/compatibility_regression.php`.
+- `RELEASE_NOTES_v5.0.1.1.md`.
+- `PHASE1_SECURITY_FIX_SUMMARY.md`.
+
+### Compatibility
+
+- No database schema, migration, table, column, index, foreign key, or trigger changed.
+- No API URL, JSON field, route, folder, class, method, license format, license-generation algorithm, cron entry point, CSS, or JavaScript changed.
+- Existing license keys, API keys, encrypted values, devices, logs, and audit history remain compatible.
+- The legacy `/api/check_license.php` endpoint remains unauthenticated by default because mandatory authentication would break existing clients; its response contract is unchanged.
+
 ## [5.0.1] - 2026-07-22
 
 ### Fixed

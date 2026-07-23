@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_api_key'])) {
 
 // API কী টেস্ট
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_api_key'])) {
+    AdminHelpers::requireManage();
     Security::requireCSRFToken($_POST['csrf_token'] ?? '');
     $apiKey = trim($_POST['test_key'] ?? '');
     $keyId = (int)($_POST['key_id'] ?? 0);
@@ -140,7 +141,7 @@ if (isset($_GET['delete_key'])) {
 }
 
 $newKeyHtml = '';
-if (isset($_GET['new_key']) && isset($_SESSION['new_api_key'])) {
+if (isset($_GET['new_key']) && isset($_SESSION['new_api_key']) && AdminHelpers::canManage()) {
     $newKey = $_SESSION['new_api_key'];
     if ((string)$newKey['id'] === (string)$_GET['new_key']) {
         $newKeyName = Security::escape($newKey['name']);
@@ -255,8 +256,8 @@ function testAPIKey($apiKey, $db, $url) {
                             <?php else: ?>
                                 <?php foreach ($apiKeys as $key):
                                     $decryptedKey = '';
-                                    $displayKey = 'Not available for old key';
-                                    if (!empty($key['api_key_encrypted'])) {
+                                    $displayKey = AdminHelpers::canManage() ? 'Not available for old key' : 'Restricted for Viewer role';
+                                    if (AdminHelpers::canManage() && !empty($key['api_key_encrypted'])) {
                                         $decryptedKey = Security::decrypt($key['api_key_encrypted']);
                                         $displayKey = $decryptedKey ?: 'Unable to decrypt';
                                     }

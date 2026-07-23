@@ -86,14 +86,15 @@ $possible_server_keys = [
     'HTTP_X_APIKEY', 
     'HTTP_API_KEY',
     'HTTP_APIKEY',
-    'HTTP_AUTHORIZATION'
+    'HTTP_AUTHORIZATION',
+    'REDIRECT_HTTP_AUTHORIZATION'
 ];
 
 foreach ($possible_server_keys as $header) {
     if (!empty($_SERVER[$header])) {
         $apiKey = $_SERVER[$header];
         if ($debug_mode) {
-            error_log("Found API Key in \$_SERVER['$header']: " . substr($apiKey, 0, 30) . "...");
+            error_log("Found API Key in \$_SERVER['$header']: [redacted]");
         }
         break;
     }
@@ -103,7 +104,7 @@ foreach ($possible_server_keys as $header) {
 if (empty($apiKey) && function_exists('getallheaders')) {
     $headers = getallheaders();
     if ($debug_mode) {
-        error_log("Checking getallheaders(): " . json_encode($headers));
+        error_log("Checking getallheaders() header names: " . implode(", ", array_keys($headers)));
     }
     
     $possible_header_names = [
@@ -119,7 +120,7 @@ if (empty($apiKey) && function_exists('getallheaders')) {
         if (isset($headers[$header_name])) {
             $apiKey = $headers[$header_name];
             if ($debug_mode) {
-                error_log("Found API Key in getallheaders()['$header_name']: " . substr($apiKey, 0, 30) . "...");
+                error_log("Found API Key in getallheaders()['$header_name']: [redacted]");
             }
             break;
         }
@@ -131,7 +132,7 @@ if (empty($apiKey) && function_exists('getallheaders')) {
         if (preg_match('/Bearer\s+(\S+)/i', $auth_header, $matches)) {
             $apiKey = $matches[1];
             if ($debug_mode) {
-                error_log("Extracted API Key from Authorization Bearer: " . substr($apiKey, 0, 30) . "...");
+                error_log("Extracted API Key from Authorization Bearer: [redacted]");
             }
         }
     }
@@ -145,7 +146,7 @@ if (empty($apiKey)) {
         if (json_last_error() === JSON_ERROR_NONE && isset($json_data['api_key'])) {
             $apiKey = $json_data['api_key'];
             if ($debug_mode) {
-                error_log("Found API Key in JSON data: " . substr($apiKey, 0, 30) . "...");
+                error_log("Found API Key in JSON data: [redacted]");
             }
         }
     }
@@ -153,8 +154,7 @@ if (empty($apiKey)) {
 
 // এপিআই কি ক্লিনআপ
 $originalApiKey = $apiKey;
-$apiKey = trim($apiKey);
-$apiKey = preg_replace('/\s+/', '', $apiKey);
+$apiKey = Security::normalizeAPIKeyCredential($apiKey);
 
 if ($debug_mode) {
     error_log("--- API Key Processing ---");
@@ -195,20 +195,18 @@ if (!$apiValidation) {
     if ($debug_mode) {
         error_log("API Key validation FAILED!");
         
-        // ডাটাবেস থেকে সব এপিআই কি চেক করুন
+        // Report only aggregate configuration metadata; never log key hashes or values.
         try {
             $db = Database::getInstance();
-            $stmt = $db->query("SELECT id, name, LEFT(api_key_hash, 20) as hash_prefix FROM api_keys");
-            $all_keys = $stmt->fetchAll();
-            error_log("All API Keys in database:");
-            foreach ($all_keys as $key) {
-                error_log("  ID: {$key['id']}, Name: {$key['name']}, Hash: {$key['hash_prefix']}...");
-            }
+            $stmt = $db->query("SELECT COUNT(*) AS key_count FROM api_keys");
+            $keyCount = (int)$stmt->fetchColumn();
+            error_log("Configured API key count: " . $keyCount);
         } catch (Exception $e) {
             error_log("Database error: " . $e->getMessage());
         }
     }
     
+    error_log("Security event: API key validation failed for endpoint verify from IP " . Security::getClientIP());
     http_response_code(401);
     echo json_encode([
         'success' => false, 

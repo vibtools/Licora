@@ -84,6 +84,7 @@ class AdminHelpers {
 
     public static function requireManage() {
         if (!self::canManage()) {
+            self::audit('security', null, 'permission_denied_manage', 'Manager permission required');
             http_response_code(403);
             die('Permission denied');
         }
@@ -91,9 +92,41 @@ class AdminHelpers {
 
     public static function requireDelete() {
         if (!self::canDelete()) {
+            self::audit('security', null, 'permission_denied_delete', 'Super Admin permission required');
             http_response_code(403);
             die('Permission denied');
         }
+    }
+
+    public static function hasTemporaryAdminCredentials() {
+        $cacheTime = (int)($_SESSION['licora_temporary_admin_checked_at'] ?? 0);
+        if ($cacheTime > 0 && (time() - $cacheTime) < 60) {
+            return !empty($_SESSION['licora_temporary_admin_detected']);
+        }
+
+        $detected = false;
+        try {
+            if (self::tableExists('admin_users')) {
+                $db = Database::getInstance();
+                $stmt = $db->prepare("SELECT password FROM admin_users WHERE username = :username LIMIT 1");
+                $stmt->execute([':username' => 'admin']);
+                $row = $stmt->fetch();
+                $detected = $row && Security::verifyPassword('ChangeMe!2026', (string)$row['password']);
+            }
+        } catch (Throwable $e) {
+            error_log('Temporary administrator credential check failed: ' . $e->getMessage());
+        }
+
+        $_SESSION['licora_temporary_admin_checked_at'] = time();
+        $_SESSION['licora_temporary_admin_detected'] = $detected ? 1 : 0;
+        return $detected;
+    }
+
+    public static function clearTemporaryAdminCredentialCache() {
+        unset(
+            $_SESSION['licora_temporary_admin_checked_at'],
+            $_SESSION['licora_temporary_admin_detected']
+        );
     }
 
     public static function audit($type, $id, $action, $details = '') {
