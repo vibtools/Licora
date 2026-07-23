@@ -1,8 +1,8 @@
 # Licora v5.0.1.1 — High Security Stabilization
 
-**Release date:** 2026-07-23  
-**Release type:** Backward-compatible security stabilization  
-**Baseline:** `v5.0.1-baseline`  
+**Release date:** 2026-07-23
+**Release type:** Backward-compatible security stabilization
+**Baseline:** `v5.0.1-baseline`
 **Baseline source commit:** `c3db5759ac2539ab1525c73530ef5984b4b73ed6`
 
 ## Summary
