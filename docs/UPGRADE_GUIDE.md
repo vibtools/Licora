@@ -59,3 +59,15 @@ A configured deployment with a temporarily unavailable database retains the exis
 - Settings
 - Installer lock
 - Legacy encrypted values
+
+## Upgrade from v5.1.0 to v5.1.1
+
+1. Back up the database and private runtime files.
+2. Record environment variables and cron configuration.
+3. Replace application source with v5.1.1.
+4. Preserve all private configuration and encryption-key material.
+5. Do not run the first-run installer.
+6. Run repository validation.
+7. Verify admin, API, license, device, cron, export, settings, logging, and legacy API behavior.
+
+No database migration is required. Existing installation flags may continue recording the original installation version; they are installation records, not an upgrade ledger.

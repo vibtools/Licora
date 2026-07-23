@@ -52,6 +52,21 @@ $validApplication = [
 ];
 $assert(licora_installer_validate_application($validApplication) === [], 'valid application configuration accepted');
 
+$unsafeUrl = $validApplication;
+$unsafeUrl['base_url'] = 'https://user:password@licenses.example.com/licora';
+$assert(licora_installer_validate_application($unsafeUrl) !== [], 'base URL credentials rejected');
+$unsafeUrl['base_url'] = 'https://licenses.example.com/licora?token=secret';
+$assert(licora_installer_validate_application($unsafeUrl) !== [], 'base URL query rejected');
+$unsafeUrl['base_url'] = 'https://licenses.example.com/licora#fragment';
+$assert(licora_installer_validate_application($unsafeUrl) !== [], 'base URL fragment rejected');
+
+$unsafeMail = $validApplication;
+$unsafeMail['mail_from_name'] = "Licora\r\nBcc: attacker@example.com";
+$assert(licora_installer_validate_application($unsafeMail) !== [], 'mail-from line break rejected');
+
+$assert(licora_installer_generated_secret_is_valid(str_repeat('a', 64)), 'generated secret validation accepted');
+$assert(!licora_installer_generated_secret_is_valid('replace-me'), 'invalid generated secret rejected');
+
 $sql = "CREATE TABLE sample (id INT);\nDELIMITER $$\nCREATE TRIGGER sample_trigger BEFORE INSERT ON sample FOR EACH ROW SET NEW.id = 1$$\nDELIMITER ;\nINSERT INTO sample (id) VALUES (1);\n";
 $statements = licora_installer_sql_statements($sql);
 $assert(count($statements) === 3, 'schema parser handles custom delimiters');
@@ -74,7 +89,7 @@ $data = [
     ],
 ];
 $config = licora_installer_build_config($data);
-$assert(strpos($config, "define('APP_VERSION', '5.1.0')") !== false, 'generated configuration targets v5.1.0');
+$assert(strpos($config, "define('APP_VERSION', '5.1.1')") !== false, 'generated configuration targets v5.1.1');
 $assert(strpos($config, "define('DB_PORT', 3306)") !== false, 'generated configuration includes database port');
 
 $encrypted = licora_installer_encrypt('installer-secret-test', str_repeat('2', 64));
@@ -86,10 +101,10 @@ $assert(preg_match('/^[A-Z0-9]{8}-[A-Z0-9]{8}-[A-Z0-9]{8}-[A-Z0-9]{8}$/', $licen
 
 $tempRoot = sys_get_temp_dir() . '/licora-installer-test-' . bin2hex(random_bytes(5));
 mkdir($tempRoot . '/includes', 0700, true);
-$assert(licora_installation_write_flag($tempRoot, '5.1.0'), 'installation flag written atomically');
+$assert(licora_installation_write_flag($tempRoot, '5.1.1'), 'installation flag written atomically');
 $flag = json_decode((string)file_get_contents($tempRoot . '/includes/.licora-installed'), true);
 $assert(($flag['product'] ?? '') === 'Licora', 'installation flag identifies Licora');
-$assert(($flag['version'] ?? '') === '5.1.0', 'installation flag records version');
+$assert(($flag['version'] ?? '') === '5.1.1', 'installation flag records version');
 $assert(!isset($flag['database_password']) && !isset($flag['encryption_key']), 'installation flag contains no secrets');
 
 $assert(
