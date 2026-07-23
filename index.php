@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/includes/config.php';
 $adminUrl = 'admin/login.php';
 ?>
 <!DOCTYPE html>

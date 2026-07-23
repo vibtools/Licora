@@ -1,79 +1,110 @@
 # Installation
 
-## 1. Prepare the environment
+Licora v5.1.0 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
 
-Install PHP 8.0 or later with `pdo_mysql`, `openssl`, and `json`. Create a dedicated database and a database user limited to that database. Enable HTTPS before production use.
+## Requirements
 
-## 2. Place files
+- PHP 8.0 or newer
+- `pdo`, `pdo_mysql`, `openssl`, and `json`
+- MySQL or MariaDB
+- A writable `includes/` directory during first installation
+- A readable `database.sql`
+- HTTPS for production use
 
-Deploy the repository under the intended application path. On Apache, allow the supplied `.htaccess` rules. On Nginx, manually reproduce the deny rules in [SECURITY_DEPLOYMENT.md](SECURITY_DEPLOYMENT.md).
+## Fresh installation with the wizard
 
-## 3. Choose an installation method
+1. Deploy the complete Licora release.
+2. Open `/install` or the preserved `/install.php` route.
+3. Complete the ten installer steps.
+4. Use a dedicated database account with permission to create or initialize the target database.
+5. Supply a strong administrator password. No default administrator credential is retained by the wizard.
+6. Leave the table-prefix field blank. Fixed table names are part of the frozen compatibility contract.
+7. Choose whether to install optional DEMO data.
+8. Confirm the installation lock and complete installation.
+9. Sign in manually at `admin/login.php`.
 
-### Installer
+The installer executes the existing `database.sql` schema and migrations. No new table, column, index, constraint, trigger, or migration is introduced by v5.1.0.
 
-Open `install.php` once in a private staging environment. Enter the database host, name, username, and password. The installer creates/selects the database, imports `database.sql`, generates cryptographic configuration values, and writes `includes/config.local.php`.
+## Installation detection
 
-Immediately after completion:
+Before normal web application boot, Licora checks installation state.
 
-1. Sign in at `admin/login.php`.
-2. Change the temporary password.
-3. Remove or deny `install.php`.
-4. Confirm that `includes/config.local.php` is not web-accessible.
+- No configuration: redirect to `/install`.
+- Incomplete fresh database: redirect to `/install`.
+- Valid existing installation: continue normal application boot.
+- Valid legacy installation without a flag: continue normal boot and create the flag when safe.
+- Configured installation with a temporary database outage: preserve the existing database-error flow and never reopen the installer.
+- Completed installation: installer routes display `Installation already completed.`
 
-### Installer lock and manual recovery
+CLI execution is not redirected by the first-run guard.
 
-After `includes/config.local.php` is created, or when database environment configuration is detected, `install.php` returns HTTP 403 and does not execute the installation form.
+## Installation lock
+
+A successful wizard run writes:
+
+- `includes/config.local.php`
+- `includes/.licora-installed`
+
+The flag stores only product, version, and installation timestamp. It contains no database password, application key, encryption key, administrator password, or generated token.
+
+Do not commit either private runtime file.
+
+## Installer recovery
 
 For intentional recovery only:
 
-1. Put the site in maintenance mode or remove public access.
+1. Remove public access or place the server in private maintenance mode.
 2. Back up the complete database.
-3. Copy `includes/config.local.php` outside the web root.
-4. If `includes/.licora-encryption.key` exists, copy it outside the web root with the configuration backup.
-5. Temporarily move the installation-lock configuration only while performing the recovery.
-6. Restore secure configuration immediately after recovery.
-7. Confirm that `install.php` is locked again before restoring public access.
+3. Back up `includes/config.local.php`.
+4. Back up `includes/.licora-encryption.key` when present.
+5. Back up `includes/.licora-installed`.
+6. Follow the recovery procedure in `FIRST_RUN_GUIDE.md`.
+7. Restore secure private configuration and the lock before reopening public access.
 
-Do not delete or regenerate an existing encryption key unless loss of access to encrypted API-key copies and encrypted license values is acceptable.
+Never delete or regenerate an existing encryption key unless loss of access to encrypted API-key copies and encrypted license values is acceptable.
 
-### Manual import
+## Manual installation
+
+The existing manual process remains supported.
 
 ```bash
 mysql --host=localhost --user=license_app --password license_system < database.sql
 ```
 
-Create `includes/config.local.php` from `config.sample.php` and replace every placeholder. Alternatively, provide environment variables.
+Create `includes/config.local.php` from `config.sample.php`, replace every placeholder, and set secure file permissions. Manual installations may create `includes/.licora-installed` with non-secret product/version metadata, or allow Licora to backfill it after the first valid web request.
 
-## 4. Temporary local account
-
-The sanitized schema creates a local-only account:
+The sanitized schema includes a temporary local-development account for manual import compatibility:
 
 - Username: `admin`
 - Password: `ChangeMe!2026`
 
-Change it immediately. Do not expose a fresh installation to the internet while the temporary account is active.
+Change it immediately. The v5.1.0 wizard replaces that temporary row before installation completes.
 
-## 5. Configure cron
+## Database port
 
-Example scheduler entries:
+The wizard and runtime support `DB_PORT`. Existing deployments without that constant continue using port `3306`.
+
+## Cron
+
+Example entries:
 
 ```cron
-*/5 * * * * /usr/bin/php /var/www/license-system/cron/cleanup.php >> /var/log/license-system-cleanup.log 2>&1
-0 8 * * * /usr/bin/php /var/www/license-system/cron/check_expiring.php >> /var/log/license-system-expiry.log 2>&1
+*/5 * * * * /usr/bin/php /var/www/licora/cron/cleanup.php >> /var/log/licora-cleanup.log 2>&1
+0 8 * * * /usr/bin/php /var/www/licora/cron/check_expiring.php >> /var/log/licora-expiry.log 2>&1
 ```
 
-The scripts are intended for CLI execution. The repository denies `cron/` over Apache; add equivalent Nginx rules.
+## Verification
 
-## 6. Verify the deployment
+After installation:
 
-- Open `admin/health.php` while authenticated.
+- Sign in at `admin/login.php`.
+- Open `admin/health.php`.
 - Create a disposable API key and license.
-- Verify the license with `X-API-Key`.
-- Confirm device registration and logs.
-- Test backup restore in a separate database.
-- Run `bash scripts/validate.sh` on the deployed source tree.
+- Verify with `X-API-Key` and Bearer authentication.
+- Confirm device registration and audit logs.
+- Test backup restore separately.
+- Run `bash scripts/validate.sh`.
 
-## Upgrades
+## Upgrade installations
 
-Apply migration files in chronological order only after a backup. See [MIGRATIONS.md](MIGRATIONS.md).
+Existing v5.0.1 and v5.0.1.1 deployments must not run the first-run wizard. Preserve private configuration and encrypted-key material, replace application source, and follow `UPGRADE_GUIDE.md`.

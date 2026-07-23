@@ -3,7 +3,10 @@
 .env.*
 !.env.example
 includes/config.local.php
+includes/config.local.php.installing.*
 includes/.licora-encryption.key
+includes/.licora-installed
+includes/.licora-installed.installing.*
 config.local.php
 
 # Logs, exports, backups, and generated operational data

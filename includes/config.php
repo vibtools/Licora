@@ -34,6 +34,7 @@ if (!function_exists('env_value')) {
 
 // ডেটাবেস কনফিগারেশন
 if (!defined('DB_HOST')) define('DB_HOST', env_value('LICENSE_DB_HOST', env_value('DB_HOST', 'localhost')));
+if (!defined('DB_PORT')) define('DB_PORT', (int)env_value('LICENSE_DB_PORT', env_value('DB_PORT', 3306)));
 if (!defined('DB_NAME')) define('DB_NAME', env_value('LICENSE_DB_NAME', env_value('DB_NAME', '')));
 if (!defined('DB_USER')) define('DB_USER', env_value('LICENSE_DB_USER', env_value('DB_USER', '')));
 if (!defined('DB_PASS')) define('DB_PASS', env_value('LICENSE_DB_PASS', env_value('DB_PASS', '')));
@@ -41,10 +42,14 @@ if (!defined('DB_PASS')) define('DB_PASS', env_value('LICENSE_DB_PASS', env_valu
 // এপ্লিকেশন সেটিংস
 if (!defined('APP_NAME')) define('APP_NAME', env_value('APP_NAME', 'License System'));
 if (!defined('APP_URL')) define('APP_URL', env_value('APP_URL', 'http://localhost'));
-if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.0.1.1'));
+if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.1.0'));
+if (!defined('APP_TIMEZONE')) define('APP_TIMEZONE', env_value('APP_TIMEZONE', 'Asia/Dhaka'));
+if (!defined('APP_LOCALE')) define('APP_LOCALE', env_value('APP_LOCALE', 'en'));
+if (!defined('MAIL_FROM_NAME')) define('MAIL_FROM_NAME', env_value('MAIL_FROM_NAME', APP_NAME));
 if (!defined('ENVIRONMENT')) define('ENVIRONMENT', env_value('APP_ENV', 'production'));
 
 // সিকিউরিটি সেটিংস
+if (!defined('APP_KEY')) define('APP_KEY', env_value('LICENSE_APP_KEY', env_value('APP_KEY', '')));
 if (!defined('ENCRYPTION_KEY')) define('ENCRYPTION_KEY', env_value('LICENSE_ENCRYPTION_KEY', ''));
 if (!defined('CSRF_SECRET')) define('CSRF_SECRET', env_value('LICENSE_CSRF_SECRET', ''));
 if (!defined('JWT_SECRET')) define('JWT_SECRET', env_value('LICENSE_JWT_SECRET', ''));
@@ -53,7 +58,12 @@ if (!defined('JWT_SECRET')) define('JWT_SECRET', env_value('LICENSE_JWT_SECRET',
 if (!defined('API_RATE_LIMIT')) define('API_RATE_LIMIT', (int)env_value('API_RATE_LIMIT', 1000));
 if (!defined('API_VERSION')) define('API_VERSION', env_value('API_VERSION', 'v1'));
 
-date_default_timezone_set('Asia/Dhaka');
+// The installation guard is additive and only redirects incomplete fresh installations.
+// Valid existing installations and temporary database outages retain the previous boot flow.
+require_once __DIR__ . '/installation.php';
+licora_enforce_installation_guard(dirname(__DIR__));
+
+date_default_timezone_set(APP_TIMEZONE);
 
 // এরর রিপোর্টিং
 if (ENVIRONMENT === 'production') {

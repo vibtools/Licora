@@ -49,6 +49,7 @@ foreach ($expectedImmutableHashes as $path => $expectedHash) {
 $publicRoutes = [
     'index.php',
     'install.php',
+    'install/index.php',
     'api/verify.php',
     'api/check_license.php'
 ];
@@ -75,7 +76,9 @@ foreach ($adminRoutes as $path) {
 }
 
 $config = $read('includes/config.php');
-$assert(strpos($config, "env_value('APP_VERSION', '5.0.1.1')") !== false, 'application version is v5.0.1.1');
+$assert(strpos($config, "env_value('APP_VERSION', '5.1.0')") !== false, 'application version is v5.1.0');
+$assert(strpos($config, "if (!defined('DB_PORT'))") !== false, 'database port support is additive');
+$assert(strpos($config, 'licora_enforce_installation_guard') !== false, 'first-run guard is enabled before application boot');
 
 $security = $read('includes/security.php');
 $assert(strpos($security, '/^[A-Z0-9]{8}-[A-Z0-9]{8}-[A-Z0-9]{8}-[A-Z0-9]{8}$/') !== false, 'license format unchanged');
@@ -127,7 +130,7 @@ $assert(
     preg_match('/isset\(\$_POST\[\'test_api_key\'\]\)\) \{\s*AdminHelpers::requireManage\(\);/s', $apiAdmin) === 1,
     'viewer API key test action is blocked server-side'
 );
-$assert(strpos($apiAdmin, "Restricted for Viewer role") !== false, 'viewer secret display is restricted');
+$assert(strpos($apiAdmin, 'Restricted for Viewer role') !== false, 'viewer secret display is restricted');
 
 $auth = $read('includes/auth.php');
 foreach ([
@@ -145,8 +148,32 @@ foreach ([
 $assert(strpos($auth, '$timeout = 30 * 60;') !== false, 'existing 30-minute session timeout enforced');
 
 $installer = $read('install.php');
-$assert(strpos($installer, 'installer_is_locked()') !== false, 'installer lock detection present');
-$assert(strpos($installer, 'installer_csrf_token') !== false, 'installer CSRF protection present');
+$installationHelper = $read('includes/installation.php');
+foreach ([
+    'installer_csrf_token',
+    'Complete Installation',
+    'Installation already completed.',
+    'Step <?php echo $step; ?> of 10',
+] as $marker) {
+    $assert(strpos($installer, $marker) !== false, 'smart installer marker present: ' . $marker);
+}
+foreach ([
+    'licora_enforce_installation_guard',
+    'licora_installer_finalize',
+    'licora_installer_execute_schema',
+    'licora_installation_write_flag',
+    'Table prefixes are not supported by the frozen Licora database contract.',
+] as $marker) {
+    $assert(strpos($installationHelper, $marker) !== false, 'installation helper marker present: ' . $marker);
+}
+$assert(strpos($installationHelper, "'database.sql'") !== false, 'existing database schema is the installer source');
+$assert(strpos($installationHelper, "'products'") === false, 'installer creates no products table');
+$assert(strpos($installationHelper, "'customers'") === false, 'installer creates no customers table');
+$assert(strpos($installationHelper, "'roles'") === false, 'installer creates no roles table');
+$assert(strpos($installationHelper, "'permissions'") === false, 'installer creates no permissions table');
+
+$database = $read('includes/database.php');
+$assert(strpos($database, 'defined(\'DB_PORT\') ? (int)DB_PORT : 3306') !== false, 'database port defaults preserve existing connections');
 
 if ($failures !== []) {
     fwrite(STDERR, "Compatibility regression test failed:\n- " . implode("\n- ", $failures) . "\n");
