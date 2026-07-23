@@ -4,10 +4,19 @@ require_once 'config.php';
 class Database {
     private static $instance = null;
     private $connection;
-    
+
     private function __construct() {
         try {
-            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+            $host = (string)DB_HOST;
+            $port = defined('DB_PORT') ? (int)DB_PORT : 3306;
+            if (substr_count($host, ':') === 1) {
+                [$candidateHost, $candidatePort] = explode(':', $host, 2);
+                if ($candidateHost !== '' && ctype_digit($candidatePort)) {
+                    $host = $candidateHost;
+                    $port = (int)$candidatePort;
+                }
+            }
+            $dsn = "mysql:host=" . $host . ";port=" . $port . ";dbname=" . DB_NAME . ";charset=utf8mb4";
             $this->connection = new PDO($dsn, DB_USER, DB_PASS);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -21,14 +30,14 @@ class Database {
             }
         }
     }
-    
+
     public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new Database();
         }
         return self::$instance->connection;
     }
-    
+
     public static function close() {
         self::$instance = null;
     }
