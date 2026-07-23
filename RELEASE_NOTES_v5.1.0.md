@@ -91,6 +91,8 @@ After successful installation Licora creates:
 
 The installation flag contains only product, version, and installation timestamp. Installer files remain on disk but execution is disabled.
 
+The completion screen is a one-time same-session handoff. After installation, requests to installer steps 1-8 are denied even when the browser still holds the installer session. Step 10 clears the completion-session state before redirecting to the administrator login.
+
 ## Optional DEMO data
 
 When selected, the installer creates clearly marked DEMO data using existing tables only:

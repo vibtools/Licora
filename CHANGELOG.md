@@ -29,6 +29,11 @@ All notable public-release changes are recorded here. Historical project notes r
 - Updated database connection construction to honor `DB_PORT` while retaining port `3306` as the default.
 - Updated the root landing page to trigger the installation guard before normal output.
 
+### Fixed
+
+- Enforced the installation lock for same-session requests to installer steps 1-8 after successful installation.
+- Restricted the completion screen to one pending view and cleared completion-session state before the admin-login redirect.
+
 ### Compatibility
 
 - No database table, column, index, foreign key, trigger, or migration was changed.
