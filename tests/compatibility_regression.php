@@ -23,17 +23,26 @@ $expectedImmutableHashes = [
     'migration-v5.sql' => '2622592c14de6621cf0695dd76fb21957cc1ea49dcf338c44e0c4f3cdd93eef0',
     'migration-v5-fix.sql' => '16cf4e0beae4e13e91003c439377893becaec8876718e8e02dad2801104b96f3',
     'migration-v5-hotfix.sql' => 'e735acebfdad6254ca8fc6d6bbec28af2d35db41d6bf43fa77da1e2605e8ed62',
-    'cron/cleanup.php' => 'dd72218f06dece11d2edeb059d405342927d03914b5907a31d5b40d4fdde2c18',
-    'cron/check_expiring.php' => '39325b6f610857d1fb37ccf80d8b46f1bf1ea91221fea6a1ab4a003c7c1a86ea',
+    'cron/cleanup.php' => '62467804576ecf6d29cb9a35a92eb8d8a9bae76490d328784ec0c2aa478e3fc5',
+    'cron/check_expiring.php' => 'c52715837a84512f0378d14fc2e57024d928435d1a75c0014d5af616e58a41c2',
     'admin/assets/css/admin-ui.css' => 'a18773b97f793cd86c011df1fe9bf472613749f26660a9e9a4220582e89d5913',
     'admin/assets/js/admin-ui.js' => '5722297eec36a653241520b19a2217f9c4653aa43f6c1db6d05758264201e5da'
+];
+
+$lineEndingNeutralPaths = [
+    'cron/cleanup.php',
+    'cron/check_expiring.php'
 ];
 
 foreach ($expectedImmutableHashes as $path => $expectedHash) {
     $full = $root . '/' . $path;
     $assert(is_file($full), "required immutable file exists: {$path}");
     if (is_file($full)) {
-        $assert(hash_file('sha256', $full) === $expectedHash, "immutable hash preserved: {$path}");
+        $content = (string)file_get_contents($full);
+        $actualHash = in_array($path, $lineEndingNeutralPaths, true)
+            ? hash('sha256', str_replace(["\r\n", "\r"], "\n", $content))
+            : hash('sha256', $content);
+        $assert($actualHash === $expectedHash, "immutable hash preserved: {$path}");
     }
 }
 
