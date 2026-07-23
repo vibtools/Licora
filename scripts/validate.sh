@@ -4,28 +4,31 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-echo "[1/6] Checking required files"
-required=(README.md LICENSE SECURITY.md CONTRIBUTING.md database.sql includes/config.php tests/security_smoke.php)
+echo "[1/7] Checking required files"
+required=(README.md LICENSE SECURITY.md CONTRIBUTING.md database.sql includes/config.php tests/security_smoke.php tests/compatibility_regression.php RELEASE_NOTES_v5.0.1.1.md)
 for path in "${required[@]}"; do
   test -f "$path" || { echo "Missing required file: $path" >&2; exit 1; }
 done
 
-echo "[2/6] PHP syntax"
+echo "[2/7] PHP syntax"
 while IFS= read -r -d '' file; do
   php -l "$file" >/dev/null
 done < <(find . -type f -name '*.php' -not -path './vendor/*' -print0 | sort -z)
 
-echo "[3/6] Security smoke test"
+echo "[3/7] Security smoke test"
 php tests/security_smoke.php
 
-echo "[4/6] JavaScript syntax"
+echo "[4/7] Compatibility regression test"
+php tests/compatibility_regression.php
+
+echo "[5/7] JavaScript syntax"
 if command -v node >/dev/null 2>&1; then
   node --check admin/assets/js/admin-ui.js
 else
   echo "Node.js not installed; JavaScript syntax check skipped."
 fi
 
-echo "[5/6] Public-release marker scan"
+echo "[6/7] Public-release marker scan"
 python3 - <<'PY_PUBLIC_MARKER_SCAN'
 from pathlib import Path
 import base64
@@ -54,7 +57,7 @@ if violations:
     raise SystemExit('Private deployment marker detected in: ' + ', '.join(sorted(violations)))
 PY_PUBLIC_MARKER_SCAN
 
-echo "[6/6] SQL seed scope"
+echo "[7/7] SQL seed scope"
 python3 - <<'PY_VALIDATE_SQL'
 from pathlib import Path
 import re

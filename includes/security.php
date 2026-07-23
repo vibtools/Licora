@@ -40,27 +40,151 @@ class Security {
         return !password_get_info($hash)['algo'] || password_needs_rehash($hash, PASSWORD_BCRYPT, ['cost' => 12]);
     }
 
-    private static function encryptionKey() {
+    private static function legacyEncryptionKey() {
         $source = ENCRYPTION_KEY ?: hash('sha256', __DIR__ . APP_URL . DB_NAME, true);
         return substr(hash('sha256', $source), 0, 32);
     }
 
+    private static function isUsableEncryptionSecret($value) {
+        $value = trim((string)$value);
+        if ($value === '') {
+            return false;
+        }
+        $lower = strtolower($value);
+        return strpos($lower, 'your-') === false && strpos($lower, 'change-this') === false;
+    }
+
+    private static function readLocalEncryptionKey($keyFile) {
+        if (!is_file($keyFile) || !is_readable($keyFile)) {
+            return '';
+        }
+        $value = trim((string)file_get_contents($keyFile));
+        return preg_match('/^[a-f0-9]{64}$/i', $value) ? $value : '';
+    }
+
+    private static function currentEncryptionSource() {
+        $candidates = [
+            defined('ENCRYPTION_KEY') ? ENCRYPTION_KEY : '',
+            defined('CSRF_SECRET') ? CSRF_SECRET : '',
+            defined('JWT_SECRET') ? JWT_SECRET : ''
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (self::isUsableEncryptionSecret($candidate)) {
+                return (string)$candidate;
+            }
+        }
+
+        $keyFile = __DIR__ . '/.licora-encryption.key';
+        $existing = self::readLocalEncryptionKey($keyFile);
+        if ($existing !== '') {
+            return $existing;
+        }
+
+        $generated = bin2hex(random_bytes(32));
+        $handle = @fopen($keyFile, 'x');
+        if ($handle !== false) {
+            $written = false;
+            try {
+                if (!flock($handle, LOCK_EX)) {
+                    throw new RuntimeException('Unable to lock local encryption key file.');
+                }
+                $bytes = fwrite($handle, $generated . PHP_EOL);
+                if ($bytes === false || $bytes < strlen($generated)) {
+                    throw new RuntimeException('Unable to persist local encryption key.');
+                }
+                fflush($handle);
+                $written = true;
+            } finally {
+                @flock($handle, LOCK_UN);
+                fclose($handle);
+                if (!$written) {
+                    @unlink($keyFile);
+                }
+            }
+            @chmod($keyFile, 0600);
+            return $generated;
+        }
+
+        // Another request may have created the key after the exclusive create attempt.
+        $existing = self::readLocalEncryptionKey($keyFile);
+        if ($existing !== '') {
+            return $existing;
+        }
+
+        throw new RuntimeException(
+            'A secure encryption key is unavailable. Configure LICENSE_ENCRYPTION_KEY or make the includes directory writable once.'
+        );
+    }
+
+    private static function currentEncryptionKeys() {
+        $master = hash('sha256', self::currentEncryptionSource(), true);
+        return [
+            'encryption' => hash_hmac('sha256', 'licora-encryption-v2', $master, true),
+            'authentication' => hash_hmac('sha256', 'licora-authentication-v2', $master, true)
+        ];
+    }
+
     public static function encrypt($data) {
-        $key = self::encryptionKey();
+        $keys = self::currentEncryptionKeys();
         $iv = random_bytes(16);
-        $encrypted = openssl_encrypt((string)$data, 'AES-256-CBC', $key, 0, $iv);
-        return base64_encode($iv . $encrypted);
+        $ciphertext = openssl_encrypt(
+            (string)$data,
+            'AES-256-CBC',
+            $keys['encryption'],
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+        if ($ciphertext === false) {
+            throw new RuntimeException('Encryption failed.');
+        }
+
+        $mac = hash_hmac('sha256', $iv . $ciphertext, $keys['authentication'], true);
+        return 'v2:' . base64_encode($iv . $mac . $ciphertext);
     }
 
     public static function decrypt($data) {
         if (empty($data)) {
             return '';
         }
-        $decoded = base64_decode((string)$data, true);
+
+        $data = (string)$data;
+        if (strpos($data, 'v2:') === 0) {
+            try {
+                $decoded = base64_decode(substr($data, 3), true);
+                if ($decoded === false || strlen($decoded) < 49) {
+                    return '';
+                }
+
+                $iv = substr($decoded, 0, 16);
+                $mac = substr($decoded, 16, 32);
+                $ciphertext = substr($decoded, 48);
+                $keys = self::currentEncryptionKeys();
+                $expectedMac = hash_hmac('sha256', $iv . $ciphertext, $keys['authentication'], true);
+                if (!hash_equals($expectedMac, $mac)) {
+                    return '';
+                }
+
+                $plain = openssl_decrypt(
+                    $ciphertext,
+                    'AES-256-CBC',
+                    $keys['encryption'],
+                    OPENSSL_RAW_DATA,
+                    $iv
+                );
+                return $plain === false ? '' : $plain;
+            } catch (Throwable $e) {
+                error_log('Versioned decryption failed: ' . $e->getMessage());
+                return '';
+            }
+        }
+
+        // Legacy v1 payload support. Existing encrypted licenses and API keys remain readable.
+        $decoded = base64_decode($data, true);
         if ($decoded === false || strlen($decoded) < 17) {
             return '';
         }
-        $key = self::encryptionKey();
+        $key = self::legacyEncryptionKey();
         $iv = substr($decoded, 0, 16);
         $encrypted = substr($decoded, 16);
         $plain = openssl_decrypt($encrypted, 'AES-256-CBC', $key, 0, $iv);
@@ -105,9 +229,17 @@ class Security {
         return preg_match('/^[A-Z0-9]{8}-[A-Z0-9]{8}-[A-Z0-9]{8}-[A-Z0-9]{8}$/', (string)$key);
     }
 
+    public static function normalizeAPIKeyCredential($credential) {
+        $credential = trim((string)$credential);
+        if (preg_match('/^Bearer\s+(.+)$/i', $credential, $matches)) {
+            $credential = trim($matches[1]);
+        }
+        return preg_replace('/\s+/', '', $credential);
+    }
+
     public static function validateAPIKey($apiKey) {
         $db = Database::getInstance();
-        $apiKey = preg_replace('/\s+/', '', trim((string)$apiKey));
+        $apiKey = self::normalizeAPIKeyCredential($apiKey);
         if ($apiKey === '') {
             return false;
         }
@@ -117,8 +249,7 @@ class Security {
         return $stmt->fetch();
     }
 
-    public static function checkRateLimit($ip, $endpoint, $limit = 100) {
-        $db = Database::getInstance();
+    private static function checkRateLimitWithoutAdvisoryLock($db, $ip, $endpoint, $limit) {
         $delete = $db->prepare("DELETE FROM rate_limits WHERE last_request < DATE_SUB(NOW(), INTERVAL 1 HOUR)");
         $delete->execute();
         $check = $db->prepare("SELECT request_count FROM rate_limits WHERE ip_address = :ip AND endpoint = :endpoint AND last_request > DATE_SUB(NOW(), INTERVAL 1 HOUR)");
@@ -135,6 +266,66 @@ class Security {
             $insert->execute([':ip' => $ip, ':endpoint' => $endpoint]);
         }
         return true;
+    }
+
+    public static function checkRateLimit($ip, $endpoint, $limit = 100) {
+        $db = Database::getInstance();
+        $ip = (string)$ip;
+        $endpoint = (string)$endpoint;
+        $limit = max(1, (int)$limit);
+        $lockName = 'licora_rl_' . substr(hash('sha256', $ip . '|' . $endpoint), 0, 48);
+        $lockAcquired = false;
+
+        try {
+            $lock = $db->prepare("SELECT GET_LOCK(:lock_name, 2)");
+            $lock->execute([':lock_name' => $lockName]);
+            $lockAcquired = ((int)$lock->fetchColumn() === 1);
+        } catch (Throwable $e) {
+            error_log('Rate limit advisory lock unavailable; using compatibility fallback: ' . $e->getMessage());
+            return self::checkRateLimitWithoutAdvisoryLock($db, $ip, $endpoint, $limit);
+        }
+
+        if (!$lockAcquired) {
+            return false;
+        }
+
+        try {
+            $delete = $db->prepare("DELETE FROM rate_limits WHERE last_request < DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+            $delete->execute();
+
+            $check = $db->prepare("
+                SELECT COALESCE(SUM(request_count), 0) AS request_count, MIN(id) AS first_id
+                FROM rate_limits
+                WHERE ip_address = :ip
+                  AND endpoint = :endpoint
+                  AND last_request > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+            ");
+            $check->execute([':ip' => $ip, ':endpoint' => $endpoint]);
+            $result = $check->fetch();
+            $requestCount = (int)($result['request_count'] ?? 0);
+
+            if ($requestCount >= $limit) {
+                return false;
+            }
+
+            $firstId = isset($result['first_id']) ? (int)$result['first_id'] : 0;
+            if ($firstId > 0) {
+                $update = $db->prepare("UPDATE rate_limits SET request_count = request_count + 1, last_request = NOW() WHERE id = :id");
+                $update->execute([':id' => $firstId]);
+            } else {
+                $insert = $db->prepare("INSERT INTO rate_limits (ip_address, endpoint) VALUES (:ip, :endpoint)");
+                $insert->execute([':ip' => $ip, ':endpoint' => $endpoint]);
+            }
+
+            return true;
+        } finally {
+            try {
+                $release = $db->prepare("SELECT RELEASE_LOCK(:lock_name)");
+                $release->execute([':lock_name' => $lockName]);
+            } catch (Throwable $e) {
+                error_log('Rate limit advisory lock release failed: ' . $e->getMessage());
+            }
+        }
     }
 }
 ?>

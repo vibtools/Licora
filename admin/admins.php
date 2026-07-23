@@ -40,6 +40,7 @@ try {
                     $stmt->execute([':u' => $username, ':p' => Security::hashPassword($password), ':e' => $email ?: null]);
                 }
                 AdminHelpers::audit('admin', (int)$db->lastInsertId(), 'admin_created', 'Admin user created: ' . $username);
+                AdminHelpers::clearTemporaryAdminCredentialCache();
                 $msg = 'Admin created successfully.';
             }
         }
@@ -65,6 +66,7 @@ try {
                     $stmt = $db->prepare('UPDATE admin_users SET ' . implode(', ', $sets) . ' WHERE id = :id');
                     $stmt->execute($params);
                     AdminHelpers::audit('admin', $id, 'admin_updated', 'Admin user updated');
+                    AdminHelpers::clearTemporaryAdminCredentialCache();
                     $msg = 'Admin updated successfully.';
                 }
             }
@@ -81,6 +83,7 @@ try {
                 $stmt = $db->prepare('DELETE FROM admin_users WHERE id = :id');
                 $stmt->execute([':id' => $id]);
                 AdminHelpers::audit('admin', $id, 'admin_deleted', 'Admin user deleted');
+                AdminHelpers::clearTemporaryAdminCredentialCache();
                 $msg = 'Admin deleted successfully.';
             }
         }

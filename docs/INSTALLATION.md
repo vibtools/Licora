@@ -21,6 +21,22 @@ Immediately after completion:
 3. Remove or deny `install.php`.
 4. Confirm that `includes/config.local.php` is not web-accessible.
 
+### Installer lock and manual recovery
+
+After `includes/config.local.php` is created, or when database environment configuration is detected, `install.php` returns HTTP 403 and does not execute the installation form.
+
+For intentional recovery only:
+
+1. Put the site in maintenance mode or remove public access.
+2. Back up the complete database.
+3. Copy `includes/config.local.php` outside the web root.
+4. If `includes/.licora-encryption.key` exists, copy it outside the web root with the configuration backup.
+5. Temporarily move the installation-lock configuration only while performing the recovery.
+6. Restore secure configuration immediately after recovery.
+7. Confirm that `install.php` is locked again before restoring public access.
+
+Do not delete or regenerate an existing encryption key unless loss of access to encrypted API-key copies and encrypted license values is acceptable.
+
 ### Manual import
 
 ```bash

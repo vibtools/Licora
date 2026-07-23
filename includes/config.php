@@ -14,6 +14,11 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 ob_start();
 
+if (!headers_sent()) {
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: same-origin');
+}
+
 // Optional private local override. Keep this file outside public web root where possible.
 $localConfig = __DIR__ . '/config.local.php';
 if (file_exists($localConfig)) {
@@ -36,7 +41,7 @@ if (!defined('DB_PASS')) define('DB_PASS', env_value('LICENSE_DB_PASS', env_valu
 // এপ্লিকেশন সেটিংস
 if (!defined('APP_NAME')) define('APP_NAME', env_value('APP_NAME', 'License System'));
 if (!defined('APP_URL')) define('APP_URL', env_value('APP_URL', 'http://localhost'));
-if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '2.0'));
+if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.0.1.1'));
 if (!defined('ENVIRONMENT')) define('ENVIRONMENT', env_value('APP_ENV', 'production'));
 
 // সিকিউরিটি সেটিংস
