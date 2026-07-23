@@ -91,6 +91,36 @@ $flag = json_decode((string)file_get_contents($tempRoot . '/includes/.licora-ins
 $assert(($flag['product'] ?? '') === 'Licora', 'installation flag identifies Licora');
 $assert(($flag['version'] ?? '') === '5.1.0', 'installation flag records version');
 $assert(!isset($flag['database_password']) && !isset($flag['encryption_key']), 'installation flag contains no secrets');
+
+$assert(
+    licora_installer_locked_request_action(false, 1, false, false, false) === 'continue',
+    'fresh installer requests continue'
+);
+$assert(
+    licora_installer_locked_request_action(true, 1, true, true, false) === 'locked',
+    'same-session root revisit remains locked after installation'
+);
+$assert(
+    licora_installer_locked_request_action(true, 2, true, true, false) === 'locked',
+    'same-session wizard steps remain locked after installation'
+);
+$assert(
+    licora_installer_locked_request_action(true, 9, true, true, false) === 'show_success',
+    'one pending completion request may show the success screen'
+);
+$assert(
+    licora_installer_locked_request_action(true, 9, true, false, true) === 'locked',
+    'success screen cannot be replayed after its pending view is consumed'
+);
+$assert(
+    licora_installer_locked_request_action(true, 10, true, false, true) === 'redirect_login',
+    'pending completion flow may redirect to admin login'
+);
+$assert(
+    licora_installer_locked_request_action(true, 10, true, false, false) === 'locked',
+    'direct step-ten access without the completion handoff remains locked'
+);
+
 @unlink($tempRoot . '/includes/.licora-installed');
 @rmdir($tempRoot . '/includes');
 @rmdir($tempRoot);
@@ -102,9 +132,15 @@ foreach ([
     'Installation already completed.',
     'Complete Installation',
     'Go to Login',
+    'licora_installer_success_view_pending',
+    'licora_installer_login_redirect_pending',
 ] as $marker) {
     $assert(strpos($installer, $marker) !== false, 'installer marker present: ' . $marker);
 }
+$assert(
+    strpos($installer, '&& !is_array($successData)') === false,
+    'success-session data no longer bypasses the installation lock'
+);
 
 if ($failures !== []) {
     fwrite(STDERR, "Installer smoke test failed:\n- " . implode("\n- ", $failures) . "\n");

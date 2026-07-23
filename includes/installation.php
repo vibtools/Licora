@@ -782,3 +782,34 @@ if (!function_exists('licora_installer_finalize')) {
         }
     }
 }
+
+if (!function_exists('licora_installer_locked_request_action')) {
+    /**
+     * Decide how an installer request is handled after installation.
+     *
+     * Only the one-time success handoff (step 9) and its subsequent login
+     * redirect (step 10) may proceed. Every other installed-state request,
+     * including same-session requests to steps 1-8, remains locked.
+     */
+    function licora_installer_locked_request_action(
+        bool $locked,
+        int $step,
+        bool $hasSuccessData,
+        bool $successViewPending,
+        bool $loginRedirectPending
+    ): string {
+        if (!$locked) {
+            return 'continue';
+        }
+
+        if ($step === 9 && $hasSuccessData && $successViewPending) {
+            return 'show_success';
+        }
+
+        if ($step === 10 && $hasSuccessData && $loginRedirectPending) {
+            return 'redirect_login';
+        }
+
+        return 'locked';
+    }
+}

@@ -43,8 +43,36 @@ function installer_render_locked(): void
     exit;
 }
 
+$requestedStep = filter_input(INPUT_GET, 'step', FILTER_VALIDATE_INT);
+$step = $requestedStep !== false && $requestedStep !== null ? max(1, min(10, (int)$requestedStep)) : 1;
 $successData = $_SESSION['licora_installer_success'] ?? null;
-if (licora_installer_is_locked($root) && !is_array($successData)) {
+$lockedAction = licora_installer_locked_request_action(
+    licora_installer_is_locked($root),
+    $step,
+    is_array($successData),
+    !empty($_SESSION['licora_installer_success_view_pending']),
+    !empty($_SESSION['licora_installer_login_redirect_pending'])
+);
+
+if ($lockedAction === 'show_success') {
+    unset($_SESSION['licora_installer_success_view_pending']);
+    $_SESSION['licora_installer_login_redirect_pending'] = true;
+} elseif ($lockedAction === 'redirect_login') {
+    $adminUrl = (string)($successData['admin_url'] ?? '');
+    unset(
+        $_SESSION['licora_installer_success'],
+        $_SESSION['licora_installer_success_view_pending'],
+        $_SESSION['licora_installer_login_redirect_pending'],
+        $_SESSION['licora_installer'],
+        $_SESSION['licora_installer_csrf']
+    );
+    session_regenerate_id(true);
+    if ($adminUrl === '' || preg_match('/[\r\n]/', $adminUrl) === 1) {
+        installer_render_locked();
+    }
+    header('Location: ' . $adminUrl, true, 302);
+    exit;
+} elseif ($lockedAction === 'locked') {
     installer_render_locked();
 }
 
@@ -56,17 +84,10 @@ if (!isset($_SESSION['licora_installer']) || !is_array($_SESSION['licora_install
 }
 
 $wizard =& $_SESSION['licora_installer'];
-$requestedStep = filter_input(INPUT_GET, 'step', FILTER_VALIDATE_INT);
-$step = $requestedStep !== false && $requestedStep !== null ? max(1, min(10, (int)$requestedStep)) : 1;
-if (is_array($successData)) {
-    $wizard['max_step'] = 10;
+if (is_array($successData) && $step === 9) {
+    $wizard['max_step'] = 9;
 } elseif ($step > (int)($wizard['max_step'] ?? 1)) {
     $step = (int)($wizard['max_step'] ?? 1);
-}
-
-if ($step === 10 && is_array($successData)) {
-    header('Location: ' . (string)$successData['admin_url'], true, 302);
-    exit;
 }
 
 $error = '';
@@ -194,7 +215,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $result = licora_installer_finalize($root, $wizard['data']);
                     $_SESSION['licora_installer_success'] = $result;
-                    unset($_SESSION['licora_installer']);
+                    $_SESSION['licora_installer_success_view_pending'] = true;
+                    unset(
+                        $_SESSION['licora_installer_login_redirect_pending'],
+                        $_SESSION['licora_installer']
+                    );
                     $_SESSION['licora_installer_csrf'] = bin2hex(random_bytes(32));
                     session_regenerate_id(true);
                     header('Location: ?step=9');
