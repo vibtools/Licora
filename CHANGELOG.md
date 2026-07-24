@@ -8,6 +8,29 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
+## [5.1.1] - 2026-07-23
+
+### Changed
+
+- Updated the default runtime and installer-generated version to `5.1.1`.
+- Added dedicated quality and stability regression validation.
+- Expanded installation, upgrade, troubleshooting, security, FAQ, and compatibility documentation.
+
+### Fixed
+
+- Removed exception message, source-path, and line disclosure from non-production public error responses.
+- Replaced the installer requirements absolute path with a safe writable/not-writable status.
+- Rejected Base URLs containing credentials, query parameters, or fragments.
+- Rejected CR/LF control characters in Mail From Name.
+- Added safe installer exception mapping and installer-generated secret validation.
+- Prevented preserved v5.1.0 private configuration from pinning the runtime version after a v5.1.1 source upgrade.
+
+### Compatibility
+
+- No database schema or migration changed.
+- No license generation, validation, encryption compatibility, device behavior, API contract, route, admin UI, cron entry point, CSS, or JavaScript changed.
+- Existing v5.1.0 installations upgrade without running the installer.
+
 ## [5.1.0] - 2026-07-23
 
 ### Added

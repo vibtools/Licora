@@ -108,3 +108,17 @@ After installation:
 ## Upgrade installations
 
 Existing v5.0.1 and v5.0.1.1 deployments must not run the first-run wizard. Preserve private configuration and encrypted-key material, replace application source, and follow `UPGRADE_GUIDE.md`.
+
+## v5.1.1 production-readiness checks
+
+Before public exposure:
+
+- Use PHP 8.1, 8.2, or 8.3 with required extensions.
+- Keep the application read-only where practical.
+- Grant temporary write access only to `includes/` during first installation.
+- Confirm private configuration, installation flags, cron paths, audit files, and backups are not web-accessible.
+- Use a Base URL without credentials, query parameters, or fragments.
+- Restore restrictive permissions after installation.
+- Review `COMPATIBILITY_MATRIX.md` for server-specific validation.
+
+Licora defines no dedicated upload, cache, or storage directory. v5.1.1 does not introduce one.

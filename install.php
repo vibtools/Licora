@@ -228,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } catch (Throwable $e) {
             error_log('Licora installer request failed [' . get_class($e) . '].');
-            $error = $e->getMessage() !== '' ? $e->getMessage() : 'Installation request failed.';
+            $error = licora_installer_public_error($e);
         }
     }
 }
@@ -272,7 +272,7 @@ $stepTitles = [
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div>
                     <h2 class="mb-1"><i class="bi bi-shield-check me-2"></i>Licora First-Run Installer</h2>
-                    <div class="opacity-75">Professional installation wizard for Licora v5.1.0</div>
+                    <div class="opacity-75">Professional installation wizard for Licora v5.1.1</div>
                 </div>
                 <span class="step-pill">Step <?php echo $step; ?> of 10</span>
             </div>
@@ -307,7 +307,7 @@ $stepTitles = [
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.1.0 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
+                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.1.1 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
                 <form method="post">
                     <input type="hidden" name="installer_csrf_token" value="<?php echo installer_escape($_SESSION['licora_installer_csrf']); ?>">
                     <button class="btn btn-primary" <?php echo licora_installer_requirements_pass($requirements) ? '' : 'disabled'; ?>>Continue</button>
@@ -414,7 +414,7 @@ $stepTitles = [
                 <a class="btn btn-primary" href="?step=1">Restart</a>
             <?php endif; ?>
         </div>
-        <div class="card-footer text-center text-muted py-3"><small>Licora v5.1.0 &middot; Vib Tools &middot; MIT License</small></div>
+        <div class="card-footer text-center text-muted py-3"><small>Licora v5.1.1 &middot; Vib Tools &middot; MIT License</small></div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

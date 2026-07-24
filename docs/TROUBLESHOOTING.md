@@ -35,3 +35,21 @@ Run it from the project context with the same environment variables as the web p
 ## Protected files are visible
 
 Apache may not be honoring `.htaccess`, or the server may be Nginx. Apply explicit deny rules from [SECURITY_DEPLOYMENT.md](SECURITY_DEPLOYMENT.md) immediately.
+
+## v5.1.1 quality and stability diagnostics
+
+### Installer reports that the private configuration location is not writable
+
+Grant the web-server process temporary write access to `includes/`. Do not make the complete application tree globally writable. The installer intentionally does not display the absolute path.
+
+### Base URL is rejected
+
+Use only the application root, such as `https://licenses.example.com`, `https://licenses.example.com/licora`, or `http://localhost/licora`. Do not include embedded credentials, query parameters, or fragments.
+
+### Installer displays a generic completion error
+
+Review the server error log using the same timestamp. Public output intentionally excludes SQL text, credentials, stack traces, and server paths.
+
+### Nginx or LiteSpeed exposes a protected path
+
+Reproduce the deny rules documented in `SECURITY_DEPLOYMENT.md`. Licora does not edit web-server configuration automatically.
