@@ -21,6 +21,23 @@ $installer = $read('install.php');
 $installation = $read('includes/installation.php');
 
 $assert(strpos($config, "env_value('APP_VERSION', '5.1.1')") !== false, 'default application version is v5.1.1');
+
+$versionDefinition = "if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.1.1'));";
+$localConfigRequire = 'require_once $localConfig;';
+$versionPosition = strpos($config, $versionDefinition);
+$localConfigPosition = strpos($config, $localConfigRequire);
+
+$assert(
+    substr_count($config, $versionDefinition) === 1,
+    'runtime application version has exactly one source definition'
+);
+$assert(
+    $versionPosition !== false
+    && $localConfigPosition !== false
+    && $versionPosition < $localConfigPosition,
+    'runtime version resolves before preserved private configuration'
+);
+
 $assert(strpos($installation, "'APP_VERSION' => '5.1.1'") !== false, 'generated installer configuration targets v5.1.1');
 $assert(strpos($installer, 'Professional installation wizard for Licora v5.1.1') !== false, 'installer branding targets v5.1.1');
 

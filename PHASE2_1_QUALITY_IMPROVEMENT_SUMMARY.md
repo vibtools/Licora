@@ -12,7 +12,7 @@
 
 | Area | Improvement | Compatibility effect |
 |---|---|---|
-| Version | Runtime and installer metadata updated to v5.1.1 | Environment overrides remain supported |
+| Version | Runtime and installer metadata updated to v5.1.1; preserved v5.1.0 private configuration can no longer pin the upgraded runtime version | Environment overrides remain supported |
 | Error handling | Generic public exception responses in every environment | Existing production error JSON preserved |
 | Installer errors | Safe allowlisted error mapping | No database, credential, SQL, or path disclosure |
 | Permissions | Absolute server path removed from requirements screen | Requirement behavior unchanged |

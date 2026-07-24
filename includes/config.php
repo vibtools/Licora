@@ -19,17 +19,22 @@ if (!headers_sent()) {
     header('Referrer-Policy: same-origin');
 }
 
-// Optional private local override. Keep this file outside public web root where possible.
-$localConfig = __DIR__ . '/config.local.php';
-if (file_exists($localConfig)) {
-    require_once $localConfig;
-}
-
 if (!function_exists('env_value')) {
     function env_value($key, $default = '') {
         $value = getenv($key);
         return ($value === false || $value === '') ? $default : $value;
     }
+}
+
+// Resolve release identity before private local configuration is loaded.
+// This prevents an installer-generated version from pinning upgrades while
+// retaining the existing APP_VERSION environment override.
+if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.1.1'));
+
+// Optional private local override. Keep this file outside public web root where possible.
+$localConfig = __DIR__ . '/config.local.php';
+if (file_exists($localConfig)) {
+    require_once $localConfig;
 }
 
 // ডেটাবেস কনফিগারেশন
@@ -42,7 +47,6 @@ if (!defined('DB_PASS')) define('DB_PASS', env_value('LICENSE_DB_PASS', env_valu
 // এপ্লিকেশন সেটিংস
 if (!defined('APP_NAME')) define('APP_NAME', env_value('APP_NAME', 'License System'));
 if (!defined('APP_URL')) define('APP_URL', env_value('APP_URL', 'http://localhost'));
-if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.1.1'));
 if (!defined('APP_TIMEZONE')) define('APP_TIMEZONE', env_value('APP_TIMEZONE', 'Asia/Dhaka'));
 if (!defined('APP_LOCALE')) define('APP_LOCALE', env_value('APP_LOCALE', 'en'));
 if (!defined('MAIL_FROM_NAME')) define('MAIL_FROM_NAME', env_value('MAIL_FROM_NAME', APP_NAME));

@@ -23,6 +23,7 @@ All notable public-release changes are recorded here. Historical project notes r
 - Rejected Base URLs containing credentials, query parameters, or fragments.
 - Rejected CR/LF control characters in Mail From Name.
 - Added safe installer exception mapping and installer-generated secret validation.
+- Prevented preserved v5.1.0 private configuration from pinning the runtime version after a v5.1.1 source upgrade.
 
 ### Compatibility
 

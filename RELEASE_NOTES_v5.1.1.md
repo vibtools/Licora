@@ -35,6 +35,10 @@ Unexpected installer exceptions are mapped to a safe, consistent message. Approv
 
 The installer verifies its generated application, encryption, CSRF, and JWT secrets before finalization. This does not change legacy secret acceptance or existing installations.
 
+### Existing-upgrade version precedence
+
+Installer-generated private configuration from v5.1.0 may contain `APP_VERSION` set to `5.1.0`. Previously, preserving that file during an upgrade could pin the displayed runtime version to the old value. v5.1.1 now resolves the release identity before loading private configuration. Database credentials, application settings, and security secrets remain preserved, while the runtime reports the installed source release correctly. The existing environment override remains supported.
+
 ## Version update
 
 The default runtime version, generated installer configuration, installation flag, installed-version setting, installer display, and regression assertions are updated to `5.1.1`.

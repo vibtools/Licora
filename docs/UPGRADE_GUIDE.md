@@ -70,4 +70,6 @@ A configured deployment with a temporarily unavailable database retains the exis
 6. Run repository validation.
 7. Verify admin, API, license, device, cron, export, settings, logging, and legacy API behavior.
 
+The preserved `includes/config.local.php` file may contain the version recorded by its original installer. v5.1.1 resolves runtime release identity from the upgraded source before loading that private configuration, so an old `APP_VERSION` value does not pin the displayed runtime version. Existing database values, application settings, security secrets, and environment-based version overrides remain supported.
+
 No database migration is required. Existing installation flags may continue recording the original installation version; they are installation records, not an upgrade ledger.
