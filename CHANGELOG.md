@@ -8,7 +8,7 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
-## [5.1.0] - 2026-07-23
+## [5.1.0] - 2026-08-06
 
 ### Added
 
@@ -33,6 +33,14 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Enforced the installation lock for same-session requests to installer steps 1-8 after successful installation.
 - Restricted the completion screen to one pending view and cleared completion-session state before the admin-login redirect.
+- Prevented private installer configuration from pinning the source release version during future upgrades.
+- Removed exception messages, source paths, line numbers, and absolute installer paths from public responses.
+- Rejected Base URLs containing embedded credentials, query parameters, or fragments.
+- Rejected CR/LF characters in Mail From Name and validated installer-generated secrets before activation.
+- Refreshed cached file-status data before checking the `includes` directory and made the permission regression test portable across root-based CI containers.
+- Added a safe actionable diagnostic for database accounts that lack the `TRIGGER` privilege required by the existing schema.
+- Replaced release packaging based on the live directory with validated `git archive` packaging and SHA-256 output.
+- Corrected release, configuration, metadata, FAQ, compatibility, troubleshooting, and upgrade documentation for v5.1.0.
 
 ### Compatibility
 

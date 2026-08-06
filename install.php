@@ -228,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } catch (Throwable $e) {
             error_log('Licora installer request failed [' . get_class($e) . '].');
-            $error = $e->getMessage() !== '' ? $e->getMessage() : 'Installation request failed.';
+            $error = licora_installer_public_error($e);
         }
     }
 }

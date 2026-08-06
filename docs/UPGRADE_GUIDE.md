@@ -59,3 +59,9 @@ A configured deployment with a temporarily unavailable database retains the exis
 - Settings
 - Installer lock
 - Legacy encrypted values
+
+## Release-version precedence
+
+The preserved `includes/config.local.php` file may contain the version recorded by an older installer. v5.1.0 resolves runtime release identity from the source before loading private configuration, so a preserved local `APP_VERSION` definition does not pin future source upgrades. Existing database values, application settings, security secrets, and explicit environment-based version overrides remain supported.
+
+Existing installation flags may continue recording the original installation version; they are installation records, not an upgrade ledger.

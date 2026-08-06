@@ -1,0 +1,35 @@
+Licora v5.1.0 Final Release Delta Patch
+Base commit: 372fb35f602b16f6dd684b59a36114b7b941c3fe
+Target branch: release/v5.1.0-final created from main
+Audit date: 2026-08-06
+
+Modified files:
+.github/workflows/ci.yml
+CHANGELOG.md
+PHASE2_INSTALLER_SUMMARY.md
+README.md
+RELEASE_NOTES_v5.1.0.md
+REPOSITORY_METADATA.md
+SECURITY.md
+docs/CONFIGURATION.md
+docs/INSTALLATION.md
+docs/RELEASE.md
+docs/TROUBLESHOOTING.md
+docs/UPGRADE_GUIDE.md
+includes/config.php
+includes/installation.php
+install.php
+scripts/package-release.sh
+scripts/validate.sh
+tests/installer_smoke.php
+
+Added files:
+RELEASE_COMMANDS_v5.1.0.md
+audit/V5.1.0_RELEASE_DELTA_AUDIT.md
+audit/V5.1.0_DELTA_PATCH_MANIFEST.txt
+docs/COMPATIBILITY_MATRIX.md
+docs/FAQ.md
+tests/release_readiness.php
+
+Application rule:
+Extract into the repository root on a clean release/v5.1.0-final branch created from main, and allow overwrite/replace. Do not tag the v5.1.1 feature branch as v5.1.0.

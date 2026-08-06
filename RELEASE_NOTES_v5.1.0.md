@@ -1,5 +1,6 @@
 # Licora v5.1.0 — Smart Installer & First-Run Wizard
 
+**Release date:** 2026-08-06
 **Release type:** Backward-compatible installer feature release
 **Stable base:** `v5.0.1.1`
 **Database migration:** None
@@ -111,6 +112,21 @@ Demo records can be removed with:
 php scripts/remove-demo-data.php
 ```
 
+
+## Release hardening included
+
+Before publication, the v5.1.0 line received additional release-readiness fixes without changing the database schema, license engine, or API contracts:
+
+- Public exception responses no longer expose exception messages, source paths, or line numbers.
+- Installer requirement output no longer exposes absolute server paths.
+- Base URLs containing embedded credentials, query strings, or fragments are rejected.
+- Mail From Name rejects CR/LF characters.
+- Installer-generated application and security secrets are validated before finalization.
+- Runtime release identity resolves before preserved private configuration, preventing version pinning during future upgrades.
+- Cached filesystem status is refreshed before checking whether `includes/` is writable.
+- Database `TRIGGER` permission denial is mapped to an actionable, non-secret installer message.
+- Release packaging uses a validated Git ref and produces a SHA-256 checksum.
+
 ## Compatibility guarantees
 
 This release does not change:
@@ -164,6 +180,11 @@ The repository validation suite covers:
 - JavaScript syntax
 - Public-release marker scanning
 - SQL seed-scope validation
+- Release-version consistency
+- Safe public-error mapping
+- Base URL and mail-header validation
+- Installer permission-state ordering
+- Git-ref release packaging markers
 
 ## Documentation
 
@@ -172,4 +193,19 @@ The repository validation suite covers:
 - `docs/FIRST_RUN_GUIDE.md`
 - `docs/UPGRADE_GUIDE.md`
 - `docs/DEMO_DATA.md`
+- `docs/FAQ.md`
+- `docs/COMPATIBILITY_MATRIX.md`
+- `docs/RELEASE.md`
+- `RELEASE_COMMANDS_v5.1.0.md`
 - `PHASE2_INSTALLER_SUMMARY.md`
+
+## Hosting privilege note
+
+The unchanged Licora schema contains MySQL/MariaDB triggers. The standard installer therefore requires a database account with the privileges needed to create those triggers. Some free shared hosts deny `TRIGGER`; v5.1.0 reports that condition safely but does not silently remove schema objects.
+
+## Release assets
+
+The official release should include:
+
+- `Licora-v5.1.0.zip`
+- `Licora-v5.1.0.zip.sha256`
