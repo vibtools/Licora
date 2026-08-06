@@ -6,6 +6,7 @@
 - Stable base: `v5.0.1.1`
 - Base commit: `7fafd2c34b3425df6ef310b9f25ffa426588d294`
 - Development mode: Zero Freedom Development
+- Final release date: `2026-08-06`
 
 ## Implementation summary
 
@@ -101,6 +102,22 @@ The raw generated API credential is never displayed or logged.
 - Installer lock after completion
 - Existing configured database outage does not reopen installer
 
+
+## Final release hardening
+
+The unpublished v5.1.0 line was finalized before tagging with the following compatibility-preserving corrections:
+
+- Generic public exception responses and safe diagnostic references
+- Safe installer error mapping, including missing `TRIGGER` privilege
+- Hidden absolute server paths in requirement output
+- Base URL credential/query/fragment rejection
+- Mail From Name CR/LF rejection
+- Installer-generated secret validation
+- Source version precedence over preserved private configuration
+- Cached writability-state refresh and portable permission regression coverage
+- Git-ref-only release packaging with SHA-256 output
+- Corrected release and configuration documentation
+
 ## Upgrade compatibility
 
 - v5.0.1 and v5.0.1.1 private configuration remains supported.
@@ -125,3 +142,6 @@ Automated coverage includes:
 - Non-secret installation flag
 - Preserved schema/migration/frontend hashes
 - Preserved API and route markers
+- Safe exception and installer-error output
+- URL, mail-header, and generated-secret validation
+- Release-version consistency and Git-ref packaging

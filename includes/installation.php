@@ -57,6 +57,50 @@ if (!function_exists('licora_installation_secret_is_usable')) {
     }
 }
 
+if (!function_exists('licora_installer_generated_secret_is_valid')) {
+    function licora_installer_generated_secret_is_valid($value): bool
+    {
+        return preg_match('/^[a-f0-9]{64}$/i', trim((string)$value)) === 1;
+    }
+}
+
+if (!function_exists('licora_installer_public_error')) {
+    function licora_installer_public_error(Throwable $error): string
+    {
+        $message = trim($error->getMessage());
+        $normalized = strtolower($message);
+
+        $allowed = [
+            'Licora is already installed.',
+            'The target database already contains Licora tables.',
+            'Generated installation secrets are invalid.',
+            'Database schema is unavailable.',
+            'The database account lacks the TRIGGER privilege required by the Licora schema.',
+            'The database credentials or required database privileges were rejected.',
+            'Installation request could not be completed. Review the server log and try again.',
+        ];
+        if (in_array($message, $allowed, true)) {
+            return $message;
+        }
+
+        // Shared hosts frequently permit tables but deny triggers. Return a
+        // useful non-secret diagnostic instead of exposing the SQL exception.
+        if (strpos($normalized, 'trigger command denied') !== false
+            || (strpos($normalized, 'trigger') !== false && strpos($normalized, 'permission') !== false)
+            || (strpos($normalized, 'trigger') !== false && strpos($normalized, 'privilege') !== false)) {
+            return 'The database account lacks the TRIGGER privilege required by the Licora schema.';
+        }
+
+        if (strpos($normalized, 'access denied') !== false
+            || strpos($normalized, 'permission denied') !== false
+            || strpos($normalized, 'command denied') !== false) {
+            return 'The database credentials or required database privileges were rejected.';
+        }
+
+        return 'Installation request could not be completed. Review the server log and try again.';
+    }
+}
+
 if (!function_exists('licora_installation_environment_configured')) {
     function licora_installation_environment_configured(): bool
     {
@@ -288,13 +332,20 @@ if (!function_exists('licora_installer_requirements')) {
     function licora_installer_requirements(?string $root = null): array
     {
         $root = licora_installation_root($root);
+        $includesPath = $root . '/includes';
+
+        // PHP caches stat-family results. Refresh this path before evaluating
+        // permissions so persistent web-server workers cannot report stale ACL state.
+        clearstatcache(true, $includesPath);
+        $includesWritable = is_writable($includesPath);
+
         $requirements = [
             ['label' => 'PHP 8.0 or newer', 'status' => version_compare(PHP_VERSION, '8.0.0', '>='), 'required' => true, 'detail' => PHP_VERSION],
             ['label' => 'PDO extension', 'status' => extension_loaded('pdo'), 'required' => true, 'detail' => extension_loaded('pdo') ? 'Loaded' : 'Missing'],
             ['label' => 'PDO MySQL extension', 'status' => extension_loaded('pdo_mysql'), 'required' => true, 'detail' => extension_loaded('pdo_mysql') ? 'Loaded' : 'Missing'],
             ['label' => 'OpenSSL extension', 'status' => extension_loaded('openssl'), 'required' => true, 'detail' => extension_loaded('openssl') ? 'Loaded' : 'Missing'],
             ['label' => 'JSON extension', 'status' => extension_loaded('json'), 'required' => true, 'detail' => extension_loaded('json') ? 'Loaded' : 'Missing'],
-            ['label' => 'Writable includes directory', 'status' => is_writable($root . '/includes'), 'required' => true, 'detail' => $root . '/includes'],
+            ['label' => 'Writable includes directory', 'status' => $includesWritable, 'required' => true, 'detail' => $includesWritable ? 'Writable' : 'Not writable'],
             ['label' => 'Readable database schema', 'status' => is_readable($root . '/database.sql'), 'required' => true, 'detail' => 'database.sql'],
             ['label' => 'HTTPS transport', 'status' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', 'required' => false, 'detail' => 'Required for production'],
         ];
@@ -431,11 +482,20 @@ if (!function_exists('licora_installer_validate_application')) {
         if (!preg_match('/^[A-Za-z]{2,3}(?:[_-][A-Za-z]{2})?$/', $locale)) {
             $errors[] = 'Locale must use a value such as en or en_US.';
         }
-        if (!filter_var($url, FILTER_VALIDATE_URL) || !preg_match('#^https?://#i', $url)) {
-            $errors[] = 'Base URL must be a valid HTTP or HTTPS URL.';
+        $urlParts = parse_url($url);
+        if (!filter_var($url, FILTER_VALIDATE_URL)
+            || !preg_match('#^https?://#i', $url)
+            || !is_array($urlParts)
+            || empty($urlParts['host'])) {
+            $errors[] = 'Base URL must be a valid HTTP or HTTPS application URL.';
+        } elseif (isset($urlParts['user'])
+            || isset($urlParts['pass'])
+            || isset($urlParts['query'])
+            || isset($urlParts['fragment'])) {
+            $errors[] = 'Base URL must not contain credentials, query parameters, or fragments.';
         }
-        if (strlen($mailFrom) < 2 || strlen($mailFrom) > 120) {
-            $errors[] = 'Mail From Name must be between 2 and 120 characters.';
+        if (strlen($mailFrom) < 2 || strlen($mailFrom) > 120 || preg_match('/[\r\n]/', $mailFrom)) {
+            $errors[] = 'Mail From Name must be 2-120 characters without line breaks.';
         }
         return $errors;
     }
@@ -641,6 +701,12 @@ if (!function_exists('licora_installer_finalize')) {
     function licora_installer_finalize(?string $root, array $data): array
     {
         $root = licora_installation_root($root);
+        foreach (['app_key', 'encryption_key', 'csrf_secret', 'jwt_secret'] as $secretName) {
+            if (!isset($data['secrets'][$secretName])
+                || !licora_installer_generated_secret_is_valid($data['secrets'][$secretName])) {
+                throw new RuntimeException('Generated installation secrets are invalid.');
+            }
+        }
         $db = $data['db'];
         $databaseCreated = false;
         $snapshot = [];
@@ -777,8 +843,9 @@ if (!function_exists('licora_installer_finalize')) {
                     licora_installer_cleanup_new_tables($pdo, $snapshot);
                 }
             }
-            error_log('Licora installer finalization failed [' . get_class($e) . '].');
-            throw new RuntimeException('Installation could not be completed. Verify database permissions and writable directories, then try again.');
+            $reference = substr(hash('sha256', microtime(true) . get_class($e) . $e->getLine()), 0, 12);
+            error_log('Licora installer finalization failed [' . $reference . '] [' . get_class($e) . '].');
+            throw new RuntimeException(licora_installer_public_error($e), 0, $e);
         }
     }
 }

@@ -68,15 +68,24 @@ The application is a server-rendered PHP project with no Composer runtime depend
 
 ## Quick start
 
+### Fresh installation
+
 1. Place the project in a non-public staging environment.
-2. Create an empty database and import `database.sql`, or open `install.php` once.
-3. Configure `includes/config.local.php` or environment variables.
-4. Sign in at `admin/login.php` using the temporary local-only account:
-   - Username: `admin`
-   - Password: `ChangeMe!2026`
-5. Change the password immediately from **Admin Users**.
-6. Delete or deny access to `install.php`.
+2. Create an empty MySQL/MariaDB database and a database account with the schema privileges required by `database.sql`, including `TRIGGER`.
+3. Open `install.php` or `/install` and complete the ten-step wizard.
+4. Create the first administrator in the wizard; no default password is retained after successful wizard installation.
+5. Confirm that `includes/config.local.php` and `includes/.licora-installed` were created and are not web-accessible.
+6. Sign in at `admin/login.php`, open `admin/health.php`, and complete an API/license/device smoke test.
 7. Configure HTTPS, cron, backups, and web-server deny rules before production use.
+
+### Manual import
+
+Importing `database.sql` directly creates a temporary local-only account:
+
+- Username: `admin`
+- Password: `ChangeMe!2026`
+
+Change that password immediately and create `includes/config.local.php` from `config.sample.php`.
 
 Complete steps: [docs/INSTALLATION.md](docs/INSTALLATION.md).
 
@@ -105,10 +114,13 @@ The application accepts deployment-specific values through environment variables
 | Purpose | Preferred variable | Default |
 |---|---|---|
 | Database host | `LICENSE_DB_HOST` | `localhost` |
+| Database port | `LICENSE_DB_PORT` | `3306` |
 | Database name | `LICENSE_DB_NAME` | empty |
 | Database user | `LICENSE_DB_USER` | empty |
 | Database password | `LICENSE_DB_PASS` | empty |
+| Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
+| Application version | `APP_VERSION` | `5.1.0` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -122,7 +134,7 @@ Full reference: [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
 bash scripts/validate.sh
 ```
 
-The validation script checks PHP syntax, JavaScript syntax when Node.js is available, public-release secret markers, expected repository files, and the built-in security smoke test. Database-backed behavior requires a disposable MySQL/MariaDB instance and is not simulated by the static validation suite.
+The validation script checks PHP syntax, security behavior, compatibility invariants, installer parsing and lock behavior, release-version consistency, safe public errors, JavaScript syntax, public-release secret markers, and SQL seed scope. Database-backed behavior still requires a disposable MySQL/MariaDB instance.
 
 ## Documentation
 
@@ -137,6 +149,7 @@ The validation script checks PHP syntax, JavaScript syntax when Node.js is avail
 - [Maintenance](docs/MAINTENANCE.md)
 - [Release guide](docs/RELEASE.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.1.0 release notes](RELEASE_NOTES_v5.1.0.md)
 - [v5.0.1 release notes](RELEASE_NOTES-v5.0.1.md)
 - [v5.0.0 release notes](RELEASE_NOTES.md)
 - [Forensic audit](audit/FORENSIC_AUDIT_REPORT.md)
@@ -145,7 +158,14 @@ The validation script checks PHP syntax, JavaScript syntax when Node.js is avail
 
 ## Known limitations
 
-The audit intentionally records unresolved behavior rather than silently changing application logic. Important items include a legacy unauthenticated verification endpoint, Bearer-header parsing inconsistencies, an unused session-timeout method, settings that are stored but not enforced, unauthenticated encryption, destructive admin actions implemented through query strings, and CDN supply-chain exposure. Review the audit before production deployment.
+- The legacy `/api/check_license.php` endpoint remains unauthenticated for compatibility; new clients should use `/api/verify.php` with an API key.
+- Several stored settings remain informational or only partially connected to runtime enforcement.
+- The admin interface depends on public CDN assets unless a deployment vendors them locally.
+- Nginx and LiteSpeed operators must reproduce the supplied Apache deny rules.
+- The standard schema requires database privileges including `TRIGGER`; some free shared hosts do not provide them.
+- Full browser and database-backed regression testing remains a release/deployment responsibility.
+
+Review [SECURITY.md](SECURITY.md), [docs/COMPATIBILITY_MATRIX.md](docs/COMPATIBILITY_MATRIX.md), and the forensic audit before production deployment.
 
 ## Roadmap
 

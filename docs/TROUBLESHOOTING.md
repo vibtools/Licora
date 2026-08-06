@@ -14,7 +14,7 @@ For the sanitized schema, use the temporary local credentials and change them im
 
 ## API key is rejected
 
-Use `X-API-Key`, remove whitespace, confirm the key is active and not expired, and ensure the stored hash corresponds to the original plaintext key. Bearer parsing is a known issue in this release.
+Use `X-API-Key` or `Authorization: Bearer TOKEN`, remove whitespace, confirm the key is active and not expired, and ensure the stored hash corresponds to the original plaintext key.
 
 ## License is valid but verification fails
 
@@ -35,3 +35,26 @@ Run it from the project context with the same environment variables as the web p
 ## Protected files are visible
 
 Apache may not be honoring `.htaccess`, or the server may be Nginx. Apply explicit deny rules from [SECURITY_DEPLOYMENT.md](SECURITY_DEPLOYMENT.md) immediately.
+
+## v5.1.0 quality and stability diagnostics
+
+### Installer reports that the private configuration location is not writable
+
+Grant the web-server process temporary write access to `includes/`. Do not make the complete application tree globally writable. The installer intentionally does not display the absolute path.
+
+
+### Installer reports missing TRIGGER privilege
+
+The standard schema contains MySQL/MariaDB triggers. Use a database account that has the required `TRIGGER` privilege or move the deployment to hosting that permits the complete schema. Licora does not silently remove schema objects during a standard installation.
+
+### Base URL is rejected
+
+Use only the application root, such as `https://licenses.example.com`, `https://licenses.example.com/licora`, or `http://localhost/licora`. Do not include embedded credentials, query parameters, or fragments.
+
+### Installer displays a generic completion error
+
+Review the server error log using the same timestamp. Public output intentionally excludes SQL text, credentials, stack traces, and server paths.
+
+### Nginx or LiteSpeed exposes a protected path
+
+Reproduce the deny rules documented in `SECURITY_DEPLOYMENT.md`. Licora does not edit web-server configuration automatically.
