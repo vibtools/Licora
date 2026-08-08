@@ -44,6 +44,16 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link <?php echo $currentPage == 'client_apps.php' ? 'active' : ''; ?>" href="client_apps.php">
+                        <i class="bi bi-boxes"></i> <span>Client Apps</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php echo $currentPage == 'v2_devices.php' ? 'active' : ''; ?>" href="v2_devices.php">
+                        <i class="bi bi-shield-check"></i> <span>V2 Devices</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link <?php echo $currentPage == 'settings.php' ? 'active' : ''; ?>" href="settings.php">
                         <i class="bi bi-gear"></i> <span>Settings</span>
                     </a>

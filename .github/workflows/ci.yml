@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches: [main]
-    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
@@ -12,6 +11,7 @@ permissions:
 
 jobs:
   validate:
+    name: PHP ${{ matrix.php-version }} validation
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -19,19 +19,105 @@ jobs:
         php-version: ['8.0', '8.1', '8.2', '8.3', '8.4']
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@2.37.2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: pdo_mysql, openssl, json
           coverage: none
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
-          node-version: '22'
+          python-version: '3.13'
 
-      - name: Validate repository
-        run: bash scripts/validate.sh
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Verify repository
+        run: python3 scripts/verify-local.py
+
+  mysql-integration:
+    name: API v2 MySQL integration
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: licora-test-root
+          MYSQL_DATABASE: licora_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -plicora-test-root"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@2.37.2
+        with:
+          php-version: '8.4'
+          extensions: pdo_mysql, openssl, json
+          coverage: none
+
+      - name: Run API v2 database integration
+        env:
+          LICORA_V2_TEST_ALLOW_SCHEMA_RESET: '1'
+          LICORA_TEST_DB_DSN: mysql:host=127.0.0.1;port=3306;dbname=licora_test;charset=utf8mb4
+          LICORA_TEST_DB_USER: root
+          LICORA_TEST_DB_PASS: licora-test-root
+        run: php tests/api_v2_db_integration.php
+
+  package:
+    name: Build verified source artifact
+    needs: [validate, mysql-integration]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@2.37.2
+        with:
+          php-version: '8.4'
+          extensions: pdo_mysql, openssl, json
+          coverage: none
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Build source ZIP and checksum
+        shell: bash
+        run: |
+          short_sha="${GITHUB_SHA:0:12}"
+          mkdir -p release
+          bash scripts/package-release.sh v5.2.0 "$GITHUB_SHA" "release/Licora-5.2.0-ci-${short_sha}.zip"
+
+      - name: Upload CI release-candidate artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: Licora-5.2.0-${{ github.sha }}
+          path: |
+            release/Licora-5.2.0-ci-*.zip
+            release/Licora-5.2.0-ci-*.zip.sha256
+          if-no-files-found: error
+          retention-days: 14

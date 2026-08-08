@@ -17,7 +17,6 @@ $read = static function (string $path) use ($root): string {
 };
 
 $expectedImmutableHashes = [
-    'database.sql' => '6a39d7fbb8a48b51cba1118457465b4c31eea1023d18cbeb803f8f2e84430fa6',
     'migration.sql' => '3da777f815bb3bc5e766be01cc5872ef1630623e4da3e4fa8f4f0b0716fa6db0',
     'migration-v4.sql' => 'a45793f40329da0b48e71a2c2da19b9b1c17457fe00000d18007ea8cd59cb243',
     'migration-v5.sql' => '2622592c14de6621cf0695dd76fb21957cc1ea49dcf338c44e0c4f3cdd93eef0',
@@ -44,6 +43,22 @@ foreach ($expectedImmutableHashes as $path => $expectedHash) {
             : hash('sha256', $content);
         $assert($actualHash === $expectedHash, "immutable hash preserved: {$path}");
     }
+}
+
+$databaseSource = $read('database.sql');
+$v2DatabaseMarker = '-- Licora v5.2.0 Secure API v2 additive migration.';
+$v2DatabasePosition = strpos($databaseSource, $v2DatabaseMarker);
+$assert($v2DatabasePosition !== false, 'v5.2 database contains the additive API v2 marker');
+if ($v2DatabasePosition !== false) {
+    $prefix = substr($databaseSource, 0, $v2DatabasePosition);
+    $trimmed = rtrim($prefix, "\r\n");
+    $candidates = [
+        hash('sha256', $prefix),
+        hash('sha256', $trimmed),
+        hash('sha256', $trimmed . "\n"),
+        hash('sha256', str_replace(["\r\n", "\r"], "\n", $trimmed . "\n")),
+    ];
+    $assert(in_array('6a39d7fbb8a48b51cba1118457465b4c31eea1023d18cbeb803f8f2e84430fa6', $candidates, true), 'v5.2 database preserves the complete v5.1.0 schema prefix');
 }
 
 $publicRoutes = [
@@ -76,7 +91,7 @@ foreach ($adminRoutes as $path) {
 }
 
 $config = $read('includes/config.php');
-$assert(strpos($config, "env_value('APP_VERSION', '5.1.0')") !== false, 'application version is v5.1.0');
+$assert(strpos($config, "env_value('APP_VERSION', '5.2.0')") !== false, 'application version is v5.2.0');
 $assert(strpos($config, "if (!defined('DB_PORT'))") !== false, 'database port support is additive');
 $assert(strpos($config, 'licora_enforce_installation_guard') !== false, 'first-run guard is enabled before application boot');
 

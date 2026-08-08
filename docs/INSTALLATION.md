@@ -1,6 +1,6 @@
 # Installation
 
-Licora v5.1.0 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
+Licora v5.2.0 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
 
 ## Requirements
 
@@ -23,7 +23,7 @@ Licora v5.1.0 provides a first-run installer for fresh deployments while preserv
 8. Confirm the installation lock and complete installation.
 9. Sign in manually at `admin/login.php`.
 
-The installer executes the existing `database.sql` schema and migrations. No new table, column, index, constraint, trigger, or migration is introduced by v5.1.0.
+The installer executes `database.sql`, including the additive Secure API v2 schema. Existing v1 tables, columns, indexes, constraints, triggers, routes, and license behavior remain preserved.
 
 ## Installation detection
 
@@ -44,8 +44,10 @@ A successful wizard run writes:
 
 - `includes/config.local.php`
 - `includes/.licora-installed`
+- `includes/.licora-v2-signing-private.pem`
+- `includes/.licora-v2-signing-public.pem`
 
-The flag stores only product, version, and installation timestamp. It contains no database password, application key, encryption key, administrator password, or generated token.
+The flag stores only product, version, and installation timestamp. It contains no database password, application key, encryption key, administrator password, generated token, or API v2 private key. The API v2 private signing key remains server-side deployment material and is never displayed by the installer.
 
 Do not commit either private runtime file.
 
@@ -57,9 +59,11 @@ For intentional recovery only:
 2. Back up the complete database.
 3. Back up `includes/config.local.php`.
 4. Back up `includes/.licora-encryption.key` when present.
-5. Back up `includes/.licora-installed`.
-6. Follow the recovery procedure in `FIRST_RUN_GUIDE.md`.
-7. Restore secure private configuration and the lock before reopening public access.
+5. Back up the API v2 signing key pair when present; loss of the private key invalidates access tokens and requires an intentional signing-key rotation.
+
+6. Back up `includes/.licora-installed`.
+7. Follow the recovery procedure in `FIRST_RUN_GUIDE.md`.
+8. Restore secure private configuration and the lock before reopening public access.
 
 Never delete or regenerate an existing encryption key unless loss of access to encrypted API-key copies and encrypted license values is acceptable.
 
@@ -78,7 +82,7 @@ The sanitized schema includes a temporary local-development account for manual i
 - Username: `admin`
 - Password: `ChangeMe!2026`
 
-Change it immediately. The v5.1.0 wizard replaces that temporary row before installation completes.
+Change it immediately. The v5.2.0 wizard replaces that temporary row before installation completes.
 
 ## Database port
 
@@ -109,7 +113,7 @@ After installation:
 
 Existing v5.0.1 and v5.0.1.1 deployments must not run the first-run wizard. Preserve private configuration and encrypted-key material, replace application source, and follow `UPGRADE_GUIDE.md`.
 
-## v5.1.0 production-readiness checks
+## v5.2.0 production-readiness checks
 
 Before public exposure:
 
@@ -121,4 +125,16 @@ Before public exposure:
 - Restore restrictive permissions after installation.
 - Review `COMPATIBILITY_MATRIX.md` for server-specific validation.
 
-Licora defines no dedicated upload, cache, or storage directory. v5.1.0 does not introduce one.
+Licora defines no dedicated upload, cache, or storage directory. v5.2.0 does not introduce one.
+
+## Secure API v2 installation
+
+Fresh v5.2.0 wizard installations generate the deployment RSA-3072 API v2 signing key pair automatically and create the additive v2 tables through `database.sql`. The private key is never shown in the UI.
+
+For an existing Licora deployment upgraded from v5.1.0, preserve all existing private files, replace source, then run:
+
+```bash
+php scripts/setup-v2.php
+```
+
+This applies only `migration-v5.2.0-api-v2.sql` and generates the signing key pair only when neither key file exists. It refuses a partial key-pair state rather than silently replacing deployment identity.

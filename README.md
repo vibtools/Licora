@@ -91,7 +91,7 @@ Complete steps: [docs/INSTALLATION.md](docs/INSTALLATION.md).
 
 ## API quick example
 
-Use the full endpoint for new integrations:
+API v1 remains available for trusted/legacy integrations:
 
 ```bash
 curl --request POST "https://example.com/license-system/api/verify.php" \
@@ -105,7 +105,7 @@ curl --request POST "https://example.com/license-system/api/verify.php" \
   }'
 ```
 
-`X-API-Key` is the recommended authentication header for the current release. See [docs/API.md](docs/API.md) for endpoint behavior, response fields, and integration warnings.
+`X-API-Key` remains the API v1 authentication header. New desktop/public clients should use Secure API v2, which does not embed a shared Licora API key. See [docs/API.md](docs/API.md) and [docs/API_V2.md](docs/API_V2.md).
 
 ## Configuration
 
@@ -120,7 +120,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.1.0` |
+| Application version | `APP_VERSION` | `5.2.0` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -149,6 +149,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Maintenance](docs/MAINTENANCE.md)
 - [Release guide](docs/RELEASE.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.2.0 release notes](RELEASE_NOTES_v5.2.0.md)
 - [v5.1.0 release notes](RELEASE_NOTES_v5.1.0.md)
 - [v5.0.1 release notes](RELEASE_NOTES-v5.0.1.md)
 - [v5.0.0 release notes](RELEASE_NOTES.md)
@@ -156,9 +157,15 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
+## Secure API v2 (v5.2.0)
+
+Licora v5.2.0 adds `/api/v2/activate.php`, `/refresh.php`, `/status.php`, and `/deactivate.php` for public/desktop clients. API v2 uses registered App IDs, P-256 device keys, RS256 server-signed short-lived access tokens, rotating hashed refresh tokens, nonce/timestamp replay protection, and device revocation. API v1 remains unchanged for existing integrations.
+
+Existing deployments apply the additive schema and create deployment signing keys with `php scripts/setup-v2.php`. See [API v2](docs/API_V2.md), [security model](docs/API_V2_SECURITY.md), [client integration](docs/API_V2_CLIENT_INTEGRATION.md), and [migration](docs/API_V2_MIGRATION.md).
+
 ## Known limitations
 
-- The legacy `/api/check_license.php` endpoint remains unauthenticated for compatibility; new clients should use `/api/verify.php` with an API key.
+- The legacy `/api/check_license.php` endpoint remains unauthenticated for compatibility; new desktop/public clients should use Secure API v2.
 - Several stored settings remain informational or only partially connected to runtime enforcement.
 - The admin interface depends on public CDN assets unless a deployment vendors them locally.
 - Nginx and LiteSpeed operators must reproduce the supplied Apache deny rules.

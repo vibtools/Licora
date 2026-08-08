@@ -66,3 +66,14 @@ Licenses use `active`, `expired`, and `suspended` states. Devices use `is_active
 ## Compatibility principle
 
 Migrations are additive. The code includes fallbacks for older schemas, and repository changes should preserve existing endpoints and database columns unless a versioned migration and rollback are supplied.
+
+## Secure API v2 architecture
+
+API v2 is additive to the existing server-rendered application and API v1. `/api/v2/*` handlers use the existing PDO connection, license/device/blacklist/rate-limit data and a separate v2 service layer under `includes/v2/`.
+
+```text
+Public client -> /api/v2 -> V2 request/proof validation -> V2Repository -> existing licenses/devices + v2 credential tables
+                                               |-> V2TokenService -> deployment RSA signing key
+```
+
+`V2Repository::activate()` locks the license row before checking/registering a device so concurrent first activations cannot exceed the existing license device limit. Existing API v1 `LicenseSystem::verifyLicense()` is not changed.

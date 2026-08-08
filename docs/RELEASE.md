@@ -2,7 +2,7 @@
 
 ## Versioning
 
-Licora uses semantic version tags. For this release, repository version, installer version, installation flag, stored installed version, and runtime `APP_VERSION` are aligned at `5.1.0`.
+Licora uses semantic version tags. For this release, repository version, installer version, installation flag, stored installed version, and runtime `APP_VERSION` are aligned at `5.2.0`.
 
 The release tag must point to a reviewed commit on `main`. Do not tag a dirty working tree or package uncommitted files.
 
@@ -19,7 +19,7 @@ The release tag must point to a reviewed commit on `main`. Do not tag a dirty wo
 - [ ] `/api/verify.php` is tested with valid, invalid, expired, suspended, and device-limit scenarios.
 - [ ] `database.sql` contains no operational data.
 - [ ] No private configuration, API key, password, license key, device identifier, IP address, log, or backup is tracked.
-- [ ] `CHANGELOG.md`, `RELEASE_NOTES_v5.1.0.md`, and repository metadata are current.
+- [ ] `CHANGELOG.md`, `RELEASE_NOTES_v5.2.0.md`, and repository metadata are current.
 - [ ] The release ZIP and SHA-256 checksum are inspected.
 
 ## Build the release archive
@@ -27,7 +27,7 @@ The release tag must point to a reviewed commit on `main`. Do not tag a dirty wo
 Run from the repository root after committing and tagging:
 
 ```bash
-bash scripts/package-release.sh v5.1.0 v5.1.0
+bash scripts/package-release.sh v5.2.0 v5.2.0
 ```
 
 The packager:
@@ -40,8 +40,8 @@ The packager:
 Default output:
 
 ```text
-../Licora-v5.1.0.zip
-../Licora-v5.1.0.zip.sha256
+../Licora-v5.2.0.zip
+../Licora-v5.2.0.zip.sha256
 ```
 
 ## Tag and publish
@@ -50,19 +50,19 @@ Default output:
 git switch main
 git pull --ff-only origin main
 bash scripts/validate.sh
-git tag -a v5.1.0 -m "Licora v5.1.0 - Smart Installer and First-Run Wizard"
-git push origin v5.1.0
-bash scripts/package-release.sh v5.1.0 v5.1.0
-gh release create v5.1.0 \
-  ../Licora-v5.1.0.zip \
-  ../Licora-v5.1.0.zip.sha256 \
+git tag -a v5.2.0 -m "Licora v5.2.0 - Smart Installer and First-Run Wizard"
+git push origin v5.2.0
+bash scripts/package-release.sh v5.2.0 v5.2.0
+gh release create v5.2.0 \
+  ../Licora-v5.2.0.zip \
+  ../Licora-v5.2.0.zip.sha256 \
   --verify-tag \
-  --title "Licora v5.1.0 - Smart Installer and First-Run Wizard" \
-  --notes-file RELEASE_NOTES_v5.1.0.md \
+  --title "Licora v5.2.0 - Smart Installer and First-Run Wizard" \
+  --notes-file RELEASE_NOTES_v5.2.0.md \
   --latest
 ```
 
-Windows Command Prompt equivalents are provided in `RELEASE_COMMANDS_v5.1.0.md`.
+Windows Command Prompt equivalents are provided in `RELEASE_COMMANDS_v5.2.0.md`.
 
 ## Post-release verification
 
@@ -76,3 +76,17 @@ Windows Command Prompt equivalents are provided in `RELEASE_COMMANDS_v5.1.0.md`.
 ## Suggested release metadata
 
 See [REPOSITORY_METADATA.md](../REPOSITORY_METADATA.md).
+
+## v5.2 automated publication authority
+
+Local verification is `python scripts/verify-local.py` or `bash scripts/validate.sh`. Local verification never publishes a release.
+
+Normal pushes/PRs run PHP 8.0–8.4 verification plus a dedicated MySQL API v2 integration job. After those pass, CI builds a verified source ZIP/checksum workflow artifact.
+
+For the v5.2.0 release, the packager command remains available for forensic/manual inspection:
+
+```bash
+bash scripts/package-release.sh v5.2.0 v5.2.0
+```
+
+The authoritative publication path is tag-triggered GitHub Actions. Pushing `v5.2.0` runs full verification, packages the exact tag, generates SHA-256 and creates the GitHub Release from `RELEASE_NOTES_v5.2.0.md`. Manual `gh release create` is no longer part of the normal release procedure.

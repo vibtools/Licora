@@ -272,7 +272,7 @@ $stepTitles = [
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div>
                     <h2 class="mb-1"><i class="bi bi-shield-check me-2"></i>Licora First-Run Installer</h2>
-                    <div class="opacity-75">Professional installation wizard for Licora v5.1.0</div>
+                    <div class="opacity-75">Professional installation wizard for Licora v5.2.0</div>
                 </div>
                 <span class="step-pill">Step <?php echo $step; ?> of 10</span>
             </div>
@@ -307,7 +307,7 @@ $stepTitles = [
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.1.0 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
+                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.2.0 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
                 <form method="post">
                     <input type="hidden" name="installer_csrf_token" value="<?php echo installer_escape($_SESSION['licora_installer_csrf']); ?>">
                     <button class="btn btn-primary" <?php echo licora_installer_requirements_pass($requirements) ? '' : 'disabled'; ?>>Continue</button>
@@ -353,17 +353,17 @@ $stepTitles = [
                         <div class="col-md-6"><label class="form-label">Locale</label><input class="form-control" name="locale" value="<?php echo installer_escape($appData['locale'] ?? 'en'); ?>" required></div>
                         <div class="col-12"><label class="form-label">Base URL</label><input class="form-control" type="url" name="base_url" value="<?php echo installer_escape($appData['base_url'] ?? licora_installer_detect_base_url()); ?>" required></div>
                     </div>
-                    <div class="alert alert-info mt-4 secret-note"><i class="bi bi-key me-2"></i>Application, encryption, CSRF, and JWT secrets are generated securely. Secret values are never displayed.</div>
+                    <div class="alert alert-info mt-4 secret-note"><i class="bi bi-key me-2"></i>Application, encryption, CSRF, JWT secrets, and the API v2 server signing key pair are generated securely. Secret values are never displayed.</div>
                     <div class="d-flex justify-content-between mt-4"><a class="btn btn-outline-secondary" href="?step=3">Back</a><button class="btn btn-primary">Generate Configuration</button></div>
                 </form>
 
             <?php elseif ($step === 5): ?>
-                <p>Licora will initialize the unchanged, existing database schema from <code>database.sql</code>, including its existing indexes, constraints, triggers, and additive migrations.</p>
+                <p>Licora will initialize <code>database.sql</code>, preserving the existing API v1 schema and adding only the Secure API v2 tables documented for v5.2.0.</p>
                 <div class="alert alert-warning">The target database must not already contain Licora tables. Unrelated existing tables are never removed. If installation fails, only installer-created objects are cleaned up.</div>
                 <dl class="row review-list">
                     <dt class="col-sm-4">Database</dt><dd class="col-sm-8"><?php echo installer_escape(($dbData['host'] ?? '') . ':' . ($dbData['port'] ?? '') . '/' . ($dbData['name'] ?? '')); ?></dd>
-                    <dt class="col-sm-4">Schema changes</dt><dd class="col-sm-8">None beyond the existing repository schema</dd>
-                    <dt class="col-sm-4">Business logic</dt><dd class="col-sm-8">Unchanged</dd>
+                    <dt class="col-sm-4">Schema changes</dt><dd class="col-sm-8">Additive Secure API v2 tables; existing API v1 schema preserved</dd>
+                    <dt class="col-sm-4">Business logic</dt><dd class="col-sm-8">API v1 unchanged; Secure API v2 added separately</dd>
                 </dl>
                 <form method="post"><input type="hidden" name="installer_csrf_token" value="<?php echo installer_escape($_SESSION['licora_installer_csrf']); ?>"><div class="d-flex justify-content-between mt-4"><a class="btn btn-outline-secondary" href="?step=4">Back</a><button class="btn btn-primary">Continue</button></div></form>
 
@@ -389,8 +389,8 @@ $stepTitles = [
             <?php elseif ($step === 8): ?>
                 <div class="alert alert-primary"><strong>Ready to install.</strong> Licora has validated the server, database credentials, administrator data, application configuration, and lock requirements.</div>
                 <ul>
-                    <li>Database password and generated secrets will not be displayed.</li>
-                    <li>The existing schema and application business logic remain unchanged.</li>
+                    <li>Database password, generated secrets, and the API v2 signing private key will not be displayed.</li>
+                    <li>The existing API v1 schema and behavior remain preserved; Secure API v2 additions are additive.</li>
                     <li>Temporary development administrator credentials will be replaced immediately.</li>
                     <li>Installer execution will be disabled after completion.</li>
                 </ul>
@@ -414,7 +414,7 @@ $stepTitles = [
                 <a class="btn btn-primary" href="?step=1">Restart</a>
             <?php endif; ?>
         </div>
-        <div class="card-footer text-center text-muted py-3"><small>Licora v5.1.0 &middot; Vib Tools &middot; MIT License</small></div>
+        <div class="card-footer text-center text-muted py-3"><small>Licora v5.2.0 &middot; Vib Tools &middot; MIT License</small></div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -4,7 +4,7 @@
 
 - **Name:** `Licora`
 - **Title:** Licora — Open-Source Central License Management System
-- **Description:** Licora is an open-source, self-hosted PHP and MySQL/MariaDB central license management system with authenticated license validation, API-key/application binding, device controls, administration, audit logs, and backups.
+- **Description:** Licora is an open-source, self-hosted PHP and MySQL/MariaDB central license management system with authenticated license validation, Secure API v2 device-bound clients, API-key/application binding, device controls, administration, audit logs, and backups.
 - **Homepage:** `https://vib.tools/`
 - **Visibility:** Public
 - **Default branch:** `main`
@@ -26,3 +26,13 @@
 ## Release summary
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
+
+## v5.2.0 release
+
+- **Tag:** `v5.2.0`
+- **Title:** `Licora v5.2.0 — Secure API v2`
+- **Release notes:** `RELEASE_NOTES_v5.2.0.md`
+- **Assets:** automatically generated `Licora-5.2.0.zip` and `Licora-5.2.0.zip.sha256`
+- **Publication:** tag-triggered `.github/workflows/release.yml`
+
+Licora v5.2.0 adds a desktop/public-client API that does not require embedding a shared Licora API key, while preserving API v1 compatibility.

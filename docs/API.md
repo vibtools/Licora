@@ -1,5 +1,9 @@
 # API Reference
 
+## Secure API v2 for desktop/public clients
+
+New desktop/public integrations should use the Secure API v2 endpoints documented in `API_V2.md`. API v2 does not use the shared API v1 `X-API-Key` credential. Existing API v1 integrations remain supported and unchanged.
+
 ## Full verification endpoint
 
 `POST /api/verify.php`
@@ -7,9 +11,9 @@
 ### Headers
 
 - `Content-Type: application/json`
-- `X-API-Key: <key>` — recommended and verified by the current implementation.
+- `X-API-Key: <key>` — API v1 credential for trusted/legacy integrations.
 
-The endpoint advertises `Authorization`, but the forensic audit identified inconsistent Bearer extraction. Use `X-API-Key` until the parser is corrected in a reviewed release.
+API v1 accepts its reviewed API-key credential paths for backward compatibility. This credential model is intentionally not used by API v2 desktop/public clients.
 
 ### Request
 

@@ -8,6 +8,21 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
+## [5.2.0] - 2026-08-08
+
+### Added
+
+- Added Secure API v2 activation, refresh, status and deactivation endpoints without a desktop shared/master API key.
+- Added device-bound P-256 request proofs, RSA-3072/RS256 server-signed access tokens, rotating hashed refresh tokens, nonce replay protection and v2 audit logging.
+- Added additive API v2 client-app/device/refresh/nonce/audit database tables and migration/setup tooling.
+- Added Client Apps and V2 Devices administration pages and additive API v2 app-scope selection during license creation.
+- Added local verification, API v1 freeze checks, API v2 crypto/static/database tests, CI package artifacts and tag-triggered automatic GitHub Releases.
+
+### Compatibility
+
+- Preserved API v1 endpoint implementation and existing v1 license/API-key behavior unchanged.
+- Preserved existing license format, license engine, encryption compatibility, cron routes and existing admin workflows outside the API v2 additions.
+
 ## [5.1.0] - 2026-08-06
 
 ### Added

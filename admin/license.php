@@ -43,6 +43,13 @@ try {
         $appOptions = [];
     }
 } catch (Exception $e) { $appOptions = []; }
+$v2AppOptions = [];
+try {
+    if (AdminHelpers::tableExists('v2_client_apps')) {
+        $v2AppOptions = $db->query("SELECT app_id, display_name FROM v2_client_apps WHERE is_active = 1 ORDER BY display_name, app_id")->fetchAll();
+    }
+} catch (Exception $e) { $v2AppOptions = []; }
+$v2AllowedAppIds = array_values(array_filter(array_map(static function ($row) { return (string)($row['app_id'] ?? ''); }, $v2AppOptions)));
 
 // লাইসেন্স তৈরি
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_license'])) {
@@ -53,6 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_license'])) {
     $notes = Security::sanitize($_POST['notes'] ?? '');
     $app_scope = Security::sanitize($_POST['app_scope'] ?? '');
     $license_api_key_id = (int)($_POST['license_api_key_id'] ?? 0);
+    if ($license_api_key_id <= 0 && $app_scope !== '' && !in_array($app_scope, $v2AllowedAppIds, true)) {
+        $error = 'Selected API v2 client application is not active or does not exist';
+        $app_scope = '';
+    }
     if ($license_api_key_id > 0) {
         try {
             $apiScopeStmt = $db->prepare("SELECT id, COALESCE(app_name, '') AS app_name, COALESCE(scope_label, '') AS scope_label, name FROM api_keys WHERE id = :id AND is_active = 1 LIMIT 1");
@@ -164,6 +175,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_create_license']
     $limit = max(1, (int)($_POST['bulk_device_limit'] ?? $defaultDeviceLimit));
     $appScope = Security::sanitize($_POST['bulk_app_scope'] ?? '');
     $bulkApiKeyId = (int)($_POST['bulk_license_api_key_id'] ?? 0);
+    if ($bulkApiKeyId <= 0 && $appScope !== '' && !in_array($appScope, $v2AllowedAppIds, true)) {
+        $error = 'Selected API v2 client application is not active or does not exist';
+        $appScope = '';
+    }
     if ($bulkApiKeyId > 0) {
         try {
             $apiScopeStmt = $db->prepare("SELECT id, COALESCE(app_name, '') AS app_name, COALESCE(scope_label, '') AS scope_label, name FROM api_keys WHERE id = :id AND is_active = 1 LIMIT 1");
@@ -291,7 +306,16 @@ $licenses = $stmt->fetchAll();
                                         <option value="<?php echo (int)$app['id']; ?>"><?php echo Security::escape($appLabel); ?></option>
                                     <?php endforeach; ?>
                                 </select>
-                                <input type="hidden" name="app_scope" value="">
+                                <div class="mb-3">
+                                    <label class="form-label">API v2 Client App</label>
+                                    <select class="form-select" name="app_scope" id="v2_app_scope">
+                                        <option value="">No API v2 app scope</option>
+                                        <?php foreach ($v2AppOptions as $v2App): ?>
+                                            <option value="<?php echo Security::escape($v2App['app_id']); ?>"><?php echo Security::escape(($v2App['display_name'] ?? $v2App['app_id']) . ' — ' . $v2App['app_id']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <small class="text-muted">Used by Secure API v2. If an API v1 key is selected above, the existing v1 binding remains authoritative.</small>
+                                </div>
                                 <?php if (empty($appOptions)): ?>
                                     <small class="text-warning">No active API key/app found. Create API key with App Name first.</small>
                                 <?php else: ?>
@@ -317,7 +341,16 @@ $licenses = $stmt->fetchAll();
                         <form method="POST" class="needs-validation" novalidate>
                             <input type="hidden" name="csrf_token" value="<?php echo Security::escape(Security::generateCSRFToken()); ?>">
                             <input type="hidden" name="bulk_create_license" value="1">
-                            <input type="hidden" name="bulk_app_scope" value="">
+                            <div class="col-12">
+                                <label class="form-label">API v2 Client App</label>
+                                <select class="form-select" name="bulk_app_scope" id="bulk_v2_app_scope">
+                                    <option value="">No API v2 app scope</option>
+                                    <?php foreach ($v2AppOptions as $v2App): ?>
+                                        <option value="<?php echo Security::escape($v2App['app_id']); ?>"><?php echo Security::escape(($v2App['display_name'] ?? $v2App['app_id']) . ' — ' . $v2App['app_id']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small class="text-muted">Applies the same API v2 app scope to this bulk batch.</small>
+                            </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Number of Licenses</label>

@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -65,3 +65,17 @@ A configured deployment with a temporarily unavailable database retains the exis
 The preserved `includes/config.local.php` file may contain the version recorded by an older installer. v5.1.0 resolves runtime release identity from the source before loading private configuration, so a preserved local `APP_VERSION` definition does not pin future source upgrades. Existing database values, application settings, security secrets, and explicit environment-based version overrides remain supported.
 
 Existing installation flags may continue recording the original installation version; they are installation records, not an upgrade ledger.
+
+## v5.1.0 to v5.2.0 Secure API v2 upgrade
+
+The v5.1.0 first-run installer remains a historical fresh-install baseline. Existing v5.1.0 deployments upgrade in place and must not rerun the installer.
+
+1. Back up the database, `includes/config.local.php`, `includes/.licora-encryption.key` when present, installation flag, and any existing API v2 signing files.
+2. Replace application source with v5.2.0 while preserving all private/runtime files.
+3. Run `python scripts/verify-local.py` to verify source before changing the database.
+4. Run `php scripts/setup-v2.php` once. It applies the additive API v2 migration and creates the deployment signing key pair only when absent.
+5. Register a Client App in `admin/client_apps.php`.
+6. Bind test licenses to the exact API v2 App ID using the new API v2 Client App selector.
+7. Verify activation, refresh, status, deactivation, device limit, revocation, API v1 regression, admin, cron and existing encrypted-data behavior.
+
+`migration-v5.2.0-api-v2.sql` creates only the five `v2_*` tables. It does not drop, rename, or replace existing v1 tables. API v1 endpoints and their shared API-key behavior remain unchanged for compatibility.

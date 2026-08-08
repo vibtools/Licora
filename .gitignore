@@ -36,3 +36,9 @@ tmp/
 # Dependency folders if maintainers add development tooling locally
 vendor/
 node_modules/
+
+# Licora API v2 deployment signing material
+includes/.licora-v2-signing-private.pem
+includes/.licora-v2-signing-public.pem
+includes/.licora-v2-signing-private.pem.installing.*
+includes/.licora-v2-signing-public.pem.installing.*

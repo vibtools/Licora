@@ -55,3 +55,9 @@ Licora v5.1.0 removes verified technical-detail disclosure from unhandled except
 - Existing legacy configuration and secret compatibility are unchanged.
 
 Historical logs are not deleted or rewritten by this release.
+
+## Secure API v2 trust boundary
+
+Licora v5.2.0 API v2 does not require a shared server API key in desktop/public clients. Deployment RSA signing private keys remain server-side; clients use per-device P-256 key pairs and verify/use short-lived server-signed credentials. Refresh tokens are stored as hashes server-side and rotate on use. Production API v2 requires HTTPS by default and uses timestamp/nonce request proofs to resist replay.
+
+Never commit `includes/.licora-v2-signing-private.pem`, `includes/.licora-v2-signing-public.pem`, deployment configuration, device private keys, refresh credentials, or live license/customer data. See `docs/API_V2_SECURITY.md`.

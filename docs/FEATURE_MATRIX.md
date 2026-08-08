@@ -7,7 +7,10 @@
 | Device registration | Implemented | New devices are blocked when the active limit is full. |
 | Automatic oldest-device logout | Dormant code | Private method exists but is not called; current behavior blocks the new device. |
 | Full API-key verification | Implemented | `api/verify.php` with key hash lookup and scope binding. |
-| Bearer authentication | Defective | Header is advertised, but extraction paths are inconsistent. Use `X-API-Key`. |
+| Secure API v2 | Implemented | Device-bound P-256 request proofs, RS256 server tokens, rotating refresh credentials, replay protection and no desktop shared API key. |
+| API v2 client app management | Implemented | Admin Client Apps page controls App IDs, version floor, TTL and rate policy. |
+| API v2 device revocation | Implemented | Admin V2 Devices page revokes the credential and refresh tokens. |
+| API v1 Bearer/API-key authentication | Implemented | Existing reviewed v1 credential normalization remains supported; v1 is unchanged. |
 | Simple API | Implemented / legacy risk | No API key; retained for compatibility. |
 | Global IP rate limit | Implemented | `API_RATE_LIMIT`; one-hour window. |
 | Per-API-key rate limit | Stored only | `rate_limit_per_hour` is not applied. |

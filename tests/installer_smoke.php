@@ -89,7 +89,7 @@ $data = [
     ],
 ];
 $config = licora_installer_build_config($data);
-$assert(strpos($config, "define('APP_VERSION', '5.1.0')") !== false, 'generated configuration targets v5.1.0');
+$assert(strpos($config, "define('APP_VERSION', '5.2.0')") !== false, 'generated configuration targets v5.2.0');
 $assert(strpos($config, "define('DB_PORT', 3306)") !== false, 'generated configuration includes database port');
 
 $encrypted = licora_installer_encrypt('installer-secret-test', str_repeat('2', 64));
@@ -139,10 +139,17 @@ if (DIRECTORY_SEPARATOR === '/') {
     }
 }
 
-$assert(licora_installation_write_flag($tempRoot, '5.1.0'), 'installation flag written atomically');
+$v2InstallerKeys = licora_installer_prepare_v2_signing_keys($tempRoot);
+$assert(is_file($v2InstallerKeys['private_tmp']) && is_file($v2InstallerKeys['public_tmp']), 'API v2 installer signing key pair is generated');
+$assert(openssl_pkey_get_private((string)file_get_contents($v2InstallerKeys['private_tmp'])) !== false, 'API v2 installer private key is valid');
+$assert(openssl_pkey_get_public((string)file_get_contents($v2InstallerKeys['public_tmp'])) !== false, 'API v2 installer public key is valid');
+@unlink($v2InstallerKeys['private_tmp']);
+@unlink($v2InstallerKeys['public_tmp']);
+
+$assert(licora_installation_write_flag($tempRoot, '5.2.0'), 'installation flag written atomically');
 $flag = json_decode((string)file_get_contents($tempRoot . '/includes/.licora-installed'), true);
 $assert(($flag['product'] ?? '') === 'Licora', 'installation flag identifies Licora');
-$assert(($flag['version'] ?? '') === '5.1.0', 'installation flag records version');
+$assert(($flag['version'] ?? '') === '5.2.0', 'installation flag records version');
 $assert(!isset($flag['database_password']) && !isset($flag['encryption_key']), 'installation flag contains no secrets');
 
 $assert(

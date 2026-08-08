@@ -1,0 +1,91 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: licora-release-test
+          MYSQL_DATABASE: licora_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -plicora-release-test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - name: Checkout exact tag
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@2.37.2
+        with:
+          php-version: '8.4'
+          extensions: pdo_mysql, openssl, json
+          coverage: none
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Validate release tag and source version
+        shell: bash
+        run: |
+          test "$GITHUB_REF_TYPE" = "tag"
+          tag="$GITHUB_REF_NAME"
+          version="${tag#v}"
+          [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          grep -F "env_value('APP_VERSION', '${version}')" includes/config.php
+          test -f "RELEASE_NOTES_${tag}.md"
+
+      - name: Full source verification
+        run: python3 scripts/verify-local.py
+
+      - name: API v2 database integration
+        env:
+          LICORA_V2_TEST_ALLOW_SCHEMA_RESET: '1'
+          LICORA_TEST_DB_DSN: mysql:host=127.0.0.1;port=3306;dbname=licora_test;charset=utf8mb4
+          LICORA_TEST_DB_USER: root
+          LICORA_TEST_DB_PASS: licora-release-test
+        run: php tests/api_v2_db_integration.php
+
+      - name: Build exact-tag release ZIP and checksum
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p release
+          bash scripts/package-release.sh "$GITHUB_REF_NAME" "$GITHUB_REF_NAME" "release/Licora-${version}.zip"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" \
+            "release/Licora-${version}.zip" \
+            "release/Licora-${version}.zip.sha256" \
+            --verify-tag \
+            --title "Licora ${GITHUB_REF_NAME}" \
+            --notes-file "RELEASE_NOTES_${GITHUB_REF_NAME}.md" \
+            --latest

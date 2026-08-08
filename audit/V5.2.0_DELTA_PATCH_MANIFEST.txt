@@ -1,0 +1,72 @@
+Licora v5.2.0 Phase-02 Step-001 Delta Patch Manifest
+Official baseline: Licora v5.1.0
+Target: Licora v5.2.0
+
+Added files: 31
+Modified files: 25
+Removed files: 0
+
+[ADDED]
+.github/workflows/release.yml
+RELEASE_COMMANDS_v5.2.0.md
+RELEASE_NOTES_v5.2.0.md
+admin/client_apps.php
+admin/v2_devices.php
+api/v2/activate.php
+api/v2/deactivate.php
+api/v2/refresh.php
+api/v2/status.php
+audit/V5.2.0_DELTA_FILE_SHA256SUMS.txt
+audit/V5.2.0_DELTA_PATCH_MANIFEST.txt
+audit/V5.2.0_PHASE02_STEP001_FORENSIC_AUDIT.md
+docs/API_V2.md
+docs/API_V2_CLIENT_INTEGRATION.md
+docs/API_V2_MIGRATION.md
+docs/API_V2_SECURITY.md
+includes/v2/ApiV2.php
+includes/v2/V2DeviceProof.php
+includes/v2/V2Exception.php
+includes/v2/V2KeyManager.php
+includes/v2/V2Repository.php
+includes/v2/V2TokenService.php
+includes/v2/bootstrap.php
+migration-v5.2.0-api-v2.sql
+scripts/maintenance/Apply-Licora-v5.2.0-Step001.py
+scripts/setup-v2.php
+scripts/verify-local.py
+tests/api_v1_freeze.php
+tests/api_v2_crypto.php
+tests/api_v2_db_integration.php
+tests/api_v2_static.php
+
+[MODIFIED]
+.github/workflows/ci.yml
+.gitignore
+CHANGELOG.md
+README.md
+REPOSITORY_METADATA.md
+SECURITY.md
+admin/includes/navbar.php
+admin/license.php
+config.sample.php
+database.sql
+docs/API.md
+docs/ARCHITECTURE.md
+docs/CONFIGURATION.md
+docs/FEATURE_MATRIX.md
+docs/INSTALLATION.md
+docs/RELEASE.md
+docs/UPGRADE_GUIDE.md
+includes/config.php
+includes/installation.php
+install.php
+scripts/package-release.sh
+scripts/validate.sh
+tests/compatibility_regression.php
+tests/installer_smoke.php
+tests/release_readiness.php
+
+[REMOVED]
+(none)
+
+No existing v5.1.0 API-v1 route, license-engine file, or security.php file is removed by this delta.

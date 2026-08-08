@@ -29,7 +29,7 @@ if (!function_exists('env_value')) {
 // Resolve release identity before private local configuration is loaded.
 // This prevents an installer-generated local configuration from pinning
 // future source upgrades while retaining the APP_VERSION environment override.
-if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.1.0'));
+if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.2.0'));
 
 // Optional private local override. Keep this file outside public web root where possible.
 $localConfig = __DIR__ . '/config.local.php';
@@ -61,6 +61,18 @@ if (!defined('JWT_SECRET')) define('JWT_SECRET', env_value('LICENSE_JWT_SECRET',
 // API সেটিংস
 if (!defined('API_RATE_LIMIT')) define('API_RATE_LIMIT', (int)env_value('API_RATE_LIMIT', 1000));
 if (!defined('API_VERSION')) define('API_VERSION', env_value('API_VERSION', 'v1'));
+
+// Licora v5.2.0 API v2 public/runtime configuration.
+// No server signing private key or API-v1 credential is embedded here.
+if (!defined('LICENSE_V2_REQUIRE_HTTPS')) define('LICENSE_V2_REQUIRE_HTTPS', env_value('LICENSE_V2_REQUIRE_HTTPS', '1'));
+if (!defined('LICENSE_TRUST_PROXY_HEADERS')) define('LICENSE_TRUST_PROXY_HEADERS', env_value('LICENSE_TRUST_PROXY_HEADERS', '0'));
+if (!defined('LICENSE_V2_MAX_BODY_BYTES')) define('LICENSE_V2_MAX_BODY_BYTES', (int)env_value('LICENSE_V2_MAX_BODY_BYTES', 32768));
+if (!defined('LICENSE_V2_RATE_LIMIT')) define('LICENSE_V2_RATE_LIMIT', (int)env_value('LICENSE_V2_RATE_LIMIT', 300));
+if (!defined('LICENSE_V2_CLOCK_SKEW')) define('LICENSE_V2_CLOCK_SKEW', (int)env_value('LICENSE_V2_CLOCK_SKEW', 300));
+if (!defined('LICENSE_V2_SIGNING_KEY_ID')) define('LICENSE_V2_SIGNING_KEY_ID', env_value('LICENSE_V2_SIGNING_KEY_ID', 'primary-v1'));
+if (!defined('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH')) define('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH', env_value('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH', __DIR__ . '/.licora-v2-signing-private.pem'));
+if (!defined('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH')) define('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH', env_value('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH', __DIR__ . '/.licora-v2-signing-public.pem'));
+
 
 // The installation guard is additive and only redirects incomplete fresh installations.
 // Valid existing installations and temporary database outages retain the previous boot flow.
