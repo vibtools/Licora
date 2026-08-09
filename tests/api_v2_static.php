@@ -4,7 +4,7 @@ $root = dirname(__DIR__);
 $required = [
  'api/v2/activate.php','api/v2/refresh.php','api/v2/status.php','api/v2/deactivate.php',
  'includes/v2/V2KeyManager.php','includes/v2/V2TokenService.php','includes/v2/V2DeviceProof.php',
- 'includes/v2/V2Repository.php','includes/v2/ApiV2.php','migration-v5.2.0-api-v2.sql'
+ 'includes/v2/V2Repository.php','includes/v2/V2Provisioner.php','includes/v2/ApiV2.php','migration-v5.2.0-api-v2.sql'
 ];
 foreach ($required as $rel) { if (!is_file($root.'/'.$rel)) { fwrite(STDERR,"Missing API v2 file: {$rel}\n"); exit(1); } }
 foreach (glob($root.'/api/v2/*.php') as $path) {
@@ -12,6 +12,11 @@ foreach (glob($root.'/api/v2/*.php') as $path) {
     if (stripos($text, 'X-API-Key') !== false || preg_match('/\bapi_key\b/i', $text)) { fwrite(STDERR,'Client master API-key marker in '.basename($path)."\n"); exit(1); }
 }
 $migration = (string)file_get_contents($root.'/migration-v5.2.0-api-v2.sql');
+require_once $root.'/includes/v2/V2Exception.php';
+require_once $root.'/includes/v2/V2KeyManager.php';
+require_once $root.'/includes/v2/V2Provisioner.php';
+$statements = V2Provisioner::migrationStatements($migration);
+if (count($statements) !== 5) { fwrite(STDERR,"Shared API v2 provisioner must parse exactly five additive CREATE TABLE statements.\n"); exit(1); }
 foreach (['v2_client_apps','v2_device_credentials','v2_refresh_tokens','v2_used_nonces','v2_audit_logs'] as $table) {
     if (strpos($migration, 'CREATE TABLE IF NOT EXISTS '.$table) === false) { fwrite(STDERR,"Missing migration table {$table}\n"); exit(1); }
 }
@@ -30,11 +35,23 @@ foreach (['activate','status','deactivate'] as $endpoint) {
 }
 $refresh = (string)file_get_contents($root.'/api/v2/refresh.php');
 if (strpos($refresh, "['refresh_token','app_version']") === false) { fwrite(STDERR,"Refresh must require current app_version.\n"); exit(1); }
+$rateContext = strpos($refresh, '$repository->refreshRateLimitContext($refreshToken);');
+$lockedContext = strpos($refresh, '$repository->refreshContextForUpdate($refreshToken);');
+if ($rateContext === false || $lockedContext === false || $rateContext > $lockedContext) { fwrite(STDERR,"Refresh app/device rate limits must be consumed before opening the refresh transaction.\n"); exit(1); }
 $refreshVerify = strpos($refresh, "V2DeviceProof::verify((string)\$context['public_key'], \$signature, \$canonical);");
 $refreshNonce = strpos($refresh, "\$repository->rememberNonce((int)\$context['device_credential_id'], \$nonce, \$skew * 2);");
 if ($refreshVerify === false || $refreshNonce === false || $refreshVerify > $refreshNonce) { fwrite(STDERR,"Refresh nonce must be stored only after proof verification.\n"); exit(1); }
 
 $bootText = (string)file_get_contents($root.'/includes/v2/bootstrap.php');
 if (strpos($bootText, 'cleanupExpiredNonces') === false) { fwrite(STDERR,"Expired nonce cleanup is not connected to API v2 runtime.\n"); exit(1); }
+if (strpos($bootText, 'assertPairMatches') === false) { fwrite(STDERR,"Runtime signing-key pair validation is not connected.\n"); exit(1); }
+$provisioner = (string)file_get_contents($root.'/includes/v2/V2Provisioner.php');
+foreach (['class V2Provisioner','migrationStatements','provision(bool','key_pair_ready'] as $marker) {
+    if (strpos($provisioner, $marker) === false) { fwrite(STDERR,"Missing provisioning contract marker: {$marker}\n"); exit(1); }
+}
+$clientApps = (string)file_get_contents($root.'/admin/client_apps.php');
+foreach (['initialize_v2','Initialize API v2','V2Provisioner'] as $marker) {
+    if (strpos($clientApps, $marker) === false) { fwrite(STDERR,"Missing cPanel/admin provisioning marker: {$marker}\n"); exit(1); }
+}
 
 echo "API v2 static checks passed.\n";

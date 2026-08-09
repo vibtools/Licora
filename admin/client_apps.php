@@ -3,6 +3,9 @@ require_once '../includes/auth.php';
 require_once '../includes/database.php';
 require_once '../includes/security.php';
 require_once '../includes/admin_helpers.php';
+require_once '../includes/v2/V2Exception.php';
+require_once '../includes/v2/V2KeyManager.php';
+require_once '../includes/v2/V2Provisioner.php';
 
 $auth = new Auth();
 if (!$auth->isAdminLoggedIn()) {
@@ -13,7 +16,11 @@ if (!$auth->isAdminLoggedIn()) {
 $db = Database::getInstance();
 $success = '';
 $error = '';
-$schemaReady = AdminHelpers::tableExists('v2_client_apps');
+$keyManager = new V2KeyManager();
+$provisioner = new V2Provisioner($db, $keyManager, dirname(__DIR__) . '/migration-v5.2.0-api-v2.sql');
+$provisionStatus = $provisioner->status();
+$schemaReady = !empty($provisionStatus['schema_ready']);
+$v2Ready = !empty($provisionStatus['ready']);
 
 function licora_v2_app_id($value) {
     $value = trim((string)$value);
@@ -28,10 +35,25 @@ function licora_v2_bounded_int($value, $min, $max, $fallback) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     AdminHelpers::requireManage();
     Security::requireCSRFToken($_POST['csrf_token'] ?? '');
-    if (!$schemaReady) {
+    $action = (string)($_POST['action'] ?? '');
+
+    if ($action === 'initialize_v2') {
+        try {
+            $result = $provisioner->provision(true);
+            $provisionStatus = $provisioner->status();
+            $schemaReady = !empty($provisionStatus['schema_ready']);
+            $v2Ready = !empty($provisionStatus['ready']);
+            AdminHelpers::audit('v2_system', null, 'v2_provisioned', 'API v2 additive schema/signing-key provisioning completed from authenticated admin UI');
+            $success = !empty($result['signing_keys_generated'])
+                ? 'Secure API v2 initialized. Database tables are ready and a new server signing key pair was generated.'
+                : 'Secure API v2 verified. Database tables and the existing server signing key pair are ready.';
+        } catch (Throwable $e) {
+            error_log('API v2 admin provisioning failed: ' . $e->getMessage());
+            $error = 'Secure API v2 could not be initialized automatically. Existing key files are never replaced. Check database privileges, includes-directory permissions, and the server error log.';
+        }
+    } elseif (!$schemaReady) {
         $error = 'API v2 database migration is required before client applications can be managed.';
     } else {
-        $action = (string)($_POST['action'] ?? '');
         if ($action === 'create') {
             $appId = licora_v2_app_id($_POST['app_id'] ?? '');
             $displayName = trim((string)($_POST['display_name'] ?? ''));
@@ -104,7 +126,22 @@ if ($schemaReady) {
         <div><h2><i class="bi bi-boxes"></i> API v2 Client Applications</h2><p>Register public application identities and token policies. No client master API key is created or displayed here.</p></div>
         <a class="btn btn-outline-light" href="v2_devices.php"><i class="bi bi-shield-check"></i> V2 Devices</a>
     </div>
-    <?php if (!$schemaReady): ?><div class="alert alert-warning">API v2 schema is not installed. Run <code>php scripts/setup-v2.php</code> after deploying the v5.2.0 source.</div><?php endif; ?>
+    <?php if (!$v2Ready): ?>
+    <div class="alert alert-warning">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+            <div>
+                <strong>Secure API v2 provisioning is incomplete.</strong>
+                <div class="small mt-1">Schema: <?php echo $schemaReady ? 'ready' : 'missing'; ?> · Signing key pair: <?php echo !empty($provisionStatus['key_pair_ready']) ? 'ready' : 'missing or invalid'; ?>.</div>
+                <div class="small">cPanel/shared-hosting upgrades can initialize the additive v2 schema and missing signing key pair here. Existing signing key files are never replaced automatically.</div>
+            </div>
+            <form method="post" class="m-0">
+                <input type="hidden" name="csrf_token" value="<?php echo Security::escape(Security::generateCSRFToken()); ?>">
+                <input type="hidden" name="action" value="initialize_v2">
+                <button class="btn btn-warning" type="submit" onclick="return confirm('Initialize/verify Secure API v2 now? Existing API v1 data and existing signing key files will not be replaced.');"><i class="bi bi-shield-lock"></i> Initialize API v2</button>
+            </form>
+        </div>
+    </div>
+    <?php endif; ?>
     <?php if ($success): ?><div class="alert alert-success"><?php echo Security::escape($success); ?></div><?php endif; ?>
     <?php if ($error): ?><div class="alert alert-danger"><?php echo Security::escape($error); ?></div><?php endif; ?>
 
@@ -118,7 +155,7 @@ if ($schemaReady) {
                     <div class="mb-3"><label class="form-label">Minimum Version (optional)</label><input class="form-control" name="min_version" placeholder="1.0.6.2"></div>
                     <div class="row g-2"><div class="col-6"><label class="form-label">Access TTL (s)</label><input class="form-control" type="number" name="access_token_ttl" min="300" max="86400" value="3600"></div><div class="col-6"><label class="form-label">Refresh TTL (s)</label><input class="form-control" type="number" name="refresh_token_ttl" min="3600" max="31536000" value="2592000"></div></div>
                     <div class="row g-2 mt-1"><div class="col-6"><label class="form-label">Clock Skew (s)</label><input class="form-control" type="number" name="clock_skew_seconds" min="30" max="900" value="300"></div><div class="col-6"><label class="form-label">Rate / hour</label><input class="form-control" type="number" name="rate_limit_per_hour" min="10" max="100000" value="300"></div></div>
-                    <button class="btn btn-primary w-100 mt-3" <?php echo $schemaReady ? '' : 'disabled'; ?>>Create Client App</button>
+                    <button class="btn btn-primary w-100 mt-3" <?php echo $v2Ready ? '' : 'disabled'; ?>>Create Client App</button>
                 </form>
             </div></div>
         </div>

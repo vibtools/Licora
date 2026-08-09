@@ -3,14 +3,13 @@
 ## Existing v5.1.0 deployment
 
 1. Back up the database and current private configuration.
-2. Deploy the v5.2.0 source while preserving `includes/config.local.php`, `.licora-encryption.key`, installation state and operational data.
-3. Run:
+2. Deploy the current v5.2.1 source while preserving `includes/config.local.php`, `.licora-encryption.key`, installation state and operational data.
+3. Initialize/verify API v2 using one of the equivalent provisioning paths:
 
-```bash
-php scripts/setup-v2.php
-```
+   - cPanel/shared hosting without shell access: **Admin → Client Apps → Initialize API v2**.
+   - CLI-capable hosting: `php scripts/setup-v2.php`.
 
-4. Confirm Admin → Client Apps loads without a migration warning.
+4. Confirm Admin → Client Apps reports the schema and signing key pair ready.
 5. Register the required App ID(s).
 6. Assign new or selected licenses to the matching API v2 app scope.
 7. Integrate clients against API v2 only after the server-side deployment is verified.
@@ -19,7 +18,7 @@ php scripts/setup-v2.php
 
 ## Fresh installation
 
-The v5.2.0 `database.sql` includes the same additive API v2 schema. The existing first-run installer remains the schema executor and generates the deployment-specific RSA signing key pair during successful fresh installation. `scripts/setup-v2.php` is for existing deployments upgrading from v5.1.0, or for explicit setup verification when the v2 schema/keys are not yet provisioned.
+The v5.2.1 `database.sql` retains the same additive API v2 schema introduced in v5.2.0. The first-run installer remains the schema executor and generates the deployment-specific RSA signing key pair during successful fresh installation. Existing deployments use the shared `V2Provisioner` through either the authenticated Client Apps action or `scripts/setup-v2.php`. No v5.2.1 database migration is required.
 
 ## Rollback
 

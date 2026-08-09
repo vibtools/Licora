@@ -77,3 +77,5 @@ Public client -> /api/v2 -> V2 request/proof validation -> V2Repository -> exist
 ```
 
 `V2Repository::activate()` locks the license row before checking/registering a device so concurrent first activations cannot exceed the existing license device limit. Existing API v1 `LicenseSystem::verifyLicense()` is not changed.
+
+`V2Provisioner` is the single additive setup path for existing deployments. The CLI `scripts/setup-v2.php` and authenticated Client Apps initialization action both reuse it to apply the unchanged v5.2.0 API v2 migration, generate missing deployment signing keys, and validate that an existing private/public signing pair matches. Fresh installation continues through the first-run installer.

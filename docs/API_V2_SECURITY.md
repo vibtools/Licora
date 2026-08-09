@@ -31,7 +31,7 @@ Access tokens use a fixed `LICORA-V2`/`RS256` contract and a configured `kid`. A
 
 ## Refresh credentials
 
-Refresh tokens are 256-bit random values. Only SHA-256 hashes are stored in `v2_refresh_tokens`. Each successful refresh creates a new token in the same family and marks the previous token used. Reuse/expiry/revocation of an old token revokes the family outside the failed row-lock transaction so the revocation cannot be undone by rollback.
+Refresh tokens are 256-bit random values. Only SHA-256 hashes are stored in `v2_refresh_tokens`. Each successful refresh creates a new token in the same family and marks the previous token used. Reuse/expiry/revocation of an old token revokes the family outside the failed row-lock transaction so the revocation cannot be undone by rollback. App/device refresh rate-limit buckets are consumed before the refresh-token transaction opens, so an invalid device proof cannot roll those counters back.
 
 ## Signing key files
 
@@ -42,7 +42,7 @@ includes/.licora-v2-signing-private.pem
 includes/.licora-v2-signing-public.pem
 ```
 
-Both are runtime/deployment files and are gitignored and excluded from release ZIPs. `scripts/setup-v2.php` creates RSA-3072 keys only from CLI and never overwrites a partial key pair. The baseline Apache deployment denies direct access to `includes/`; Nginx/LiteSpeed or other servers must enforce the equivalent deny rule. For stronger isolation, production deployments may configure the signing key paths outside the web root.
+Both are runtime/deployment files and are gitignored and excluded from release ZIPs. The CLI setup path and the authenticated **Client Apps → Initialize API v2** cPanel path use the same provisioner. Key generation occurs only when neither file exists. Existing keys are parsed and cryptographically checked to confirm the public key matches the configured private key; a partial or mismatched pair fails closed and is never silently replaced. The baseline Apache deployment denies direct access to `includes/`; Nginx/LiteSpeed or other servers must enforce the equivalent deny rule. For stronger isolation, production deployments may configure the signing key paths outside the web root.
 
 ## Network and input controls
 

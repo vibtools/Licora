@@ -1,0 +1,56 @@
+Licora v5.2.1 Phase-02 Step-001 Verification/Fix Delta Manifest
+Official baseline: Licora v5.2.0 (ZIP SHA-256 7deee61ce292e6fd1e3ef45907ef2c7ee9724b6e140d1d158269e2397005c964)
+Baseline Git HEAD: 9027a6e065244336997ebbc0b97bb4dd54b0a1f0
+Target: Licora v5.2.1
+
+Added files: 6
+Modified files: 33
+Removed files: 0
+
+[ADDED]
+RELEASE_COMMANDS_v5.2.1.md
+RELEASE_NOTES_v5.2.1.md
+audit/V5.2.1_DELTA_FILE_SHA256SUMS.txt
+audit/V5.2.1_DELTA_PATCH_MANIFEST.txt
+audit/V5.2.1_PHASE02_STEP001_FORENSIC_AUDIT.md
+includes/v2/V2Provisioner.php
+
+[MODIFIED]
+.github/workflows/ci.yml
+.github/workflows/release.yml
+CHANGELOG.md
+README.md
+REPOSITORY_METADATA.md
+SECURITY.md
+admin/client_apps.php
+admin/v2_devices.php
+api/v2/refresh.php
+config.sample.php
+docs/API_V2_MIGRATION.md
+docs/API_V2_SECURITY.md
+docs/ARCHITECTURE.md
+docs/CONFIGURATION.md
+docs/FEATURE_MATRIX.md
+docs/INSTALLATION.md
+docs/RELEASE.md
+docs/UPGRADE_GUIDE.md
+includes/config.php
+includes/installation.php
+includes/v2/ApiV2.php
+includes/v2/V2KeyManager.php
+includes/v2/V2Repository.php
+includes/v2/bootstrap.php
+install.php
+scripts/setup-v2.php
+scripts/verify-local.py
+tests/api_v2_crypto.php
+tests/api_v2_db_integration.php
+tests/api_v2_static.php
+tests/compatibility_regression.php
+tests/installer_smoke.php
+tests/release_readiness.php
+
+[REMOVED]
+(none)
+
+Replace/Overwrite extraction is sufficient. Preserve deployment-private/runtime files such as includes/config.local.php, installation/encryption files, and API v2 signing keys; they are not part of this delta.

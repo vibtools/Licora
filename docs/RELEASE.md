@@ -2,91 +2,84 @@
 
 ## Versioning
 
-Licora uses semantic version tags. For this release, repository version, installer version, installation flag, stored installed version, and runtime `APP_VERSION` are aligned at `5.2.0`.
+Licora uses semantic version tags. The current maintenance release is `5.2.1`; repository/runtime version markers, installer source version and release documentation must agree before a tag can publish.
 
 The release tag must point to a reviewed commit on `main`. Do not tag a dirty working tree or package uncommitted files.
 
 ## Release gate
 
 - [ ] `git status --short` is empty.
-- [ ] Pull-request review is complete.
-- [ ] GitHub Actions passes for PHP 8.0, 8.1, 8.2, 8.3, and 8.4.
-- [ ] `bash scripts/validate.sh` passes locally.
+- [ ] `python scripts/verify-local.py` passes on the source tree.
+- [ ] GitHub CI passes for PHP 8.0, 8.1, 8.2, 8.3 and 8.4.
+- [ ] The dedicated MySQL 8.4 API v2 integration job passes.
+- [ ] API v1 freeze verification passes.
 - [ ] Fresh production installation passes with Demo Data unchecked.
 - [ ] Fresh demonstration installation passes with Demo Data checked.
-- [ ] Existing v5.0.1.1 upgrade passes without running the installer.
-- [ ] Admin login, password change, roles, API keys, licenses, devices, logs, settings, exports, backups, and cron entry points are tested.
-- [ ] `/api/verify.php` is tested with valid, invalid, expired, suspended, and device-limit scenarios.
-- [ ] `database.sql` contains no operational data.
-- [ ] No private configuration, API key, password, license key, device identifier, IP address, log, or backup is tracked.
-- [ ] `CHANGELOG.md`, `RELEASE_NOTES_v5.2.0.md`, and repository metadata are current.
-- [ ] The release ZIP and SHA-256 checksum are inspected.
+- [ ] Existing/cPanel overwrite upgrade preserves private/runtime files and API v2 provisioning state.
+- [ ] Admin login, roles, API keys, licenses, devices, Client Apps, V2 Devices, logs, settings, exports, backups and cron entry points are checked.
+- [ ] No private configuration, signing private key, API key, password, license key, device identifier, IP address, log or backup is tracked.
+- [ ] `CHANGELOG.md`, `RELEASE_NOTES_v5.2.1.md`, `REPOSITORY_METADATA.md` and release documentation are current.
 
-## Build the release archive
+## Local verification
 
-Run from the repository root after committing and tagging:
+From the repository root:
 
 ```bash
-bash scripts/package-release.sh v5.2.0 v5.2.0
+python scripts/verify-local.py
 ```
 
-The packager:
+`bash scripts/validate.sh` remains the compatibility validation entry point. Local verification validates source; it never creates a tag or publishes a GitHub Release.
 
-1. validates the repository;
-2. requires a clean tracked working tree;
-3. packages only files tracked by the selected Git ref using `git archive`;
-4. writes a SHA-256 checksum next to the ZIP.
+## Manual forensic package check
+
+The packager remains available for local/release-forensic inspection after the target commit/tag exists:
+
+```bash
+bash scripts/package-release.sh v5.2.1 v5.2.1
+```
+
+It validates the exact Git ref, runs the source verifier inside an archive of that ref, creates a prefixed source ZIP with `git archive`, rejects private/runtime paths and writes a SHA-256 checksum.
 
 Default output:
 
 ```text
-../Licora-v5.2.0.zip
-../Licora-v5.2.0.zip.sha256
+../Licora-5.2.1.zip
+../Licora-5.2.1.zip.sha256
 ```
 
-## Tag and publish
+## Normal GitHub publication
+
+The normal release path is automatic. After the `main` CI run is green, create and push the annotated release tag:
 
 ```bash
-git switch main
-git pull --ff-only origin main
-bash scripts/validate.sh
-git tag -a v5.2.0 -m "Licora v5.2.0 - Smart Installer and First-Run Wizard"
-git push origin v5.2.0
-bash scripts/package-release.sh v5.2.0 v5.2.0
-gh release create v5.2.0 \
-  ../Licora-v5.2.0.zip \
-  ../Licora-v5.2.0.zip.sha256 \
-  --verify-tag \
-  --title "Licora v5.2.0 - Smart Installer and First-Run Wizard" \
-  --notes-file RELEASE_NOTES_v5.2.0.md \
-  --latest
+git tag -a v5.2.1 -m "Licora v5.2.1 - API v2 verification and cPanel upgrade"
+git push origin v5.2.1
 ```
 
-Windows Command Prompt equivalents are provided in `RELEASE_COMMANDS_v5.2.0.md`.
+`.github/workflows/release.yml` then:
+
+1. checks out the exact tag;
+2. validates tag/source version consistency;
+3. runs the full source verifier;
+4. runs the dedicated MySQL API v2 integration test;
+5. packages the exact tag;
+6. generates SHA-256;
+7. creates the GitHub Release using `RELEASE_NOTES_v5.2.1.md`;
+8. attaches `Licora-5.2.1.zip` and `Licora-5.2.1.zip.sha256`.
+
+Manual `gh release create` is not part of the normal v5.2.1 publication workflow.
+
+## CI source artifact
+
+Normal pushes and pull requests run the PHP 8.0–8.4 validation matrix plus the dedicated MySQL API v2 integration job. After both gates succeed, CI builds a verified source ZIP/checksum artifact for the exact commit. That CI artifact is not a public GitHub Release.
 
 ## Post-release verification
 
+- Confirm the `v5.2.1` Release workflow is green.
 - Confirm the GitHub Release is marked Latest.
-- Download the published ZIP and compare its SHA-256 checksum.
-- Extract it into a disposable directory.
-- Confirm private/runtime files are absent.
-- Run `bash scripts/validate.sh` from the extracted source.
-- Perform one clean browser installation and one API smoke test from the published asset.
+- Download the published ZIP and verify its `.sha256` file.
+- Extract it into a disposable directory and confirm private/runtime files are absent.
+- Run the source verifier from the extracted source where the local environment supports PHP/Python/Node.
+- Perform one clean browser installation and one API v1/API v2 smoke test against a disposable database.
 
-## Suggested release metadata
-
-See [REPOSITORY_METADATA.md](../REPOSITORY_METADATA.md).
-
-## v5.2 automated publication authority
-
-Local verification is `python scripts/verify-local.py` or `bash scripts/validate.sh`. Local verification never publishes a release.
-
-Normal pushes/PRs run PHP 8.0–8.4 verification plus a dedicated MySQL API v2 integration job. After those pass, CI builds a verified source ZIP/checksum workflow artifact.
-
-For the v5.2.0 release, the packager command remains available for forensic/manual inspection:
-
-```bash
-bash scripts/package-release.sh v5.2.0 v5.2.0
-```
-
-The authoritative publication path is tag-triggered GitHub Actions. Pushing `v5.2.0` runs full verification, packages the exact tag, generates SHA-256 and creates the GitHub Release from `RELEASE_NOTES_v5.2.0.md`. Manual `gh release create` is no longer part of the normal release procedure.
+Windows Command Prompt equivalents are provided in `RELEASE_COMMANDS_v5.2.1.md`.

@@ -27,12 +27,12 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
-## v5.2.0 release
+## v5.2.1 release
 
-- **Tag:** `v5.2.0`
-- **Title:** `Licora v5.2.0 — Secure API v2`
-- **Release notes:** `RELEASE_NOTES_v5.2.0.md`
-- **Assets:** automatically generated `Licora-5.2.0.zip` and `Licora-5.2.0.zip.sha256`
+- **Tag:** `v5.2.1`
+- **Title:** `Licora v5.2.1 — API v2 Verification & cPanel Upgrade Hardening`
+- **Release notes:** `RELEASE_NOTES_v5.2.1.md`
+- **Assets:** automatically generated `Licora-5.2.1.zip` and `Licora-5.2.1.zip.sha256`
 - **Publication:** tag-triggered `.github/workflows/release.yml`
 
-Licora v5.2.0 adds a desktop/public-client API that does not require embedding a shared Licora API key, while preserving API v1 compatibility.
+Licora v5.2.1 is the backward-compatible maintenance/security hardening release for Secure API v2. It fixes CI verification for supported action-major updates, adds cPanel-friendly authenticated API v2 provisioning, validates deployment signing-key pairs, and preserves refresh rate-limit counters across failed proof transactions. API v1 and the v5.2.0 five-table API v2 schema remain unchanged.

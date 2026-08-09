@@ -8,6 +8,28 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
+## [5.2.1] - 2026-08-08
+
+### Fixed
+
+- Fixed GitHub Actions verification falsely rejecting supported Dependabot action-major upgrades because `scripts/verify-local.py` required exact `@v6` marker strings.
+- Updated `actions/checkout` and `actions/setup-node` to v7 while keeping minimum-supported workflow-action verification for future compatible updates.
+- Fixed API v2 refresh app/device rate-limit writes being opened inside the refresh-token transaction, where invalid-proof rollback could undo those counters.
+- Added fail-closed validation that the configured API v2 RSA private/public signing files form the same key pair.
+
+### Added
+
+- Added a shared API v2 provisioner used by CLI setup and authenticated admin provisioning.
+- Added a cPanel/shared-hosting friendly **Initialize API v2** action on the existing Client Apps page so additive schema/signing-key setup does not require shell access.
+- Added provisioning/key-pair regression coverage and extended the MySQL integration path to exercise the shared provisioner.
+
+### Compatibility
+
+- API v1 implementation files remain byte-for-byte frozen at the established contract.
+- API v2 public endpoints, request fields, response envelope, five-table schema, license format, and existing client contract are unchanged.
+- No existing database table or column is dropped, renamed, or replaced; v5.2.1 introduces no new database migration.
+- Fresh installer behavior remains additive, and existing cPanel deployments can update by preserving private/runtime files and overwriting source files.
+
 ## [5.2.0] - 2026-08-08
 
 ### Added

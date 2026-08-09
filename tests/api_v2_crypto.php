@@ -15,6 +15,15 @@ try {
     $manager = new V2KeyManager($private, $public, 'test-key');
     check($manager->generateIfMissing() === true, 'first key generation must report generated');
     check($manager->generateIfMissing() === false, 'existing key pair must be retained');
+    $manager->assertPairMatches();
+
+    $altPrivate = $tmp . '/alt-private.pem'; $altPublic = $tmp . '/alt-public.pem';
+    $altManager = new V2KeyManager($altPrivate, $altPublic, 'alt-key');
+    check($altManager->generateIfMissing() === true, 'alternate signing key generation');
+    $mismatch = new V2KeyManager($private, $altPublic, 'mismatch-key');
+    $failed = false; try { $mismatch->assertPairMatches(); } catch (RuntimeException $e) { $failed = true; }
+    check($failed, 'mismatched server signing key pair must fail closed');
+
     $tokens = new V2TokenService($manager, 30);
     $token = $tokens->issue([
         'app_id'=>'vibrapilot','license_id'=>7,'device_id'=>'device-1234567890',
@@ -39,5 +48,5 @@ try {
     check($failed, 'tampered device proof must fail');
     echo "API v2 crypto checks passed.\n";
 } finally {
-    @unlink($private); @unlink($public); @rmdir($tmp);
+    @unlink($private); @unlink($public); @unlink($altPrivate ?? ''); @unlink($altPublic ?? ''); @rmdir($tmp);
 }

@@ -114,7 +114,7 @@ final class ApiV2
         header('X-Content-Type-Options: nosniff');
         echo json_encode(array_merge([
             'success' => $success, 'protocol' => 'licora-api-v2', 'api_version' => 2,
-            'server_version' => defined('APP_VERSION') ? APP_VERSION : '5.2.0',
+            'server_version' => defined('APP_VERSION') ? APP_VERSION : '5.2.1',
             'request_id' => self::requestId(), 'code' => $code, 'message' => $message, 'server_time' => time(),
         ], $data), JSON_UNESCAPED_SLASHES);
         exit;

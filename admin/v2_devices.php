@@ -52,7 +52,7 @@ function licora_v2_mask_license($key) {
 <body class="admin-ui"><?php include 'includes/navbar.php'; ?>
 <div class="container-fluid admin-shell">
 <div class="page-hero d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3"><div><h2><i class="bi bi-shield-check"></i> API v2 Devices</h2><p>Review device-bound public-key credentials and revoke compromised or retired API v2 clients.</p></div><a class="btn btn-outline-light" href="client_apps.php"><i class="bi bi-boxes"></i> Client Applications</a></div>
-<?php if (!$schemaReady): ?><div class="alert alert-warning">API v2 schema is not installed. Run <code>php scripts/setup-v2.php</code>.</div><?php endif; ?>
+<?php if (!$schemaReady): ?><div class="alert alert-warning">API v2 provisioning is incomplete. Open <a href="client_apps.php" class="alert-link">Client Apps</a> to initialize it from the authenticated admin UI, or run <code>php scripts/setup-v2.php</code> from CLI.</div><?php endif; ?>
 <?php if ($success): ?><div class="alert alert-success"><?php echo Security::escape($success); ?></div><?php endif; ?><?php if ($error): ?><div class="alert alert-danger"><?php echo Security::escape($error); ?></div><?php endif; ?>
 <div class="card"><div class="card-header"><h5 class="mb-0">Registered API v2 Device Credentials</h5></div><div class="card-body"><div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>App</th><th>License</th><th>Device</th><th>Public-key fingerprint</th><th>Status</th><th>Last seen</th><th></th></tr></thead><tbody>
 <?php if (!$devices): ?><tr><td colspan="7" class="text-muted text-center py-4">No API v2 device credentials found.</td></tr><?php endif; ?>

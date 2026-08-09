@@ -22,7 +22,7 @@ Environment variables are preferred in managed hosting and containers. On shared
 | `DB_PASS` | `LICENSE_DB_PASS`, fallback `DB_PASS` | empty | Required when the database account has a password. |
 | `APP_NAME` | `APP_NAME` | `Licora` | Application label. |
 | `APP_URL` | `APP_URL` | `http://localhost` | Public application root, without a query string or fragment. |
-| `APP_VERSION` | `APP_VERSION` | `5.2.0` | Source release identity returned by the verification API. |
+| `APP_VERSION` | `APP_VERSION` | `5.2.1` | Source release identity returned by the verification API. |
 | `APP_TIMEZONE` | `APP_TIMEZONE` | `Asia/Dhaka` | PHP runtime timezone. |
 | `APP_LOCALE` | `APP_LOCALE` | `en` | Application locale metadata. |
 | `MAIL_FROM_NAME` | `MAIL_FROM_NAME` | `APP_NAME` | Mail display name. CR/LF characters are rejected by the installer. |
@@ -59,7 +59,7 @@ LICENSE_ALLOWED_ORIGIN=https://app.example.com
 
 ## Installer-generated private configuration
 
-A fresh v5.2.0 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
+A fresh v5.2.1 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
 
 Never commit or publish:
 
@@ -75,7 +75,7 @@ The `settings` table and admin page store system name, timezone, default license
 
 ## Database privileges
 
-Fresh installation executes the existing `database.sql`, including tables, indexes, foreign keys, and triggers. The database account therefore needs the privileges required by that schema. Shared hosts that deny `TRIGGER` will not complete the standard installer. v5.2.0 returns a non-secret diagnostic when that denial is detected.
+Fresh installation executes the existing `database.sql`, including tables, indexes, foreign keys, and triggers. The database account therefore needs the privileges required by that schema. Shared hosts that deny `TRIGGER` will not complete the standard installer. v5.2.1 returns a non-secret diagnostic when that denial is detected.
 
 ## API v2 configuration
 
@@ -90,4 +90,6 @@ Fresh installation executes the existing `database.sql`, including tables, index
 | Signing private-key path | `LICENSE_V2_SIGNING_PRIVATE_KEY_PATH` | `includes/.licora-v2-signing-private.pem` |
 | Signing public-key path | `LICENSE_V2_SIGNING_PUBLIC_KEY_PATH` | `includes/.licora-v2-signing-public.pem` |
 
-Signing key files are deployment material, not repository configuration. Generate/validate them with `php scripts/setup-v2.php`.
+Signing key files are deployment material, not repository configuration. Existing deployments can generate/validate them either with `php scripts/setup-v2.php` or, when shell access is unavailable, through **Admin → Client Apps → Initialize API v2**. Both paths use the same additive provisioner and refuse partial or mismatched existing key pairs.
+
+Set `LICENSE_TRUST_PROXY_HEADERS=1` only when Licora is behind a trusted reverse proxy that overwrites the forwarded-protocol header. Never enable it for direct public traffic where clients can supply `X-Forwarded-Proto` themselves.

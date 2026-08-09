@@ -61,3 +61,8 @@ Historical logs are not deleted or rewritten by this release.
 Licora v5.2.0 API v2 does not require a shared server API key in desktop/public clients. Deployment RSA signing private keys remain server-side; clients use per-device P-256 key pairs and verify/use short-lived server-signed credentials. Refresh tokens are stored as hashes server-side and rotate on use. Production API v2 requires HTTPS by default and uses timestamp/nonce request proofs to resist replay.
 
 Never commit `includes/.licora-v2-signing-private.pem`, `includes/.licora-v2-signing-public.pem`, deployment configuration, device private keys, refresh credentials, or live license/customer data. See `docs/API_V2_SECURITY.md`.
+
+
+### v5.2.1 API v2 maintenance hardening
+
+Licora v5.2.1 preserves the v5.2.0 public API v2 contract while tightening operational verification. Runtime token services now reject a deployment where the configured RSA private/public signing files do not form the same key pair. Refresh app/device rate-limit writes occur outside the refresh-token row-lock transaction so failed device proofs cannot roll those counters back. Existing deployments without shell access can initialize the additive v2 schema and missing signing keys through the authenticated Client Apps admin page; existing or partial signing files are never replaced automatically.

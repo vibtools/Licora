@@ -63,15 +63,28 @@ final class V2KeyManager
         return (string)$details['key'];
     }
 
-    public function generateIfMissing(): bool
+    public function assertPairMatches(): void
     {
-        if (PHP_SAPI !== 'cli') { throw new RuntimeException('Signing key generation is CLI-only.'); }
+        $privateDetails = openssl_pkey_get_details($this->requirePrivateKey());
+        $publicDetails = openssl_pkey_get_details($this->requirePublicKey());
+        if (!is_array($privateDetails) || !is_array($publicDetails) || empty($privateDetails['key']) || empty($publicDetails['key'])) {
+            throw new RuntimeException('Unable to inspect API v2 signing key pair.');
+        }
+        $privatePublic = trim((string)$privateDetails['key']);
+        $publicPublic = trim((string)$publicDetails['key']);
+        if (!hash_equals(hash('sha256', $privatePublic), hash('sha256', $publicPublic))) {
+            throw new RuntimeException('API v2 signing private/public key files do not form a matching pair.');
+        }
+    }
+
+    public function generateIfMissing(bool $allowNonCli = false): bool
+    {
+        if (PHP_SAPI !== 'cli' && !$allowNonCli) { throw new RuntimeException('Signing key generation is CLI-only unless explicitly authorized by an authenticated admin provisioning flow.'); }
         if (is_file($this->privatePath) || is_file($this->publicPath)) {
             if (!is_file($this->privatePath) || !is_file($this->publicPath)) {
                 throw new RuntimeException('Only one API v2 signing key file exists; refusing to replace it.');
             }
-            $this->requirePrivateKey();
-            $this->requirePublicKey();
+            $this->assertPairMatches();
             return false;
         }
 
@@ -87,6 +100,7 @@ final class V2KeyManager
         self::atomicWrite($this->privatePath, $privatePem, 0600);
         try { self::atomicWrite($this->publicPath, (string)$details['key'], 0644); }
         catch (Throwable $e) { @unlink($this->privatePath); throw $e; }
+        $this->assertPairMatches();
         return true;
     }
 

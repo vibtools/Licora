@@ -17,6 +17,7 @@ function licora_v2_services(): array
     $repository->requireSchema();
     if (random_int(1, 100) === 1) { $repository->cleanupExpiredNonces(); }
     $keys = new V2KeyManager();
+    $keys->assertPairMatches();
     $skew = ApiV2::settingInt('LICENSE_V2_CLOCK_SKEW', 300, 30, 3600);
     return [$repository, new V2TokenService($keys, $skew), $keys, $skew];
 }

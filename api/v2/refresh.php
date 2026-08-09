@@ -11,12 +11,20 @@ try {
     // The IP bucket is consumed before opening the refresh-token transaction so
     // failed proof attempts cannot roll the rate-limit update back with that transaction.
     ApiV2::rateLimit('v2.refresh.ip', ApiV2::settingInt('LICENSE_V2_RATE_LIMIT', 300, 10, 100000));
+    // Consume app/device buckets before opening the refresh-token transaction.
+    // Otherwise a later proof failure would roll the rate-limit writes back with
+    // that transaction and allow repeated invalid-proof attempts to evade them.
+    $rateContext = $repository->refreshRateLimitContext($refreshToken);
+    if (is_array($rateContext)) {
+        $rateAppId = (string)$rateContext['app_id'];
+        $rateDeviceId = (string)$rateContext['device_hash'];
+        $rateLimit = max(10, (int)$rateContext['rate_limit_per_hour']);
+        ApiV2::rateLimit('v2.refresh.app.' . $rateAppId, $rateLimit);
+        ApiV2::rateLimit('v2.refresh.device.' . substr(hash('sha256', $rateDeviceId), 0, 24), $rateLimit);
+    }
     $context = $repository->refreshContextForUpdate($refreshToken);
     try {
         $appId = (string)$context['app_id']; $deviceId = (string)$context['device_hash'];
-        $appLimit = max(10, (int)$context['rate_limit_per_hour']);
-        ApiV2::rateLimit('v2.refresh.app.' . $appId, $appLimit);
-        ApiV2::rateLimit('v2.refresh.device.' . substr(hash('sha256', $deviceId), 0, 24), $appLimit);
         $version = ApiV2::appVersion($data['app_version']);
         $minimum = trim((string)($context['min_version'] ?? ''));
         if ($minimum !== '' && version_compare($version, $minimum, '<')) { throw new V2Exception('APP_VERSION_UNSUPPORTED', 'Application version is not supported.', 426); }

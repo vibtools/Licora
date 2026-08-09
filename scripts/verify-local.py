@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local source verifier for Licora v5.2.0.
+"""Local source verifier for Licora v5.2.1.
 
 This verifier validates source and tests only. It never creates a Git tag, release,
 or GitHub artifact. Release packaging is intentionally owned by GitHub Actions and
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "5.2.0"
+VERSION = "5.2.1"
 
 V1_GIT_BLOBS = {
     "api/verify.php": "4dc549c2afea0772d3f2ffa8b330fd24b8b13ec2",
@@ -28,13 +28,13 @@ V1_GIT_BLOBS = {
 
 REQUIRED = [
     "README.md", "CHANGELOG.md", "SECURITY.md", "REPOSITORY_METADATA.md",
-    "RELEASE_NOTES_v5.2.0.md", "RELEASE_COMMANDS_v5.2.0.md",
-    "audit/V5.2.0_PHASE02_STEP001_FORENSIC_AUDIT.md", "audit/V5.2.0_DELTA_PATCH_MANIFEST.txt", "audit/V5.2.0_DELTA_FILE_SHA256SUMS.txt",
+    "RELEASE_NOTES_v5.2.1.md", "RELEASE_COMMANDS_v5.2.1.md",
+    "audit/V5.2.1_PHASE02_STEP001_FORENSIC_AUDIT.md", "audit/V5.2.1_DELTA_PATCH_MANIFEST.txt", "audit/V5.2.1_DELTA_FILE_SHA256SUMS.txt",
     "migration-v5.2.0-api-v2.sql", "database.sql", "includes/.htaccess",
     "api/verify.php", "api/check_license.php",
     "api/v2/activate.php", "api/v2/refresh.php", "api/v2/status.php", "api/v2/deactivate.php",
     "includes/v2/V2Exception.php", "includes/v2/V2KeyManager.php", "includes/v2/V2TokenService.php",
-    "includes/v2/V2DeviceProof.php", "includes/v2/ApiV2.php", "includes/v2/V2Repository.php", "includes/v2/bootstrap.php",
+    "includes/v2/V2DeviceProof.php", "includes/v2/ApiV2.php", "includes/v2/V2Repository.php", "includes/v2/V2Provisioner.php", "includes/v2/bootstrap.php",
     "admin/client_apps.php", "admin/v2_devices.php",
     "scripts/setup-v2.php", "scripts/verify-local.py", "scripts/validate.sh", "scripts/package-release.sh",
     "tests/api_v1_freeze.php", "tests/api_v2_crypto.php", "tests/api_v2_static.php", "tests/api_v2_db_integration.php",
@@ -73,6 +73,30 @@ def run(command: list[str]) -> None:
     subprocess.run(command, cwd=ROOT, check=True)
 
 
+def workflow_action_refs(text: str, action: str) -> list[str]:
+    pattern = re.compile(r"uses:\s*" + re.escape(action) + r"@([^\s#]+)")
+    return pattern.findall(text)
+
+
+def version_tuple(ref: str) -> tuple[int, ...]:
+    value = ref[1:] if ref.startswith("v") else ref
+    if not re.fullmatch(r"\d+(?:\.\d+)*", value):
+        fail(f"workflow action ref is not a numeric version tag: {ref}")
+    return tuple(int(part) for part in value.split("."))
+
+
+def require_action_minimum(text: str, action: str, minimum: tuple[int, ...], label: str) -> None:
+    refs = workflow_action_refs(text, action)
+    if not refs:
+        fail(f"{label} action is missing: {action}")
+    for ref in refs:
+        current = version_tuple(ref)
+        padded_current = current + (0,) * max(0, len(minimum) - len(current))
+        padded_minimum = minimum + (0,) * max(0, len(current) - len(minimum))
+        if padded_current < padded_minimum:
+            fail(f"{label} action {action}@{ref} is below supported minimum {'.'.join(map(str, minimum))}")
+
+
 print("[1/12] Required source structure")
 for rel in REQUIRED:
     if not (ROOT / rel).is_file():
@@ -87,14 +111,14 @@ for rel, expected in V1_GIT_BLOBS.items():
 print("[3/12] Release/version consistency")
 config = read("includes/config.php")
 if f"env_value('APP_VERSION', '{VERSION}')" not in config:
-    fail("runtime APP_VERSION is not 5.2.0")
-for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.2.0.md", "CHANGELOG.md"]:
+    fail("runtime APP_VERSION is not 5.2.1")
+for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.2.1.md", "CHANGELOG.md"]:
     if VERSION not in read(rel):
-        fail(f"5.2.0 release marker missing from {rel}")
+        fail(f"5.2.1 release marker missing from {rel}")
 
 print("[4/12] API v2 protocol/security contract")
 v2_endpoint_text = "\n".join(read(f"api/v2/{name}.php") for name in ("activate", "refresh", "status", "deactivate"))
-v2_client_code = v2_endpoint_text + "\n" + "\n".join(read("includes/v2/" + name) for name in ("ApiV2.php", "V2DeviceProof.php", "V2Exception.php", "V2KeyManager.php", "V2Repository.php", "V2TokenService.php", "bootstrap.php"))
+v2_client_code = v2_endpoint_text + "\n" + "\n".join(read("includes/v2/" + name) for name in ("ApiV2.php", "V2DeviceProof.php", "V2Exception.php", "V2KeyManager.php", "V2Repository.php", "V2Provisioner.php", "V2TokenService.php", "bootstrap.php"))
 if re.search(r"(?i)\bX-API-Key\b|\bapi_key\b|LICENSE_API_KEY", v2_client_code):
     fail("API v2 public-client implementation contains a shared/master API-key marker")
 for marker in [
@@ -109,6 +133,18 @@ for marker in ["OPENSSL_KEYTYPE_EC", "prime256v1", "OPENSSL_ALGO_SHA256"]:
 for marker in ["RS256", "LICORA-V2", "token_version", "device_key_fingerprint"]:
     if marker not in read("includes/v2/V2TokenService.php"):
         fail(f"access-token marker missing: {marker}")
+
+for marker in ["assertPairMatches", "matching pair", "allowNonCli"]:
+    if marker not in read("includes/v2/V2KeyManager.php"):
+        fail(f"signing-key pair validation marker missing: {marker}")
+for marker in ["class V2Provisioner", "migrationStatements", "provision(bool", "schema_ready", "key_pair_ready"]:
+    if marker not in read("includes/v2/V2Provisioner.php"):
+        fail(f"API v2 provisioning marker missing: {marker}")
+refresh = read("api/v2/refresh.php")
+rate_context_pos = refresh.find("refreshRateLimitContext")
+transaction_pos = refresh.find("refreshContextForUpdate")
+if rate_context_pos < 0 or transaction_pos < 0 or rate_context_pos > transaction_pos:
+    fail("refresh app/device rate-limit context must be consumed before the refresh transaction opens")
 
 print("[5/12] Additive database/migration contract")
 migration = read("migration-v5.2.0-api-v2.sql")
@@ -185,17 +221,29 @@ for marker in ["$v2AppOptions", "$v2AllowedAppIds", "API v2 Client App", "bulk_v
     if marker not in license_ui:
         fail(f"license/API v2 app-scope UI marker missing: {marker}")
 
+client_apps = read("admin/client_apps.php")
+for marker in ["V2Provisioner", "initialize_v2", "Initialize API v2", "authenticated admin UI"]:
+    if marker not in client_apps:
+        fail(f"cPanel/admin API v2 provisioning marker missing: {marker}")
+setup_v2 = read("scripts/setup-v2.php")
+if "V2Provisioner" not in setup_v2:
+    fail("CLI API v2 setup does not use the shared provisioner")
+
 print("[8/12] GitHub CI/release automation")
 ci = read(".github/workflows/ci.yml")
 release = read(".github/workflows/release.yml")
-for marker in ["actions/checkout@v6", "shivammathur/setup-php@2.37.2", "actions/setup-python@v6", "actions/setup-node@v6", "actions/upload-artifact@v6", "mysql-integration", "scripts/package-release.sh"]:
+for text, label in [(ci, "CI"), (release, "release")]:
+    require_action_minimum(text, "actions/checkout", (6,), label)
+    require_action_minimum(text, "actions/setup-python", (6,), label)
+    require_action_minimum(text, "actions/setup-node", (6,), label)
+    require_action_minimum(text, "shivammathur/setup-php", (2, 37, 2), label)
+require_action_minimum(ci, "actions/upload-artifact", (6,), "CI")
+for marker in ["mysql-integration", "scripts/package-release.sh"]:
     if marker not in ci:
         fail(f"CI automation marker missing: {marker}")
 for marker in ["tags:", "contents: write", "gh release create", "--verify-tag", "RELEASE_NOTES_${GITHUB_REF_NAME}.md", "scripts/package-release.sh"]:
     if marker not in release:
         fail(f"release automation marker missing: {marker}")
-if "actions/checkout@v4" in ci + release or "actions/setup-node@v4" in ci + release or "actions/setup-python@v5" in ci + release:
-    fail("deprecated workflow action major remains active")
 
 print("[9/12] PHP syntax")
 php = shutil.which("php")
@@ -230,4 +278,4 @@ for marker in ["git archive", "scripts/verify-local.py", "sha256", ".licora-v2-s
     if marker not in packager:
         fail(f"release packaging marker missing: {marker}")
 
-print("Licora v5.2.0 local verification passed.")
+print("Licora v5.2.1 local verification passed.")

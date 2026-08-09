@@ -101,6 +101,14 @@ final class V2Repository
         return ['token' => $token, 'hash' => $hash, 'family_id' => $family, 'expires_at' => $expires];
     }
 
+    public function refreshRateLimitContext(string $refreshToken): ?array
+    {
+        $stmt = $this->db->prepare('SELECT dc.app_id, dc.device_hash, a.rate_limit_per_hour FROM v2_refresh_tokens rt JOIN v2_device_credentials dc ON dc.id = rt.device_credential_id JOIN v2_client_apps a ON a.app_id = dc.app_id WHERE rt.token_hash = :token_hash LIMIT 1');
+        $stmt->execute([':token_hash' => hash('sha256', $refreshToken)]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
     public function refreshContextForUpdate(string $refreshToken): array
     {
         $this->db->beginTransaction();

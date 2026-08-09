@@ -1,6 +1,6 @@
 # Installation
 
-Licora v5.2.0 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
+Licora v5.2.1 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
 
 ## Requirements
 
@@ -82,7 +82,7 @@ The sanitized schema includes a temporary local-development account for manual i
 - Username: `admin`
 - Password: `ChangeMe!2026`
 
-Change it immediately. The v5.2.0 wizard replaces that temporary row before installation completes.
+Change it immediately. The v5.2.1 wizard replaces that temporary row before installation completes.
 
 ## Database port
 
@@ -113,11 +113,11 @@ After installation:
 
 Existing v5.0.1 and v5.0.1.1 deployments must not run the first-run wizard. Preserve private configuration and encrypted-key material, replace application source, and follow `UPGRADE_GUIDE.md`.
 
-## v5.2.0 production-readiness checks
+## v5.2.1 production-readiness checks
 
 Before public exposure:
 
-- Use PHP 8.1, 8.2, or 8.3 with required extensions.
+- Use a supported PHP 8.0–8.4 runtime with the required extensions; production deployments should prefer a currently maintained PHP branch supported by the hosting provider.
 - Keep the application read-only where practical.
 - Grant temporary write access only to `includes/` during first installation.
 - Confirm private configuration, installation flags, cron paths, audit files, and backups are not web-accessible.
@@ -125,16 +125,15 @@ Before public exposure:
 - Restore restrictive permissions after installation.
 - Review `COMPATIBILITY_MATRIX.md` for server-specific validation.
 
-Licora defines no dedicated upload, cache, or storage directory. v5.2.0 does not introduce one.
+Licora defines no dedicated upload, cache, or storage directory. v5.2.1 does not introduce one.
 
 ## Secure API v2 installation
 
-Fresh v5.2.0 wizard installations generate the deployment RSA-3072 API v2 signing key pair automatically and create the additive v2 tables through `database.sql`. The private key is never shown in the UI.
+Fresh v5.2.1 wizard installations generate the deployment RSA-3072 API v2 signing key pair automatically and create the additive v2 tables through `database.sql`. The private key is never shown in the UI.
 
-For an existing Licora deployment upgraded from v5.1.0, preserve all existing private files, replace source, then run:
+For an existing Licora deployment upgraded from v5.1.0 or v5.2.0, preserve all private/runtime files and overwrite only the application source. Then initialize/verify API v2 by either method:
 
-```bash
-php scripts/setup-v2.php
-```
+- **cPanel/shared hosting without Terminal:** sign in as an authorized administrator, open **Admin → Client Apps**, and choose **Initialize API v2**.
+- **CLI-capable hosting:** run `php scripts/setup-v2.php` from the Licora project root.
 
-This applies only `migration-v5.2.0-api-v2.sql` and generates the signing key pair only when neither key file exists. It refuses a partial key-pair state rather than silently replacing deployment identity.
+Both paths apply only the existing additive `migration-v5.2.0-api-v2.sql`, generate the signing key pair only when neither key file exists, validate that an existing private/public pair actually matches, and refuse partial or mismatched key material rather than silently replacing deployment identity. If the host database account cannot create the additive tables or the signing-key directory is not writable, provisioning fails without modifying API v1.

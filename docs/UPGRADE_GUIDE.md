@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -79,3 +79,18 @@ The v5.1.0 first-run installer remains a historical fresh-install baseline. Exis
 7. Verify activation, refresh, status, deactivation, device limit, revocation, API v1 regression, admin, cron and existing encrypted-data behavior.
 
 `migration-v5.2.0-api-v2.sql` creates only the five `v2_*` tables. It does not drop, rename, or replace existing v1 tables. API v1 endpoints and their shared API-key behavior remain unchanged for compatibility.
+
+
+## v5.2.0 to v5.2.1 maintenance upgrade
+
+v5.2.1 is a source/security-maintenance update for the existing API v2 implementation. It introduces **no new database migration** and keeps the five-table `migration-v5.2.0-api-v2.sql` schema unchanged.
+
+1. Back up the database and all private/runtime files, including `includes/config.local.php`, `includes/.licora-encryption.key`, `includes/.licora-installed`, and both API v2 signing key files when present.
+2. Verify the current deployment before changing source.
+3. Overwrite the tracked application source with v5.2.1 while preserving the private/runtime files above.
+4. Run `python scripts/verify-local.py` when local/Terminal access exists.
+5. If API v2 was never provisioned, or you want to verify its provisioning state, use **Admin → Client Apps → Initialize API v2**. CLI-capable hosts may use `php scripts/setup-v2.php` instead.
+6. Existing valid signing keys are retained and verified. Partial or mismatched signing-key files are not replaced automatically; correct the deployment files from a trusted backup before retrying.
+7. Confirm Client Apps, V2 Devices, activation, refresh, status, deactivation, device limit/revocation, API v1, admin, cron and existing encrypted-data behavior.
+
+The v5.2.1 overwrite does not run the fresh-install wizard and does not require schema changes when API v2 is already provisioned. The authenticated admin provisioning action exists specifically for cPanel/shared-hosting environments without shell access.

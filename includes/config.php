@@ -29,7 +29,7 @@ if (!function_exists('env_value')) {
 // Resolve release identity before private local configuration is loaded.
 // This prevents an installer-generated local configuration from pinning
 // future source upgrades while retaining the APP_VERSION environment override.
-if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.2.0'));
+if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.2.1'));
 
 // Optional private local override. Keep this file outside public web root where possible.
 $localConfig = __DIR__ . '/config.local.php';
@@ -62,7 +62,7 @@ if (!defined('JWT_SECRET')) define('JWT_SECRET', env_value('LICENSE_JWT_SECRET',
 if (!defined('API_RATE_LIMIT')) define('API_RATE_LIMIT', (int)env_value('API_RATE_LIMIT', 1000));
 if (!defined('API_VERSION')) define('API_VERSION', env_value('API_VERSION', 'v1'));
 
-// Licora v5.2.0 API v2 public/runtime configuration.
+// Licora v5.2.1 API v2 public/runtime configuration.
 // No server signing private key or API-v1 credential is embedded here.
 if (!defined('LICENSE_V2_REQUIRE_HTTPS')) define('LICENSE_V2_REQUIRE_HTTPS', env_value('LICENSE_V2_REQUIRE_HTTPS', '1'));
 if (!defined('LICENSE_TRUST_PROXY_HEADERS')) define('LICENSE_TRUST_PROXY_HEADERS', env_value('LICENSE_TRUST_PROXY_HEADERS', '0'));

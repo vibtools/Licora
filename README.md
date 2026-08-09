@@ -120,7 +120,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.2.0` |
+| Application version | `APP_VERSION` | `5.2.1` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -134,7 +134,7 @@ Full reference: [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
 bash scripts/validate.sh
 ```
 
-The validation script checks PHP syntax, security behavior, compatibility invariants, installer parsing and lock behavior, release-version consistency, safe public errors, JavaScript syntax, public-release secret markers, and SQL seed scope. Database-backed behavior still requires a disposable MySQL/MariaDB instance.
+The validation script checks PHP syntax, security behavior, compatibility invariants, installer parsing and lock behavior, release-version consistency, safe public errors, JavaScript syntax, public-release secret markers, and SQL seed scope. Database-backed behavior requires a disposable MySQL/MariaDB instance; GitHub CI supplies a dedicated MySQL 8.4 API v2 integration gate before source artifacts or tagged releases are produced.
 
 ## Documentation
 
@@ -149,6 +149,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Maintenance](docs/MAINTENANCE.md)
 - [Release guide](docs/RELEASE.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.2.1 release notes](RELEASE_NOTES_v5.2.1.md)
 - [v5.2.0 release notes](RELEASE_NOTES_v5.2.0.md)
 - [v5.1.0 release notes](RELEASE_NOTES_v5.1.0.md)
 - [v5.0.1 release notes](RELEASE_NOTES-v5.0.1.md)
@@ -157,11 +158,11 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
-## Secure API v2 (v5.2.0)
+## Secure API v2 (v5.2.1)
 
-Licora v5.2.0 adds `/api/v2/activate.php`, `/refresh.php`, `/status.php`, and `/deactivate.php` for public/desktop clients. API v2 uses registered App IDs, P-256 device keys, RS256 server-signed short-lived access tokens, rotating hashed refresh tokens, nonce/timestamp replay protection, and device revocation. API v1 remains unchanged for existing integrations.
+Secure API v2, introduced in v5.2.0 and hardened in v5.2.1, provides `/api/v2/activate.php`, `/refresh.php`, `/status.php`, and `/deactivate.php` for public/desktop clients. It uses registered App IDs, P-256 device keys, RS256 server-signed short-lived access tokens, rotating hashed refresh tokens, nonce/timestamp replay protection, device revocation, matching server signing-key validation, and persistent refresh rate-limit enforcement. API v1 remains unchanged for existing integrations.
 
-Existing deployments apply the additive schema and create deployment signing keys with `php scripts/setup-v2.php`. See [API v2](docs/API_V2.md), [security model](docs/API_V2_SECURITY.md), [client integration](docs/API_V2_CLIENT_INTEGRATION.md), and [migration](docs/API_V2_MIGRATION.md).
+Fresh installations provision API v2 during the installer. Existing cPanel/shared-hosting deployments can preserve private/runtime files, overwrite the source, then use **Admin → Client Apps → Initialize API v2** without shell access. CLI-capable deployments may instead run `php scripts/setup-v2.php`. Both paths reuse the same additive v5.2.0 schema and never silently replace existing signing key files. See [API v2](docs/API_V2.md), [security model](docs/API_V2_SECURITY.md), [client integration](docs/API_V2_CLIENT_INTEGRATION.md), and [migration](docs/API_V2_MIGRATION.md).
 
 ## Known limitations
 
@@ -170,7 +171,7 @@ Existing deployments apply the additive schema and create deployment signing key
 - The admin interface depends on public CDN assets unless a deployment vendors them locally.
 - Nginx and LiteSpeed operators must reproduce the supplied Apache deny rules.
 - The standard schema requires database privileges including `TRIGGER`; some free shared hosts do not provide them.
-- Full browser and database-backed regression testing remains a release/deployment responsibility.
+- Production-environment browser smoke testing and host-specific MySQL/MariaDB compatibility remain deployment responsibilities; the repository CI includes a disposable MySQL 8.4 API v2 integration gate.
 
 Review [SECURITY.md](SECURITY.md), [docs/COMPATIBILITY_MATRIX.md](docs/COMPATIBILITY_MATRIX.md), and the forensic audit before production deployment.
 

@@ -6,7 +6,7 @@ if (!defined('DB_USER')) define('DB_USER', 'root');
 if (!defined('DB_PASS')) define('DB_PASS', '');
 if (!defined('APP_NAME')) define('APP_NAME', 'Licora');
 if (!defined('APP_URL')) define('APP_URL', 'http://localhost/licora');
-if (!defined('APP_VERSION')) define('APP_VERSION', '5.2.0');
+if (!defined('APP_VERSION')) define('APP_VERSION', '5.2.1');
 if (!defined('APP_TIMEZONE')) define('APP_TIMEZONE', 'Asia/Dhaka');
 if (!defined('APP_LOCALE')) define('APP_LOCALE', 'en');
 if (!defined('MAIL_FROM_NAME')) define('MAIL_FROM_NAME', 'Licora');
