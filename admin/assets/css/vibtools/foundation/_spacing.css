@@ -1,0 +1,25 @@
+/* VibTools Foundation Spacing — v2.1.2 */
+:root {
+  --space-0: 0;
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 10px;
+  --space-6: 12px;
+  --space-8: 16px;
+  --space-10: 20px;
+  --space-12: 24px;
+  --space-14: 28px;
+  --space-16: 32px;
+  --height-topbar: 44px;
+  --width-sidebar: 196px;
+  --height-button-sm: 28px;
+  --height-button-md: 32px;
+  --height-input-sm: 30px;
+  --height-input-md: 34px;
+  --content-max-width: 1280px;
+  --docs-shell-max-width: 1280px;
+  --card-padding-y: 10px;
+  --card-padding-x: 12px;
+}

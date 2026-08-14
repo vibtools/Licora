@@ -66,3 +66,11 @@ Never commit `includes/.licora-v2-signing-private.pem`, `includes/.licora-v2-sig
 ### v5.2.1 API v2 maintenance hardening
 
 Licora v5.2.1 preserves the v5.2.0 public API v2 contract while tightening operational verification. Runtime token services now reject a deployment where the configured RSA private/public signing files do not form the same key pair. Refresh app/device rate-limit writes occur outside the refresh-token row-lock transaction so failed device proofs cannot roll those counters back. Existing deployments without shell access can initialize the additive v2 schema and missing signing keys through the authenticated Client Apps admin page; existing or partial signing files are never replaced automatically.
+
+## v5.3.0 updater trust boundary
+
+The in-app updater is Super-Admin-only and does not accept arbitrary package URLs. It obtains stable release metadata from the configured official GitHub repository, requires a dedicated RSA/SHA-256 signed manifest, validates the signed package size/hash and every staged file hash, rejects path traversal/symlinks/protected deployment paths, uses bounded persistent jobs, serializes concurrent starts, and temporarily blocks non-updater traffic while source/schema mutations are in progress.
+
+The **private update signing key is not a Licora deployment secret** and must never be installed on a Licora server. It belongs only in secured release infrastructure / the GitHub Actions secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY`. The repository contains only the updater public verification key. API v2 signing keys and updater signing keys are separate cryptographic domains and must not be reused.
+
+Updater diagnostics are sanitized operational events; release/download/auth tokens and private key material must never be added to updater event messages.

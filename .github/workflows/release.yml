@@ -34,7 +34,7 @@ jobs:
         uses: shivammathur/setup-php@2.37.2
         with:
           php-version: '8.4'
-          extensions: pdo_mysql, openssl, json
+          extensions: pdo_mysql, openssl, json, curl, zip
           coverage: none
 
       - name: Set up Python
@@ -61,13 +61,21 @@ jobs:
       - name: Full source verification
         run: python3 scripts/verify-local.py
 
-      - name: API v2 database integration
+      - name: API v2 and updater database integration
         env:
           LICORA_V2_TEST_ALLOW_SCHEMA_RESET: '1'
           LICORA_TEST_DB_DSN: mysql:host=127.0.0.1;port=3306;dbname=licora_test;charset=utf8mb4
           LICORA_TEST_DB_USER: root
           LICORA_TEST_DB_PASS: licora-release-test
-        run: php tests/api_v2_db_integration.php
+          LICENSE_DB_HOST: 127.0.0.1
+          LICENSE_DB_PORT: '3306'
+          LICENSE_DB_NAME: licora_test
+          LICENSE_DB_USER: root
+          LICENSE_DB_PASS: licora-release-test
+        run: |
+          php tests/api_v2_db_integration.php
+          php tests/admin_v2_ui_db_integration.php
+          php tests/updater_db_integration.php
 
       - name: Build exact-tag release ZIP and checksum
         shell: bash
@@ -75,6 +83,29 @@ jobs:
           version="${GITHUB_REF_NAME#v}"
           mkdir -p release
           bash scripts/package-release.sh "$GITHUB_REF_NAME" "$GITHUB_REF_NAME" "release/Licora-${version}.zip"
+
+      - name: Build signed updater manifest
+        env:
+          LICORA_UPDATE_SIGNING_PRIVATE_KEY: ${{ secrets.LICORA_UPDATE_SIGNING_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          test -n "${LICORA_UPDATE_SIGNING_PRIVATE_KEY:-}" || { echo "Repository secret LICORA_UPDATE_SIGNING_PRIVATE_KEY is required." >&2; exit 1; }
+          private_key="$RUNNER_TEMP/licora-update-signing-private.pem"
+          printf '%s' "$LICORA_UPDATE_SIGNING_PRIVATE_KEY" > "$private_key"
+          chmod 600 "$private_key"
+          openssl pkey -in "$private_key" -pubout -outform DER > "$RUNNER_TEMP/private-derived-public.der"
+          openssl pkey -pubin -in includes/updater/update-signing-public.pem -outform DER > "$RUNNER_TEMP/tracked-public.der"
+          cmp "$RUNNER_TEMP/private-derived-public.der" "$RUNNER_TEMP/tracked-public.der"
+          python3 scripts/build-update-manifest.py \
+            --version "$version" \
+            --ref "$GITHUB_REF_NAME" \
+            --package "release/Licora-${version}.zip" \
+            --output release/licora-update-manifest.json
+          openssl dgst -sha256 -sign "$private_key" -out release/licora-update-manifest.sig release/licora-update-manifest.json
+          openssl dgst -sha256 -verify includes/updater/update-signing-public.pem -signature release/licora-update-manifest.sig release/licora-update-manifest.json
+          rm -f "$private_key" "$RUNNER_TEMP/private-derived-public.der" "$RUNNER_TEMP/tracked-public.der"
 
       - name: Publish GitHub Release
         env:
@@ -85,6 +116,8 @@ jobs:
           gh release create "$GITHUB_REF_NAME" \
             "release/Licora-${version}.zip" \
             "release/Licora-${version}.zip.sha256" \
+            "release/licora-update-manifest.json" \
+            "release/licora-update-manifest.sig" \
             --verify-tag \
             --title "Licora ${GITHUB_REF_NAME}" \
             --notes-file "RELEASE_NOTES_${GITHUB_REF_NAME}.md" \

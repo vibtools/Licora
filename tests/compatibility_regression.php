@@ -91,7 +91,7 @@ foreach ($adminRoutes as $path) {
 }
 
 $config = $read('includes/config.php');
-$assert(strpos($config, "env_value('APP_VERSION', '5.2.2')") !== false, 'application version is v5.2.2');
+$assert(strpos($config, "env_value('APP_VERSION', '5.3.0')") !== false, 'application version is v5.3.0');
 $assert(strpos($config, "if (!defined('DB_PORT'))") !== false, 'database port support is additive');
 $assert(strpos($config, 'licora_enforce_installation_guard') !== false, 'first-run guard is enabled before application boot');
 

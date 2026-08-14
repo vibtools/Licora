@@ -79,3 +79,27 @@ Public client -> /api/v2 -> V2 request/proof validation -> V2Repository -> exist
 `V2Repository::activate()` locks the license row before checking/registering a device so concurrent first activations cannot exceed the existing license device limit. Existing API v1 `LicenseSystem::verifyLicense()` is not changed.
 
 `V2Provisioner` is the single additive setup path for existing deployments. The CLI `scripts/setup-v2.php` and authenticated Client Apps initialization action both reuse it to apply the unchanged v5.2.0 API v2 migration, generate missing deployment signing keys, and validate that an existing private/public signing pair matches. Fresh installation continues through the first-run installer.
+
+## Secure updater subsystem (v5.3.0)
+
+The updater is an isolated administrative subsystem under `includes/updater/` and `admin/updates.php`. It does not change license/API request contracts. The common runtime path deliberately avoids shell execution so the same state machine can operate on shared/cPanel and VPS deployments.
+
+```text
+Super Admin → Admin/Updates → official GitHub Releases
+                         ↓           ↓
+                    release metadata + signed manifest
+                         ↓
+                    PreflightService
+                         ↓
+Download → SHA/signature → ArchiveValidator → staging
+                         ↓
+source backup → optional DB backup/migrations → UpdateLock
+                         ↓
+chunked FileInstaller → post-verify → success / RollbackService
+                         ↓
+       update_jobs + update_events + app_migrations
+```
+
+`UpdateRepository::withCoordinatorLock()` serializes update/rollback creation through a real database row lock. Each job is additionally advanced under a per-job filesystem `flock`, and the critical `UpdateLock` blocks ordinary application traffic only during source/schema mutation. Job state is persisted after every bounded step so a page reload or transient connection loss can resume rather than restart the deployment.
+
+See [UPDATER.md](UPDATER.md) for the trust, release and rollback contract.

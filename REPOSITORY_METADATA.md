@@ -27,6 +27,16 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
+## v5.3.0 release
+
+- **Tag:** `v5.3.0`
+- **Title:** `Licora v5.3.0 — Secure In-App Update Center`
+- **Release notes:** `RELEASE_NOTES_v5.3.0.md`
+- **Primary assets:** `Licora-5.3.0.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
+- **Database:** additive updater persistence (`update_jobs`, `update_events`, `app_migrations`); existing license/API/device schema and contracts remain intact.
+
+Licora v5.3.0 is the updater bootstrap release. It introduces signed official-release discovery, cPanel/VPS-safe preflight, staging, backup, migration tracking, chunked/resumable file installation, critical update locking, post-verification, rollback protection, and a VibTools Web UI v2.1.2 live update-log interface. The update signing private key is release infrastructure only and must never be committed or distributed.
+
 ## v5.2.2 release
 
 - **Tag:** `v5.2.2`

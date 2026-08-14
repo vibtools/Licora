@@ -25,3 +25,7 @@ Roadmap items are proposals and must be implemented through reviewed, backward-c
 - Vendor or integrity-pin frontend assets for offline and supply-chain resilience.
 - Add structured logs, rotation guidance, and health-check output suitable for monitoring.
 - Add container and reverse-proxy examples without making containers mandatory.
+
+## Completed operational foundation
+
+- v5.3.0: signed, resumable Super Admin in-app Update Center with cPanel/VPS-safe no-shell common path, migration ledger, rollback protection, and VibTools live deployment logs.

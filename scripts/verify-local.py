@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local source verifier for Licora v5.2.2.
+"""Local source verifier for Licora v5.3.0.
 
 This verifier validates source and tests only. It never creates a Git tag, release,
 or GitHub artifact. Release packaging is intentionally owned by GitHub Actions and
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "5.2.2"
+VERSION = "5.3.0"
 
 V1_GIT_BLOBS = {
     "api/verify.php": "4dc549c2afea0772d3f2ffa8b330fd24b8b13ec2",
@@ -28,19 +28,23 @@ V1_GIT_BLOBS = {
 
 REQUIRED = [
     "README.md", "CHANGELOG.md", "SECURITY.md", "REPOSITORY_METADATA.md",
+    "RELEASE_NOTES_v5.3.0.md", "RELEASE_COMMANDS_v5.3.0.md",
     "RELEASE_NOTES_v5.2.2.md", "RELEASE_COMMANDS_v5.2.2.md",
     "RELEASE_NOTES_v5.2.1.md", "RELEASE_COMMANDS_v5.2.1.md",
     "audit/V5.2.1_PHASE02_STEP001_FORENSIC_AUDIT.md", "audit/V5.2.1_DELTA_PATCH_MANIFEST.txt", "audit/V5.2.1_DELTA_FILE_SHA256SUMS.txt",
-    "migration-v5.2.0-api-v2.sql", "database.sql", "includes/.htaccess",
+    "migration-v5.2.0-api-v2.sql", "migration-v5.3.0-updater.sql", "database.sql", "includes/.htaccess",
     "api/verify.php", "api/check_license.php",
     "api/v2/activate.php", "api/v2/refresh.php", "api/v2/status.php", "api/v2/deactivate.php",
     "includes/v2/V2Exception.php", "includes/v2/V2KeyManager.php", "includes/v2/V2TokenService.php",
     "includes/v2/V2DeviceProof.php", "includes/v2/ApiV2.php", "includes/v2/V2Repository.php", "includes/v2/V2Provisioner.php", "includes/v2/bootstrap.php",
-    "admin/client_apps.php", "admin/v2_devices.php",
-    "scripts/setup-v2.php", "scripts/verify-local.py", "scripts/validate.sh", "scripts/package-release.sh",
+    "admin/client_apps.php", "admin/v2_devices.php", "admin/updates.php",
+    "admin/ajax/update-bootstrap.php", "admin/ajax/update-check.php", "admin/ajax/update-preflight.php", "admin/ajax/update-start.php", "admin/ajax/update-step.php", "admin/ajax/update-status.php", "admin/ajax/update-events.php", "admin/ajax/update-diagnostics.php", "admin/ajax/update-rollback.php",
+    "admin/assets/js/licora-updater.js", "admin/assets/js/update-notifier.js", "admin/assets/css/licora-updater.css",
+    "scripts/setup-v2.php", "scripts/verify-local.py", "scripts/validate.sh", "scripts/package-release.sh", "scripts/build-update-manifest.py", "update/release-spec.json",
     "tests/api_v1_freeze.php", "tests/api_v2_crypto.php", "tests/api_v2_static.php", "tests/api_v2_db_integration.php", "tests/admin_v2_ui_db_integration.php",
+    "tests/updater_static.php", "tests/updater_manifest.php", "tests/updater_state_machine.php", "tests/updater_failure_recovery.php", "tests/updater_ui_contract.php", "tests/updater_db_integration.php",
     "docs/API_V2.md", "docs/API_V2_SECURITY.md", "docs/API_V2_CLIENT_INTEGRATION.md", "docs/API_V2_MIGRATION.md",
-    "docs/CONFIGURATION.md", "docs/ARCHITECTURE.md", "docs/RELEASE.md", "docs/INSTALLATION.md", "docs/UPGRADE_GUIDE.md", "docs/FEATURE_MATRIX.md",
+    "docs/CONFIGURATION.md", "docs/ARCHITECTURE.md", "docs/RELEASE.md", "docs/INSTALLATION.md", "docs/UPGRADE_GUIDE.md", "docs/FEATURE_MATRIX.md", "docs/UPDATER.md",
     ".github/workflows/ci.yml", ".github/workflows/release.yml",
 ]
 
@@ -54,6 +58,12 @@ TESTS = [
     "tests/api_v2_static.php",
     "tests/api_v2_db_integration.php",
     "tests/admin_v2_ui_db_integration.php",
+    "tests/updater_static.php",
+    "tests/updater_manifest.php",
+    "tests/updater_state_machine.php",
+    "tests/updater_failure_recovery.php",
+    "tests/updater_ui_contract.php",
+    "tests/updater_db_integration.php",
 ]
 
 
@@ -113,10 +123,10 @@ for rel, expected in V1_GIT_BLOBS.items():
 print("[3/12] Release/version consistency")
 config = read("includes/config.php")
 if f"env_value('APP_VERSION', '{VERSION}')" not in config:
-    fail("runtime APP_VERSION is not 5.2.2")
-for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.2.2.md", "CHANGELOG.md"]:
+    fail("runtime APP_VERSION is not 5.3.0")
+for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.3.0.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
     if VERSION not in read(rel):
-        fail(f"5.2.2 release marker missing from {rel}")
+        fail(f"5.3.0 release marker missing from {rel}")
 
 print("[4/12] API v2 protocol/security contract")
 v2_endpoint_text = "\n".join(read(f"api/v2/{name}.php") for name in ("activate", "refresh", "status", "deactivate"))
@@ -163,17 +173,31 @@ seed_tables = {m.lower() for m in re.findall(r"INSERT\s+INTO\s+`?([A-Za-z0-9_]+)
 if seed_tables - {"admin_users", "settings"}:
     fail(f"unexpected public database seed tables: {sorted(seed_tables)}")
 
+updater_migration = read("migration-v5.3.0-updater.sql")
+for table in ["update_jobs", "update_events", "app_migrations"]:
+    if f"CREATE TABLE IF NOT EXISTS {table}" not in updater_migration:
+        fail(f"missing updater table: {table}")
+if "-- Licora v5.3.0 Secure In-App Updater additive migration." not in read("database.sql"):
+    fail("fresh-install database.sql does not contain updater additive schema")
+release_spec = read("update/release-spec.json")
+for marker in ['"protocol_version": 1', '"version": "5.3.0"', 'migration-v5.3.0-updater.sql']:
+    if marker not in release_spec:
+        fail(f"updater release-spec marker missing: {marker}")
+
 print("[6/12] Signing-key and secret hygiene")
 for rel in [
     "includes/.licora-v2-signing-private.pem", "includes/.licora-v2-signing-public.pem",
     "includes/.licora-v2-signing-private.pem.installing", "includes/.licora-v2-signing-public.pem.installing",
+    "includes/updater/update-signing-private.pem", "includes/updater/update-signing-private.pem.installing",
 ]:
     if (ROOT / rel).exists():
         fail(f"deployment signing-key material present in repository: {rel}")
 gitignore = read(".gitignore")
-for marker in ["includes/.licora-v2-signing-private.pem", "includes/.licora-v2-signing-public.pem"]:
+for marker in ["includes/.licora-v2-signing-private.pem", "includes/.licora-v2-signing-public.pem", "includes/updater/update-signing-private.pem", "includes/.licora-updater/"]:
     if marker not in gitignore:
-        fail(f"API v2 signing-key ignore missing: {marker}")
+        fail(f"private/runtime ignore missing: {marker}")
+if not (ROOT / "includes/updater/update-signing-public.pem").is_file():
+    fail("dedicated updater public verification key is missing")
 if "Require all denied" not in read("includes/.htaccess"):
     fail("Apache includes/ deny rule is missing")
 encoded_markers = [
@@ -235,6 +259,26 @@ for marker in ["information_schema.TABLES", "TABLE_SCHEMA = DATABASE()", "TABLE_
     if marker not in admin_helpers:
         fail(f"admin table-existence regression marker missing: {marker}")
 
+for marker in ["updates.php", "data-licora-update-badge", "update-notifier.js"]:
+    if marker not in nav:
+        fail(f"updater navigation marker missing: {marker}")
+updater_page = read("admin/updates.php")
+for marker in ["Secure Update Center", "Copy Logs", "Download Diagnostics", "Pin to bottom", "licora-update-log-modal"]:
+    if marker not in updater_page:
+        fail(f"VibTools updater UI marker missing: {marker}")
+if "AI Diagnostics" in updater_page:
+    fail("demo-only AI Diagnostics must not ship as a fake updater feature")
+updater_core = "\n".join(read("includes/updater/" + name) for name in [
+    "UpdateService.php","UpdateRepository.php","ManifestVerifier.php","ArchiveValidator.php","BackupService.php",
+    "MigrationRunner.php","FileInstaller.php","RollbackService.php","UpdateLock.php","HttpClient.php"
+])
+for marker in ["openssl_verify", "withCoordinatorLock", "recoverOrphaned", "AUTO_ROLLBACK_SCHEDULED", "UPDATE_PROTECTED_PATH", "Retry-After: 5"]:
+    if marker not in updater_core:
+        fail(f"secure updater marker missing: {marker}")
+for bad in ["shell_exec(", "system(", "passthru(", "proc_open("]:
+    if bad in updater_core:
+        fail(f"updater common path must not require shell execution: {bad}")
+
 print("[8/12] GitHub CI/release automation")
 ci = read(".github/workflows/ci.yml")
 release = read(".github/workflows/release.yml")
@@ -244,10 +288,10 @@ for text, label in [(ci, "CI"), (release, "release")]:
     require_action_minimum(text, "actions/setup-node", (6,), label)
     require_action_minimum(text, "shivammathur/setup-php", (2, 37, 2), label)
 require_action_minimum(ci, "actions/upload-artifact", (6,), "CI")
-for marker in ["mysql-integration", "scripts/package-release.sh"]:
+for marker in ["mysql-integration", "scripts/package-release.sh", "tests/updater_db_integration.php", "scripts/build-update-manifest.py"]:
     if marker not in ci:
         fail(f"CI automation marker missing: {marker}")
-for marker in ["tags:", "contents: write", "gh release create", "--verify-tag", "RELEASE_NOTES_${GITHUB_REF_NAME}.md", "scripts/package-release.sh"]:
+for marker in ["tags:", "contents: write", "gh release create", "--verify-tag", "RELEASE_NOTES_${GITHUB_REF_NAME}.md", "scripts/package-release.sh", "LICORA_UPDATE_SIGNING_PRIVATE_KEY", "licora-update-manifest.json", "licora-update-manifest.sig", "openssl dgst -sha256 -sign", "tests/updater_db_integration.php"]:
     if marker not in release:
         fail(f"release automation marker missing: {marker}")
 
@@ -268,9 +312,10 @@ for rel in TESTS:
 
 print("[11/12] JavaScript syntax")
 node = shutil.which("node")
-js = ROOT / "admin/assets/js/admin-ui.js"
-if node and js.is_file():
-    run([node, "--check", str(js)])
+js_files = [ROOT / "admin/assets/js/admin-ui.js", ROOT / "admin/assets/js/licora-updater.js", ROOT / "admin/assets/js/update-notifier.js"]
+if node and all(js.is_file() for js in js_files):
+    for js in js_files:
+        run([node, "--check", str(js)])
 else:
     print("Node.js not installed; JavaScript syntax check skipped locally.")
 
@@ -280,8 +325,8 @@ for rel in ["docs/API_V2.md", "docs/API_V2_SECURITY.md", "docs/API_V2_CLIENT_INT
     if "API v2" not in text and "API V2" not in text:
         fail(f"API v2 documentation marker missing: {rel}")
 packager = read("scripts/package-release.sh")
-for marker in ["git archive", "scripts/verify-local.py", "sha256", ".licora-v2-signing-private.pem"]:
+for marker in ["git archive", "scripts/verify-local.py", "sha256", ".licora-v2-signing-private.pem", ".licora-updater/", "update-signing-private.pem"]:
     if marker not in packager:
         fail(f"release packaging marker missing: {marker}")
 
-print("Licora v5.2.2 local verification passed.")
+print("Licora v5.3.0 local verification passed.")

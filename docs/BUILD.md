@@ -16,6 +16,8 @@ Checks include:
 - Required repository files.
 - Absence of known private deployment markers.
 - Confirmation that the public SQL file contains only the approved seed tables.
+- Secure updater static/signature/state-machine/UI/failure-recovery checks.
+- Release-manifest and updater private-material hygiene checks.
 
 ## Manual validation
 
@@ -31,3 +33,9 @@ Static checks cannot prove database behavior. Before a release:
 8. Run cron scripts from CLI.
 9. Verify protected files are denied by the production web server.
 10. Restore a backup into a second database.
+11. Verify the Secure Update Center schema, signed-manifest validation, preflight, real update-event modal, interruption/resume and rollback against a disposable future-version fixture.
+12. Verify the cPanel-style no-shell updater path with `ZipArchive` and HTTPS transport enabled.
+
+## Release updater artifacts
+
+After a clean verified Git ref exists, `scripts/package-release.sh` produces the exact source ZIP/checksum and `scripts/build-update-manifest.py` inventories that ZIP. The manifest is signed only in release infrastructure. Local maintainers may build/sign a test manifest with a non-production fixture key, but the official update signing private key must never enter the repository.

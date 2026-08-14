@@ -1,0 +1,232 @@
+/* VibTools Foundation Tokens — v2.1.2 Single Token Foundation Engine
+   Scope: primitive, semantic and component color tokens.
+   This file is the root color SSOT. Changing --color-cyan-500 or --bg-surface-card here propagates through legacy --vib-* aliases and new ui-* utilities. */
+:root {
+  /* 1. Primitive palette */
+  --color-slate-980: #080B11;
+  --color-slate-970: #090D14;
+  --color-slate-960: #0A0E14;
+  --color-slate-950: #0D1117;
+  --color-slate-940: #0B0F17;
+  --color-slate-930: #0F141C;
+  --color-slate-920: #11161D;
+  --color-slate-900: #161B22;
+  --color-slate-850: #181F2B;
+  --color-slate-825: #1C2128;
+  --color-slate-800: #21262D;
+  --color-slate-760: #2A303C;
+  --color-slate-740: #2D3748;
+  --color-slate-725: #30363D;
+  --color-slate-700: #30373F;
+  --color-slate-650: #334155;
+  --color-slate-600: #46505D;
+  --color-slate-500: #6E7681;
+  --color-slate-450: #7D8590;
+  --color-slate-400: #8B949E;
+  --color-slate-300: #C9D1D9;
+  --color-slate-200: #E6EDF3;
+  --color-slate-100: #F8FAFC;
+
+  --color-cyan-500: #38BDF8;
+  --color-cyan-400: #38BDF8;
+  --color-blue-600: #2563EB;
+  --color-blue-700: #1D4ED8;
+  --color-blue-500: #388BFD;
+  --color-emerald-500: #22C55E;
+  --color-emerald-600: #238636;
+  --color-rose-500: #EF4444;
+  --color-rose-400: #F87171;
+  --color-github-red: #F85149;
+  --color-amber-500: #F59E0B;
+  --color-amber-600: #D29922;
+  --color-purple-400: #C084FC;
+
+  /* 2. Semantic tokens */
+  --bg-app: var(--color-slate-950);
+  --bg-deep: var(--color-slate-940);
+  --bg-footer: var(--color-slate-980);
+  --bg-surface-card: var(--color-slate-900);
+  --bg-surface-primary: var(--color-slate-950);
+  --bg-surface-soft: var(--color-slate-920);
+  --bg-surface-field: #12171F;
+  --bg-surface-hover: var(--color-slate-850);
+  --bg-surface-active: #12171F;
+  --bg-surface-muted: rgba(33, 38, 45, .36);
+
+  --border-subtle: var(--color-slate-800);
+  --border-muted: var(--color-slate-700);
+  --border-card: var(--color-slate-725);
+  --border-inner: var(--color-slate-760);
+  --border-strong: var(--color-slate-600);
+  --border-focus: var(--color-cyan-500);
+
+  --text-primary: var(--color-slate-200);
+  --text-content: var(--color-slate-300);
+  --text-soft: var(--color-slate-200);
+  --text-secondary: var(--color-slate-400);
+  --text-muted: var(--color-slate-500);
+  --text-subtle: var(--color-slate-450);
+  --text-accent: var(--color-cyan-500);
+
+  --status-success: var(--color-emerald-500);
+  --status-success-soft: #4ADE80;
+  --status-danger: var(--color-rose-500);
+  --status-danger-soft: var(--color-rose-400);
+  --status-warning: var(--color-amber-500);
+
+  /* 3. Component color tokens */
+  --component-button-primary-bg: var(--color-blue-600);
+  --component-button-primary-hover-bg: var(--color-blue-700);
+  --component-button-secondary-bg: var(--bg-surface-card);
+  --component-button-secondary-border: var(--border-muted);
+  --component-input-bg: var(--bg-surface-field);
+  --component-input-hover-bg: var(--bg-surface-hover);
+  --component-input-focus-bg: #151C28;
+  --component-input-border: var(--border-muted);
+  --component-card-bg: var(--bg-surface-card);
+  --component-card-border: var(--border-card);
+  --component-badge-bg: rgba(255, 255, 255, .018);
+  --component-table-header-bg: rgba(13, 17, 23, .60);
+  --component-table-row-hover-bg: rgba(255, 255, 255, .03);
+  --component-table-skeleton-bg: rgba(255, 255, 255, .035);
+
+  /* 4. Legacy-compatible component token bridge (v2.1.2 audit fix)
+     These keep every major --vib-* color token behind the foundation engine so Tailwind CDN aliases, sandbox CSS, and docs can all resolve from a single source. */
+  --component-active-bg: rgba(37, 99, 235, .10);
+  --component-active-border: rgba(56, 189, 248, .18);
+  --component-hover-bg: rgba(33, 38, 45, .74);
+  --component-disabled-opacity: .52;
+  --component-disabled-bg: rgba(33, 38, 45, .36);
+  --component-feedback-bg: var(--bg-surface-soft);
+  --component-skeleton-bg: var(--bg-surface-card);
+  --component-skeleton-pulse: var(--color-slate-800);
+  --component-meter-track: var(--color-slate-825);
+  --component-meter-fill: var(--color-slate-200);
+
+  --state-success-bg: #0C2117;
+  --state-success-border: #124D31;
+  --state-success-text: #4ADE80;
+  --state-warning-bg: #261C0C;
+  --state-warning-border: #523912;
+  --state-warning-text: #FACC15;
+  --state-danger-bg: #280D12;
+  --state-danger-border: #5C1D24;
+  --state-danger-text: #F87171;
+
+  --log-bg: var(--color-slate-970);
+  --log-border: var(--color-slate-800);
+  --log-modal-surface: #12171F;
+  --log-info-bg: rgba(59, 130, 246, 0.15);
+  --log-info-text: #60A5FA;
+  --log-debug-bg: rgba(249, 115, 22, 0.15);
+  --log-debug-text: #FB923C;
+  --log-debug-row-bg: rgba(249, 115, 22, 0.08);
+  --log-warning-bg: rgba(234, 179, 8, 0.15);
+  --log-warning-text: #FACC15;
+  --log-warning-row-bg: rgba(234, 179, 8, 0.08);
+  --log-success-bg: rgba(34, 197, 94, 0.15);
+  --log-success-text: #4ADE80;
+
+  --chart-cpu: var(--color-cyan-500);
+  --chart-cpu-bg: rgba(56, 189, 248, 0.12);
+  --chart-memory: #F472B6;
+  --chart-memory-bg: rgba(244, 114, 182, 0.12);
+  --chart-disk: #FBBF24;
+  --chart-disk-bg: rgba(251, 191, 36, 0.12);
+  --chart-network: #34D399;
+
+  --doc-sidebar-bg: var(--bg-app);
+  --doc-code-bg: var(--color-slate-960);
+  --doc-border: var(--border-subtle);
+  --method-get-bg: rgba(34, 197, 94, 0.12);
+  --method-get-text: #4ADE80;
+  --method-post-bg: rgba(59, 130, 246, 0.12);
+  --method-post-text: #60A5FA;
+  --method-put-bg: rgba(234, 179, 8, 0.12);
+  --method-put-text: #FACC15;
+  --method-delete-bg: rgba(239, 68, 68, 0.12);
+  --method-delete-text: #F87171;
+
+  --settings-nav-bg: var(--color-slate-930);
+  --settings-row-border: var(--border-inner);
+  --settings-danger-bg: rgba(239, 68, 68, 0.08);
+  --settings-danger-border: rgba(248, 113, 113, 0.34);
+  --settings-active-bg: #1F242C;
+  --danger-button-bg: rgba(248, 81, 73, 0.15);
+  --danger-button-text: #F87171;
+  --danger-button-border: rgba(248, 81, 73, 0.40);
+  --danger-button-hover-bg: #DA3633;
+
+  --upload-dropzone-bg: var(--color-slate-930);
+  --upload-dropzone-hover-bg: rgba(56, 189, 248, 0.05);
+  --upload-dropzone-border: var(--border-muted);
+  --upload-item-bg: var(--bg-surface-soft);
+  --upload-progress-track: var(--border-subtle);
+  --upload-progress-fill: var(--border-focus);
+  --upload-success: #4ADE80;
+  --upload-error: #F87171;
+  --file-pdf-bg: rgba(239, 68, 68, 0.15);
+  --file-pdf-text: #F87171;
+  --file-png-bg: rgba(59, 130, 246, 0.15);
+  --file-png-text: #60A5FA;
+  --file-docx-bg: rgba(34, 197, 94, 0.15);
+  --file-docx-text: #4ADE80;
+  --file-mp4-bg: rgba(168, 85, 247, 0.15);
+  --file-mp4-text: #C084FC;
+
+  --brand-logo-blue: #0053FC;
+  --brand-logo-cyan: #00BFFD;
+  --brand-logo-dark: #010510;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg-app: #F6F8FA;
+  --bg-deep: #EEF1F4;
+  --bg-footer: #EAEFF4;
+  --bg-surface-card: #FFFFFF;
+  --bg-surface-primary: #FFFFFF;
+  --bg-surface-soft: #F3F4F6;
+  --bg-surface-field: #FFFFFF;
+  --bg-surface-hover: #EEF1F4;
+  --bg-surface-active: #EEF1F4;
+  --bg-surface-muted: rgba(208, 215, 222, .36);
+  --border-subtle: #D8DEE4;
+  --border-muted: #D0D7DE;
+  --border-card: #D0D7DE;
+  --border-inner: #D8DEE4;
+  --border-strong: #AFB8C1;
+  --border-focus: #0969DA;
+  --text-primary: #0D1117;
+  --text-content: #24292F;
+  --text-soft: #24292F;
+  --text-secondary: #57606A;
+  --text-muted: #6E7781;
+  --text-subtle: #57606A;
+  --text-accent: #0969DA;
+  --component-input-focus-bg: #FFFFFF;
+  --component-table-header-bg: rgba(13, 17, 23, .04);
+  --component-table-row-hover-bg: rgba(13, 17, 23, .035);
+}
+
+/* v2.1.2 Foundation Audit Completion Tokens
+   Scope: closes remaining legacy compatibility gaps found during the v2.1.1 SSOT audit without changing layout, module count, routing or interaction behavior. */
+:root {
+  --brand-logo-blue: #0053FC;
+  --brand-logo-cyan: #00BFFD;
+  --selection-bg: var(--component-button-primary-bg);
+  --selection-text: #FFFFFF;
+  --focus-outline-color: var(--border-focus);
+  --component-auth-panel: var(--bg-surface-soft);
+  --component-auth-panel-soft: var(--bg-surface-active);
+  --component-auth-shadow: none;
+  --component-btn-height-compact: var(--height-button-sm);
+  --component-log-mono-font: var(--font-mono);
+  --doc-font-h1: var(--text-xl);
+  --doc-font-h2: 0.9375rem;
+  --doc-font-h3: var(--text-base);
+  --doc-font-body: var(--text-base);
+  --doc-font-sub: var(--text-sm);
+  --doc-font-nav: var(--text-sm);
+  --doc-font-category: 0.625rem;
+}

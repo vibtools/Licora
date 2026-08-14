@@ -24,4 +24,5 @@
 | Audit trail | Implemented | Additive table plus fallback general logs. |
 | CSV and SQL backup | Implemented | Role protected; exported material is sensitive. |
 | Cron cleanup | Implemented | CLI intended; web access denied for Apache in public release. |
+| Secure in-app updates | Implemented in v5.3.0 | Super Admin Update Center checks stable official GitHub releases, verifies a dedicated signed manifest and package inventory, runs preflight, stages/backups, tracks migrations/jobs/events, applies source in resumable chunks, provides live VibTools logs, and supports rollback. v5.2.2 → v5.3.0 itself remains the one manual bootstrap update. |
 | Frontend offline mode | Not implemented | UI depends on external CDNs. |

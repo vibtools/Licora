@@ -12,6 +12,8 @@
 8. Restrict the legacy simple API at the reverse proxy if it is not required.
 9. Protect backup files and audit access.
 10. Review the unresolved audit findings.
+11. For in-app updates, permit outbound HTTPS to official GitHub release hosts, keep `includes/.licora-updater/` non-public, and grant PHP write access only to the application source/runtime paths required by the updater.
+12. Never deploy or upload the update signing private key to the Licora server.
 
 ## Apache
 
@@ -54,3 +56,9 @@ API logs and device records may contain license keys, device identifiers, IP add
 ## Frontend dependencies
 
 The admin UI loads code and styles from CDNs. A hardened deployment should vendor reviewed versions or apply integrity and Content Security Policy controls in a future release.
+
+## Secure updater deployment
+
+The updater public key at `includes/updater/update-signing-public.pem` is intended to be public and tracked. The matching private key exists only in release infrastructure. `includes/.licora-updater/` contains update packages, staging data, source/database safety backups, job step locks and the critical lock; it inherits the repository `includes/` web-deny boundary and is excluded from release archives/Git. Protect filesystem backups because they can contain application/database data.
+
+The normal update execution path does not use shell commands. Do not grant `exec`, Git or SSH access solely for Licora updates. Atomic replacement requires the PHP process to write the containing directories of files being updated; if this is not possible, the Update Center preflight must fail and the deployment should use the manual release procedure.

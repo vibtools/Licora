@@ -8,6 +8,23 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
+## [5.3.0] - 2026-08-14
+
+### Added
+- Added a Super-Admin-only Secure Update Center for future official Licora releases.
+- Added dedicated RSA/SHA-256 signed update manifests and a tracked updater public verification key; the private update signing key remains a GitHub Actions secret and is never distributed with Licora.
+- Added persistent `update_jobs`, `update_events`, and `app_migrations` state through an additive v5.3.0 updater migration that is also included in `database.sql` for fresh installations.
+- Added cPanel/VPS-safe release preflight, trusted GitHub-only downloads, package SHA-256 and per-file validation, ZIP traversal/symlink rejection, staging, source backup, database safety backup, migration ledger, chunked file application, post-update verification, and rollback handling.
+- Added a filesystem critical-update lock that temporarily blocks non-updater traffic only during source/schema mutation and recovers orphaned terminal locks safely.
+- Added VibTools Web UI v2.1.2-based updater UI and real live update-log modal with search, level filtering, copy, diagnostic download, pin-to-bottom, progress, and resumable event streaming.
+- Added update-available navbar notification for Super Admins without making Cron a dependency.
+- Added updater security, manifest, state-machine, failure/recovery, UI-contract, and MySQL integration tests.
+- Added release manifest generation and GitHub Actions signing/publication of `licora-update-manifest.json` and `licora-update-manifest.sig`.
+
+### Compatibility
+- Existing license, device, admin, API v1, and Secure API v2 contracts are unchanged.
+- v5.2.2 deployments require one final manual source update to v5.3.0; future compatible signed releases can then use Admin → Updates.
+
 ## [5.2.2] - 2026-08-14
 
 ### Fixed

@@ -42,3 +42,8 @@ includes/.licora-v2-signing-private.pem
 includes/.licora-v2-signing-public.pem
 includes/.licora-v2-signing-private.pem.installing.*
 includes/.licora-v2-signing-public.pem.installing.*
+
+# Licora Secure In-App Updater runtime/private signing material
+includes/.licora-updater/
+includes/updater/update-signing-private.pem
+includes/updater/update-signing-private.pem.*

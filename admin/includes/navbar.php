@@ -53,6 +53,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         <i class="bi bi-shield-check"></i> <span>V2 Devices</span>
                     </a>
                 </li>
+                <?php if (AdminHelpers::canDelete()): ?>
+                <li class="nav-item">
+                    <a class="nav-link <?php echo $currentPage == 'updates.php' ? 'active' : ''; ?>" href="updates.php">
+                        <i class="bi bi-cloud-arrow-down"></i> <span>Updates</span>
+                        <span class="badge bg-danger ms-1" data-licora-update-badge hidden></span>
+                    </a>
+                </li>
+                <?php endif; ?>
                 <li class="nav-item">
                     <a class="nav-link <?php echo $currentPage == 'settings.php' ? 'active' : ''; ?>" href="settings.php">
                         <i class="bi bi-gear"></i> <span>Settings</span>
@@ -95,4 +103,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         Licora has not disabled, deleted, or changed the account automatically.
     </div>
 </div>
+<?php endif; ?>
+<?php if (AdminHelpers::canDelete() && $currentPage !== 'updates.php'): ?>
+<script src="assets/js/update-notifier.js" defer></script>
 <?php endif; ?>

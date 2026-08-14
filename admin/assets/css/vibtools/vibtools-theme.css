@@ -1,0 +1,220 @@
+/* VibTools Theme Aggregator — v2.1.2 Single Token Foundation Engine
+   Import order is intentional: primitive tokens first, then type, spacing, surfaces, motion, aliases and utilities. */
+@import url('./foundation/_tokens.css');
+@import url('./foundation/_typography.css');
+@import url('./foundation/_spacing.css');
+@import url('./foundation/_surfaces.css');
+@import url('./foundation/_motion.css');
+
+:root {
+  /* Legacy --vib-* aliases now resolve through the foundation SSOT. */
+  --vib-background: var(--bg-app);
+  --vib-deep: var(--bg-deep);
+  --vib-footer: var(--bg-footer);
+  --vib-surface: var(--bg-surface-card);
+  --vib-surface-soft: var(--bg-surface-soft);
+  --vib-field: var(--component-input-bg);
+  --vib-field-hover: var(--component-input-hover-bg);
+  --vib-field-focus: var(--component-input-focus-bg);
+  --vib-surface-card: var(--bg-surface-primary);
+  --vib-surface-primary: var(--bg-surface-primary);
+  --vib-border-subtle: var(--border-subtle);
+  --vib-hover: var(--border-subtle);
+  --vib-border: var(--component-input-border);
+  --vib-border-soft: var(--border-subtle);
+  --vib-border-strong: var(--border-strong);
+  --vib-card-border: var(--component-card-border);
+  --vib-inner-border: var(--border-inner);
+  --vib-card-hover-border: var(--border-strong);
+  --vib-button-secondary-hover-border: var(--border-strong);
+  --vib-input-focus-border: var(--border-focus);
+  --vib-nav-active-bg: var(--bg-surface-active);
+  --vib-nav-active-border: var(--border-focus);
+  --vib-nav-hover-bg: var(--bg-surface-hover);
+  --vib-btn-secondary-bg: var(--component-button-secondary-bg);
+  --vib-btn-secondary-border: var(--component-button-secondary-border);
+  --vib-text: var(--text-primary);
+  --vib-content: var(--text-content);
+  --vib-doc-content: var(--text-soft);
+  --vib-doc-text-primary: var(--text-soft);
+  --vib-doc-text-muted: var(--text-secondary);
+  --vib-doc-text-heading: var(--text-soft);
+  --vib-muted: var(--text-secondary);
+  --vib-tertiary: var(--text-muted);
+  --vib-primary: var(--component-button-primary-bg);
+  --vib-primary-hover: var(--component-button-primary-hover-bg);
+  --vib-secondary: var(--text-accent);
+  --vib-success: var(--status-success);
+  --vib-warning: var(--status-warning);
+  --vib-danger: var(--status-danger);
+  --vib-radius-sm: var(--radius-sm);
+  --vib-radius-control: var(--radius-md);
+  --vib-radius-card: var(--radius-lg);
+  --vib-header: var(--height-topbar);
+  --vib-sidebar: var(--width-sidebar);
+  --vib-card-pad: var(--card-padding-y);
+  --vib-card-pad-x: var(--card-padding-x);
+  --vib-doc-shell-max: var(--docs-shell-max-width);
+  --vib-content-max: var(--content-max-width);
+  --vib-focus: var(--shadow-focus);
+  --vib-transition: var(--transition-normal);
+  --vib-table-header-bg: var(--component-table-header-bg);
+  --vib-table-row-hover: var(--component-table-row-hover-bg);
+  --vib-table-toolbar-bg: var(--component-card-bg);
+  --vib-table-empty-bg: var(--bg-surface-soft);
+  --vib-upload-progress-fill: var(--border-focus);
+  --vib-chart-cpu: var(--border-focus);
+  --vib-meter-fill: var(--text-soft);
+
+  /* v2.1.2 expanded legacy alias bridge: no visual redesign, only SSOT coverage. */
+  --vib-auth-panel: var(--bg-surface-soft);
+  --vib-auth-panel-soft: var(--bg-surface-active);
+  --vib-active-bg: var(--component-active-bg);
+  --vib-active-border: var(--component-active-border);
+  --vib-hover-bg: var(--component-hover-bg);
+  --vib-badge-bg: var(--component-badge-bg);
+  --vib-disabled-opacity: var(--component-disabled-opacity);
+  --vib-disabled-bg: var(--component-disabled-bg);
+  --vib-feedback-bg: var(--component-feedback-bg);
+  --vib-table-skeleton-bg: var(--component-table-skeleton-bg, rgba(255, 255, 255, .035));
+  --vib-state-success-bg: var(--state-success-bg);
+  --vib-state-success-border: var(--state-success-border);
+  --vib-state-success-text: var(--state-success-text);
+  --vib-state-warning-bg: var(--state-warning-bg);
+  --vib-state-warning-border: var(--state-warning-border);
+  --vib-state-warning-text: var(--state-warning-text);
+  --vib-state-danger-bg: var(--state-danger-bg);
+  --vib-state-danger-border: var(--state-danger-border);
+  --vib-state-danger-text: var(--state-danger-text);
+  --vib-skeleton-bg: var(--component-skeleton-bg);
+  --vib-skeleton-pulse: var(--component-skeleton-pulse);
+  --vib-log-bg: var(--log-bg);
+  --vib-log-border: var(--log-border);
+  --vib-log-modal-surface: var(--log-modal-surface);
+  --vib-log-info-bg: var(--log-info-bg);
+  --vib-log-info-text: var(--log-info-text);
+  --vib-log-debug-bg: var(--log-debug-bg);
+  --vib-log-debug-text: var(--log-debug-text);
+  --vib-log-debug-row-bg: var(--log-debug-row-bg);
+  --vib-log-warning-bg: var(--log-warning-bg);
+  --vib-log-warning-text: var(--log-warning-text);
+  --vib-log-warning-row-bg: var(--log-warning-row-bg);
+  --vib-log-success-bg: var(--log-success-bg);
+  --vib-log-success-text: var(--log-success-text);
+  --vib-chart-cpu-bg: var(--chart-cpu-bg);
+  --vib-chart-memory: var(--chart-memory);
+  --vib-chart-memory-bg: var(--chart-memory-bg);
+  --vib-chart-disk: var(--chart-disk);
+  --vib-chart-disk-bg: var(--chart-disk-bg);
+  --vib-chart-network: var(--chart-network);
+  --vib-meter-track: var(--component-meter-track);
+  --vib-doc-sidebar-bg: var(--doc-sidebar-bg);
+  --vib-doc-code-bg: var(--doc-code-bg);
+  --vib-doc-border: var(--doc-border);
+  --vib-method-get-bg: var(--method-get-bg);
+  --vib-method-get-text: var(--method-get-text);
+  --vib-method-post-bg: var(--method-post-bg);
+  --vib-method-post-text: var(--method-post-text);
+  --vib-method-put-bg: var(--method-put-bg);
+  --vib-method-put-text: var(--method-put-text);
+  --vib-method-delete-bg: var(--method-delete-bg);
+  --vib-method-delete-text: var(--method-delete-text);
+  --vib-settings-nav-bg: var(--settings-nav-bg);
+  --vib-settings-row-border: var(--settings-row-border);
+  --vib-settings-danger-bg: var(--settings-danger-bg);
+  --vib-settings-danger-border: var(--settings-danger-border);
+  --vib-settings-active-bg: var(--settings-active-bg);
+  --vib-danger-button-bg: var(--danger-button-bg);
+  --vib-danger-button-text: var(--danger-button-text);
+  --vib-danger-button-border: var(--danger-button-border);
+  --vib-danger-button-hover-bg: var(--danger-button-hover-bg);
+  --vib-upload-dropzone-bg: var(--upload-dropzone-bg);
+  --vib-upload-dropzone-hover-bg: var(--upload-dropzone-hover-bg);
+  --vib-upload-dropzone-border: var(--upload-dropzone-border);
+  --vib-upload-item-bg: var(--upload-item-bg);
+  --vib-upload-progress-track: var(--upload-progress-track);
+  --vib-upload-progress-fill: var(--upload-progress-fill);
+  --vib-upload-success: var(--upload-success);
+  --vib-upload-error: var(--upload-error);
+  --vib-file-pdf-bg: var(--file-pdf-bg);
+  --vib-file-pdf-text: var(--file-pdf-text);
+  --vib-file-png-bg: var(--file-png-bg);
+  --vib-file-png-text: var(--file-png-text);
+  --vib-file-docx-bg: var(--file-docx-bg);
+  --vib-file-docx-text: var(--file-docx-text);
+  --vib-file-mp4-bg: var(--file-mp4-bg);
+  --vib-file-mp4-text: var(--file-mp4-text);
+}
+
+/* Foundation utility classes for new pages/components. */
+.ui-card {
+  background: var(--component-card-bg);
+  border: var(--border-width-default) solid var(--component-card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  color: var(--text-content);
+}
+.ui-input {
+  min-height: var(--height-input-sm);
+  background: var(--component-input-bg);
+  border: var(--border-width-default) solid var(--component-input-border);
+  border-radius: var(--radius-md);
+  color: var(--text-soft);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-regular);
+}
+.ui-btn {
+  min-height: var(--height-button-sm);
+  border: var(--border-width-default) solid var(--component-button-secondary-border);
+  border-radius: var(--radius-md);
+  background: var(--component-button-secondary-bg);
+  color: var(--text-soft);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  box-shadow: none;
+}
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 20px;
+  padding: 2px 6px;
+  border: var(--border-width-default) solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  background: var(--component-badge-bg);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-regular);
+}
+.ui-text-primary { color: var(--text-primary); }
+.ui-text-content { color: var(--text-content); }
+.ui-text-muted { color: var(--text-secondary); }
+.ui-text-accent { color: var(--text-accent); }
+.ui-border-subtle { border-color: var(--border-subtle); }
+.ui-surface-card { background: var(--bg-surface-card); }
+.ui-surface-soft { background: var(--bg-surface-soft); }
+
+/* v2.1.2 low-risk utility aliases backed by the same foundation tokens. */
+.ui-divider { border-color: var(--border-subtle); }
+.ui-surface-primary { background: var(--bg-surface-primary); }
+.ui-focus-border { border-color: var(--border-focus); }
+
+/* v2.1.2 Foundation Audit Completion Bridge
+   Keeps remaining legacy-only tokens behind the foundation engine. No visual redesign or layout mutation. */
+:root {
+  --vib-logo-blue: var(--brand-logo-blue);
+  --vib-logo-cyan: var(--brand-logo-cyan);
+  --vib-auth-panel: var(--component-auth-panel);
+  --vib-auth-panel-soft: var(--component-auth-panel-soft);
+  --vib-auth-shadow: var(--component-auth-shadow);
+  --vib-btn-height-compact: var(--component-btn-height-compact);
+  --vib-log-mono-font: var(--component-log-mono-font);
+  --vib-doc-font-h1: var(--doc-font-h1);
+  --vib-doc-font-h2: var(--doc-font-h2);
+  --vib-doc-font-h3: var(--doc-font-h3);
+  --vib-doc-font-body: var(--doc-font-body);
+  --vib-doc-font-sub: var(--doc-font-sub);
+  --vib-doc-font-nav: var(--doc-font-nav);
+  --vib-doc-font-category: var(--doc-font-category);
+}

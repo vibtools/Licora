@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -108,3 +108,18 @@ v5.2.2 is a source-only production correctness patch. It introduces **no databas
 7. Smoke-test API v1 and API v2 clients.
 
 The patch changes only admin metadata discovery and release/test synchronization; API v2 activation, token, proof, refresh, license-scope, device-limit, and revoke contracts remain unchanged.
+
+## v5.2.2 to v5.3.0 Secure Updater bootstrap
+
+v5.3.0 is the **one final manual source upgrade** required before Licora can install later compatible releases from the Admin UI.
+
+1. Back up the database and private/runtime files.
+2. Preserve `includes/config.local.php`, `includes/.licora-encryption.key`, `includes/.licora-installed`, API v2 signing keys, logs/backups/exports and deployment environment variables.
+3. Replace tracked v5.2.2 source with the verified v5.3.0 release/delta.
+4. Do not rerun the fresh installer.
+5. Sign in as Super Admin and open **Admin → Updates**. The updater persistence migration is applied idempotently if those tables are not already present.
+6. Confirm `update_jobs`, `update_events`, and `app_migrations` are ready and that the Update Center renders.
+7. Run the normal admin, license, device, API v1, API v2 and cron smoke tests.
+8. Configure the GitHub repository secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY` before publishing the v5.3.0 tag; the matching public key is tracked in `includes/updater/update-signing-public.pem`.
+
+No license/API/device schema is changed by this bootstrap migration. From v5.3.0 onward, normal signed releases can use **Admin → Updates** when preflight passes. See `docs/UPDATER.md`.

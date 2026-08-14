@@ -31,6 +31,7 @@ Licora is maintained by **Vib Tools**. Vib Tools is a professional tools and dig
 - Audit trail, operational logs, CSV exports, SQL backup generation, and health checks.
 - CSRF tokens for admin mutations, prepared SQL statements, password hashing, rate limiting, and session hardening.
 - Scheduled cleanup and expiring-license reporting through CLI cron scripts.
+- Super-Admin-only Secure Update Center with signed GitHub release manifests, preflight, staged installation, persistent live logs, migration tracking, and rollback protection.
 
 ## Screenshots
 
@@ -54,13 +55,16 @@ flowchart LR
     Legacy --> Core
     Core --> DB[(MySQL or MariaDB)]
     Cron[CLI scheduler] --> DB
+    Panel --> Updater[Secure Update Center]
+    Updater -->|HTTPS + signed manifest| GitHub[Official GitHub Releases]
+    Updater --> DB
 ```
 
 The application is a server-rendered PHP project with no Composer runtime dependency. UI assets are loaded from public CDNs. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Requirements
 
-- PHP 8.0 or later with `pdo_mysql`, `openssl`, and `json`.
+- PHP 8.0 or later with `pdo_mysql`, `openssl`, and `json`. The in-app updater additionally requires `ZipArchive` and either cURL or HTTPS stream access (`allow_url_fopen`).
 - MySQL or MariaDB with InnoDB and `utf8mb4` support.
 - Apache with `.htaccess` enabled, or an equivalent Nginx configuration.
 - HTTPS for every non-local deployment.
@@ -120,7 +124,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.2.2` |
+| Application version | `APP_VERSION` | `5.3.0` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -134,7 +138,7 @@ Full reference: [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
 bash scripts/validate.sh
 ```
 
-The validation script checks PHP syntax, security behavior, compatibility invariants, installer parsing and lock behavior, release-version consistency, safe public errors, JavaScript syntax, public-release secret markers, and SQL seed scope. Database-backed behavior requires a disposable MySQL/MariaDB instance; GitHub CI supplies a dedicated MySQL 8.4 API v2 integration gate before source artifacts or tagged releases are produced.
+The validation script checks PHP syntax, security behavior, compatibility invariants, installer parsing and lock behavior, release-version consistency, safe public errors, JavaScript syntax, public-release secret markers, and SQL seed scope. Database-backed behavior requires a disposable MySQL/MariaDB instance; GitHub CI supplies dedicated MySQL 8.4 API v2 and updater integration gates before source artifacts or tagged releases are produced. Tagged releases also require a signed updater manifest before publication.
 
 ## Documentation
 
@@ -148,7 +152,9 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Build and validation](docs/BUILD.md)
 - [Maintenance](docs/MAINTENANCE.md)
 - [Release guide](docs/RELEASE.md)
+- [Secure in-app updater](docs/UPDATER.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.3.0 release notes](RELEASE_NOTES_v5.3.0.md)
 - [v5.2.2 release notes](RELEASE_NOTES_v5.2.2.md)
 - [v5.2.1 release notes](RELEASE_NOTES_v5.2.1.md)
 - [v5.2.0 release notes](RELEASE_NOTES_v5.2.0.md)
@@ -158,6 +164,15 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Forensic audit](audit/FORENSIC_AUDIT_REPORT.md)
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
+
+
+## Secure in-app updates (v5.3.0)
+
+Licora v5.3.0 introduces **Admin → Updates** for future stable releases. The updater only accepts assets from the pinned official `vibtools/Licora` GitHub repository, verifies a dedicated RSA/SHA-256 signed manifest, validates the release ZIP and per-file checksums, runs server preflight, stages files outside the application tree, records a rollback backup, applies signed migrations through a migration ledger, updates files in resumable chunks, and performs post-install verification. A critical filesystem lock temporarily returns HTTP 503 to non-updater traffic only while schema/source changes are being applied.
+
+The Update Center uses the VibTools Web UI v2.1.2 token foundation and a real persistent event stream for its deployment-log modal. Search, level filtering, Copy Logs, Download Diagnostics, pin-to-bottom, progress and stage state are backed by actual `update_events` rows; no demo deployment records or fake AI diagnostics are shipped. The normal cPanel/VPS updater path does not require Git, shell access, Composer, Python, `exec()`, or other command execution.
+
+**Bootstrap note:** v5.2.2 cannot install the updater that it does not yet contain. v5.3.0 is therefore the one final manual source replacement. From v5.3.0 onward, compatible signed releases can be installed from the Update Center after preflight passes. See [docs/UPDATER.md](docs/UPDATER.md).
 
 ## Secure API v2 (v5.2.2)
 

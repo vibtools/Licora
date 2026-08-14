@@ -50,7 +50,7 @@ git archive --format=zip --prefix="${ARCHIVE_ROOT}/" -o "$OUT" "$REF"
 from pathlib import Path
 import hashlib, sys, zipfile
 archive=Path(sys.argv[1]).resolve(); checksum=Path(sys.argv[2]).resolve(); prefix=sys.argv[3].rstrip('/')+'/'
-forbidden=(".git/", ".env", "config.local.php", ".licora-encryption.key", ".licora-v2-signing-private.pem", ".licora-v2-signing-public.pem", ".licora-installed", "logs/", "backups/", "exports/")
+forbidden=(".git/", ".env", "config.local.php", ".licora-encryption.key", ".licora-v2-signing-private.pem", ".licora-v2-signing-public.pem", ".licora-installed", ".licora-updater/", "update-signing-private.pem", "logs/", "backups/", "exports/")
 with zipfile.ZipFile(archive) as z:
     names=z.namelist()
     if not names or any(not n.startswith(prefix) for n in names): raise SystemExit("Release archive prefix validation failed")

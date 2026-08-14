@@ -25,7 +25,7 @@ jobs:
         uses: shivammathur/setup-php@2.37.2
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: pdo_mysql, openssl, json
+          extensions: pdo_mysql, openssl, json, curl, zip
           coverage: none
 
       - name: Set up Python
@@ -43,7 +43,7 @@ jobs:
         run: python3 scripts/verify-local.py
 
   mysql-integration:
-    name: API v2 MySQL integration
+    name: API v2 + updater MySQL integration
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -66,7 +66,7 @@ jobs:
         uses: shivammathur/setup-php@2.37.2
         with:
           php-version: '8.4'
-          extensions: pdo_mysql, openssl, json
+          extensions: pdo_mysql, openssl, json, curl, zip
           coverage: none
 
       - name: Run API v2 database integration
@@ -83,6 +83,7 @@ jobs:
         run: |
           php tests/api_v2_db_integration.php
           php tests/admin_v2_ui_db_integration.php
+          php tests/updater_db_integration.php
 
   package:
     name: Build verified source artifact
@@ -98,7 +99,7 @@ jobs:
         uses: shivammathur/setup-php@2.37.2
         with:
           php-version: '8.4'
-          extensions: pdo_mysql, openssl, json
+          extensions: pdo_mysql, openssl, json, curl, zip
           coverage: none
 
       - name: Set up Python
@@ -117,14 +118,18 @@ jobs:
         run: |
           short_sha="${GITHUB_SHA:0:12}"
           mkdir -p release
-          bash scripts/package-release.sh v5.2.2 "$GITHUB_SHA" "release/Licora-5.2.2-ci-${short_sha}.zip"
+          bash scripts/package-release.sh v5.3.0 "$GITHUB_SHA" "release/Licora-5.3.0-ci-${short_sha}.zip"
+          cp "release/Licora-5.3.0-ci-${short_sha}.zip" "release/Licora-5.3.0.zip"
+          python3 scripts/build-update-manifest.py --version 5.3.0 --ref "$GITHUB_SHA" --package "release/Licora-5.3.0.zip" --output release/licora-update-manifest.json
+          rm "release/Licora-5.3.0.zip"
 
       - name: Upload CI release-candidate artifact
         uses: actions/upload-artifact@v6
         with:
-          name: Licora-5.2.2-${{ github.sha }}
+          name: Licora-5.3.0-${{ github.sha }}
           path: |
-            release/Licora-5.2.2-ci-*.zip
-            release/Licora-5.2.2-ci-*.zip.sha256
+            release/Licora-5.3.0-ci-*.zip
+            release/Licora-5.3.0-ci-*.zip.sha256
+            release/licora-update-manifest.json
           if-no-files-found: error
           retention-days: 14

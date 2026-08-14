@@ -1,85 +1,73 @@
 # Release Guide
 
-## Versioning
+## Current release contract
 
-Licora uses semantic version tags. The current maintenance release is `5.2.2`; repository/runtime version markers, installer source version and release documentation must agree before a tag can publish.
+Licora uses semantic version tags. The current updater-bootstrap release is `5.3.0`; runtime, installer, verifier, release notes, update release specification and GitHub workflow markers must agree before a tag can publish.
 
-The release tag must point to a reviewed commit on `main`. Do not tag a dirty working tree or package uncommitted files.
-
-## Release gate
-
-- [ ] `git status --short` is empty.
-- [ ] `python scripts/verify-local.py` passes on the source tree.
-- [ ] GitHub CI passes for PHP 8.0, 8.1, 8.2, 8.3 and 8.4.
-- [ ] The dedicated MySQL 8.4 API v2 integration job passes.
-- [ ] API v1 freeze verification passes.
-- [ ] Fresh production installation passes with Demo Data unchecked.
-- [ ] Fresh demonstration installation passes with Demo Data checked.
-- [ ] Existing/cPanel overwrite upgrade preserves private/runtime files and API v2 provisioning state.
-- [ ] Admin login, roles, API keys, licenses, devices, Client Apps, V2 Devices, logs, settings, exports, backups and cron entry points are checked.
-- [ ] No private configuration, signing private key, API key, password, license key, device identifier, IP address, log or backup is tracked.
-- [ ] `CHANGELOG.md`, `RELEASE_NOTES_v5.2.2.md`, `REPOSITORY_METADATA.md` and release documentation are current.
-
-## Local verification
-
-From the repository root:
-
-```bash
-python scripts/verify-local.py
-```
-
-`bash scripts/validate.sh` remains the compatibility validation entry point. Local verification validates source; it never creates a tag or publishes a GitHub Release.
-
-## Manual forensic package check
-
-The packager remains available for local/release-forensic inspection after the target commit/tag exists:
-
-```bash
-bash scripts/package-release.sh v5.2.2 v5.2.2
-```
-
-It validates the exact Git ref, runs the source verifier inside an archive of that ref, creates a prefixed source ZIP with `git archive`, rejects private/runtime paths and writes a SHA-256 checksum.
-
-Default output:
+A v5.3.0+ official release consists of four updater-facing assets:
 
 ```text
-../Licora-5.2.2.zip
-../Licora-5.2.2.zip.sha256
+Licora-X.Y.Z.zip
+Licora-X.Y.Z.zip.sha256
+licora-update-manifest.json
+licora-update-manifest.sig
 ```
 
-## Normal GitHub publication
+The ZIP/checksum are generated from the exact Git ref by `scripts/package-release.sh`. `scripts/build-update-manifest.py` inventories the exact ZIP, records per-file SHA-256 values, package hash/size, commit identity, migration metadata, protected deletion intent and compatibility requirements. GitHub Actions signs the exact manifest bytes with the dedicated repository secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY`; the matching public key is tracked at `includes/updater/update-signing-public.pem`.
 
-The normal release path is automatic. After the `main` CI run is green, create and push the annotated release tag:
+## Mandatory pre-tag gates
 
 ```bash
-git tag -a v5.2.2 -m "Licora v5.2.2 - API v2 admin UI schema detection fix"
-git push origin v5.2.2
+python3 scripts/verify-local.py
+bash scripts/validate.sh
+php tests/updater_static.php
+php tests/updater_manifest.php
+php tests/updater_state_machine.php
+php tests/updater_failure_recovery.php
+php tests/updater_ui_contract.php
 ```
 
-`.github/workflows/release.yml` then:
+Database-backed API v2/admin/updater integration runs in GitHub CI against MySQL 8.4. CI must be green before creating the release tag.
 
-1. checks out the exact tag;
-2. validates tag/source version consistency;
-3. runs the full source verifier;
-4. runs the dedicated MySQL API v2 integration test;
-5. packages the exact tag;
-6. generates SHA-256;
-7. creates the GitHub Release using `RELEASE_NOTES_v5.2.2.md`;
-8. attaches `Licora-5.2.2.zip` and `Licora-5.2.2.zip.sha256`.
+## One-time v5.3.0 signing secret
 
-Manual `gh release create` is not part of the normal v5.2.2 publication workflow.
+The update private key is release infrastructure and must never be committed, bundled into a delta, copied to the hosted Licora application or printed in logs. Configure it once from a secured local file:
 
-## CI source artifact
+```bash
+gh secret set LICORA_UPDATE_SIGNING_PRIVATE_KEY < /secure/path/Licora_v5.3.0_UPDATE_SIGNING_PRIVATE_KEY.pem
+```
 
-Normal pushes and pull requests run the PHP 8.0–8.4 validation matrix plus the dedicated MySQL API v2 integration job. After both gates succeed, CI builds a verified source ZIP/checksum artifact for the exact commit. That CI artifact is not a public GitHub Release.
+The release workflow derives the public key from that secret and compares it byte-for-byte (DER) with the tracked updater public key before it is allowed to sign/publish. A mismatched/missing secret fails the release.
 
-## Post-release verification
+## Exact local package rehearsal
 
-- Confirm the `v5.2.2` Release workflow is green.
-- Confirm the GitHub Release is marked Latest.
-- Download the published ZIP and verify its `.sha256` file.
-- Extract it into a disposable directory and confirm private/runtime files are absent.
-- Run the source verifier from the extracted source where the local environment supports PHP/Python/Node.
-- Perform one clean browser installation and one API v1/API v2 smoke test against a disposable database.
+From a clean committed working tree, the exact v5.3.0 source archive can be rehearsed with:
 
-Windows Command Prompt equivalents are provided in `RELEASE_COMMANDS_v5.2.2.md`.
+```bash
+bash scripts/package-release.sh v5.3.0 v5.3.0
+```
+
+The official ZIP is still produced from the exact tag by GitHub Actions.
+
+## v5.3.0 publication
+
+```bash
+git add -A
+git commit -m "feat: add secure in-app updater in Licora v5.3.0"
+git push origin main
+# Wait for CI success.
+git tag -a v5.3.0 -m "Licora v5.3.0 - Secure In-App Update Center"
+git push origin v5.3.0
+```
+
+The tag-triggered Release workflow checks the exact tag, re-runs source and database gates, packages the exact tag, builds/signs/verifies the updater manifest, and publishes all four assets with `RELEASE_NOTES_v5.3.0.md`. Manual `gh release create` is not part of the normal workflow.
+
+## Package hygiene
+
+Release archives must exclude deployment-private/runtime material including `config.local.php`, encryption/install flags, API v2 signing keys, updater runtime state, update private keys, `.env*`, logs, backups, exports and `.git`. See `scripts/package-release.sh`.
+
+## Future release rule
+
+Every future release intended for one-click installation must update `update/release-spec.json`, ship signed migration metadata when applicable, keep its `minimum_updater` compatible with the installed updater or provide an intermediate release, and publish the four assets above. Never modify a published manifest/ZIP in place; create a new semantic version.
+
+See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model and `RELEASE_COMMANDS_v5.3.0.md` for the Windows-friendly command sequence.

@@ -1,0 +1,28 @@
+<?php
+declare(strict_types=1);
+$root=dirname(__DIR__);
+function up_ok($v,string $m):void{if(!$v){fwrite(STDERR,"FAIL: {$m}\n");exit(1);}}
+$required=[
+ 'admin/updates.php','admin/ajax/update-check.php','admin/ajax/update-preflight.php','admin/ajax/update-start.php','admin/ajax/update-step.php','admin/ajax/update-status.php','admin/ajax/update-events.php','admin/ajax/update-diagnostics.php','admin/ajax/update-rollback.php',
+ 'includes/updater/UpdateService.php','includes/updater/UpdateRepository.php','includes/updater/ManifestVerifier.php','includes/updater/ArchiveValidator.php','includes/updater/BackupService.php','includes/updater/MigrationRunner.php','includes/updater/FileInstaller.php','includes/updater/RollbackService.php','includes/updater/UpdateLock.php','includes/updater/update-signing-public.pem',
+ 'migration-v5.3.0-updater.sql','update/release-spec.json','scripts/build-update-manifest.py','admin/assets/css/licora-updater.css','admin/assets/js/licora-updater.js'
+];
+foreach($required as $rel){up_ok(is_file($root.'/'.$rel),'missing updater file '.$rel);}
+$service=(string)file_get_contents($root.'/includes/updater/UpdateService.php');foreach(['fetch_manifest','preflight','backup_database','rollback_migrations','AUTO_ROLLBACK_SCHEDULED','previewPreflight','UpdateLock::acquire','PACKAGE_SIZE_MISMATCH','withCoordinatorLock'] as $marker){up_ok(strpos($service,$marker)!==false,'missing state-machine marker '.$marker);}
+$verifier=(string)file_get_contents($root.'/includes/updater/ManifestVerifier.php');foreach(['openssl_verify','UPDATE_SIGNATURE_INVALID','UPDATE_PROTECTED_PATH','delete_files','rollback_checksum'] as $marker){up_ok(strpos($verifier,$marker)!==false,'missing manifest-security marker '.$marker);}
+$http=(string)file_get_contents($root.'/includes/updater/HttpClient.php');up_ok(strpos($http,"'https'")!==false,'HTTPS-only transport marker missing');up_ok(strpos($http,'.githubusercontent.com')!==false,'trusted GitHub redirect boundary missing');up_ok(strpos($http,'CURLOPT_FOLLOWLOCATION=>false')!==false,'cURL redirects must be manually validated before fetching');up_ok(strpos($http,'resolveRedirect')!==false,'validated redirect resolver missing');
+$releaseClient=(string)file_get_contents($root.'/includes/updater/ReleaseClient.php');up_ok(strpos($releaseClient,"OFFICIAL_REPOSITORY = 'vibtools/Licora'")!==false,'updater repository must be pinned to the official Licora repository');
+$all='';foreach(glob($root.'/includes/updater/*.php') as $f){$all.=(string)file_get_contents($f);}foreach(['shell_exec(','system(','passthru(','proc_open('] as $bad){up_ok(strpos($all,$bad)===false,'updater core must not depend on shell execution: '.$bad);}
+$ui=(string)file_get_contents($root.'/admin/updates.php');foreach(['Copy Logs','Download Diagnostics','Pin to bottom','update-log-search','update-log-filter','Closing this window does not cancel'] as $marker){up_ok(strpos($ui,$marker)!==false,'VibTools live-log contract missing '.$marker);}up_ok(strpos($ui,'AI Diagnostics')===false,'demo-only AI Diagnostics must not ship as a fake updater feature');
+$release=(string)file_get_contents($root.'/.github/workflows/release.yml');foreach(['LICORA_UPDATE_SIGNING_PRIVATE_KEY','licora-update-manifest.json','licora-update-manifest.sig','openssl dgst -sha256 -sign','tests/updater_db_integration.php'] as $marker){up_ok(strpos($release,$marker)!==false,'release signing/gate missing '.$marker);}
+$lock=(string)file_get_contents($root.'/includes/updater/UpdateLock.php');up_ok(strpos($lock,'recoverOrphaned')!==false,'orphaned terminal lock recovery missing');
+$boot=(string)file_get_contents($root.'/admin/ajax/update-bootstrap.php');up_ok(strpos($boot,"\$method!=='POST'")!==false,'mutation endpoints must enforce POST');
+
+$logger=(string)file_get_contents($root.'/includes/updater/UpdateLogger.php');up_ok(strpos($logger,'Update event telemetry must never')!==false,'updater event logging must be non-fatal to the state machine');
+$backup=(string)file_get_contents($root.'/includes/updater/BackupService.php');foreach(['source_backup_modes','SHOW TRIGGERS','SHOW CREATE TRIGGER','DATABASE_BACKUP_TRIGGERS'] as $marker){up_ok(strpos($backup,$marker)!==false,'backup safety marker missing '.$marker);}
+$rollback=(string)file_get_contents($root.'/includes/updater/RollbackService.php');up_ok(strpos($rollback,'source_backup_modes')!==false,'source rollback must restore original file permissions');
+$installer=(string)file_get_contents($root.'/includes/updater/FileInstaller.php');up_ok(strpos($installer,'fileperms($target)')!==false,'file installer must preserve existing source permissions');
+foreach(['forever-running job','stepHandle=null','lockAcquired=false'] as $marker){up_ok(strpos($service,$marker)!==false,'updater recovery hardening marker missing '.$marker);}
+
+$gitignore=(string)file_get_contents($root.'/.gitignore');up_ok(strpos($gitignore,'includes/.licora-updater/')!==false,'runtime updater storage must be ignored');up_ok(strpos($gitignore,'update-signing-private.pem')!==false,'update private key must be ignored');
+echo "Updater static checks passed.\n";

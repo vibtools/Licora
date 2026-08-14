@@ -1,0 +1,7 @@
+/* VibTools Foundation Motion — v2.1.2 */
+:root {
+  --transition-fast: 100ms ease;
+  --transition-normal: 120ms ease;
+  --transition-slow: 150ms ease;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}

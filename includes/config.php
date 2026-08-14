@@ -29,7 +29,7 @@ if (!function_exists('env_value')) {
 // Resolve release identity before private local configuration is loaded.
 // This prevents an installer-generated local configuration from pinning
 // future source upgrades while retaining the APP_VERSION environment override.
-if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.2.2'));
+if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.3.0'));
 
 // Optional private local override. Keep this file outside public web root where possible.
 $localConfig = __DIR__ . '/config.local.php';
@@ -62,7 +62,7 @@ if (!defined('JWT_SECRET')) define('JWT_SECRET', env_value('LICENSE_JWT_SECRET',
 if (!defined('API_RATE_LIMIT')) define('API_RATE_LIMIT', (int)env_value('API_RATE_LIMIT', 1000));
 if (!defined('API_VERSION')) define('API_VERSION', env_value('API_VERSION', 'v1'));
 
-// Licora v5.2.2 API v2 public/runtime configuration.
+// Licora API v2 public/runtime configuration.
 // No server signing private key or API-v1 credential is embedded here.
 if (!defined('LICENSE_V2_REQUIRE_HTTPS')) define('LICENSE_V2_REQUIRE_HTTPS', env_value('LICENSE_V2_REQUIRE_HTTPS', '1'));
 if (!defined('LICENSE_TRUST_PROXY_HEADERS')) define('LICENSE_TRUST_PROXY_HEADERS', env_value('LICENSE_TRUST_PROXY_HEADERS', '0'));
@@ -73,6 +73,25 @@ if (!defined('LICENSE_V2_SIGNING_KEY_ID')) define('LICENSE_V2_SIGNING_KEY_ID', e
 if (!defined('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH')) define('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH', env_value('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH', __DIR__ . '/.licora-v2-signing-private.pem'));
 if (!defined('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH')) define('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH', env_value('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH', __DIR__ . '/.licora-v2-signing-public.pem'));
 
+// Licora v5.3.0 Secure In-App Updater configuration.
+if (!defined('LICORA_UPDATE_REPOSITORY')) define('LICORA_UPDATE_REPOSITORY', env_value('LICORA_UPDATE_REPOSITORY', 'vibtools/Licora'));
+if (!defined('LICORA_UPDATE_CHECK_INTERVAL')) define('LICORA_UPDATE_CHECK_INTERVAL', (int)env_value('LICORA_UPDATE_CHECK_INTERVAL', 21600));
+if (!defined('LICORA_UPDATE_HTTP_TIMEOUT')) define('LICORA_UPDATE_HTTP_TIMEOUT', (int)env_value('LICORA_UPDATE_HTTP_TIMEOUT', 120));
+if (!defined('LICORA_UPDATE_MAX_PACKAGE_BYTES')) define('LICORA_UPDATE_MAX_PACKAGE_BYTES', (int)env_value('LICORA_UPDATE_MAX_PACKAGE_BYTES', 104857600));
+if (!defined('LICORA_UPDATE_PUBLIC_KEY_PATH')) define('LICORA_UPDATE_PUBLIC_KEY_PATH', env_value('LICORA_UPDATE_PUBLIC_KEY_PATH', __DIR__ . '/updater/update-signing-public.pem'));
+
+
+// A critical updater lock is filesystem-only and is enforced before installation/database boot logic.
+// This prevents ordinary application traffic from entering a partially applied source/schema state.
+$updateLockClass = __DIR__ . '/updater/UpdateLock.php';
+$updateRuntimeClass = __DIR__ . '/updater/UpdateRuntime.php';
+$updateExceptionClass = __DIR__ . '/updater/UpdateException.php';
+if (is_file($updateLockClass) && is_file($updateRuntimeClass) && is_file($updateExceptionClass)) {
+    require_once $updateExceptionClass;
+    require_once $updateRuntimeClass;
+    require_once $updateLockClass;
+    UpdateLock::enforceRequest();
+}
 
 // The installation guard is additive and only redirects incomplete fresh installations.
 // Valid existing installations and temporary database outages retain the previous boot flow.
