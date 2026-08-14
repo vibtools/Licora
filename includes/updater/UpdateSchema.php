@@ -18,15 +18,24 @@ final class UpdateSchema
     {
         $missing = [];
         foreach (self::TABLES as $table) {
-            $stmt = $this->db->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table');
-            $stmt->execute([':table' => $table]);
-            if ((int)$stmt->fetchColumn() !== 1) { $missing[] = $table; }
+            if (!$this->tableExists($table)) { $missing[] = $table; }
         }
         return ['ready' => $missing === [], 'missing_tables' => $missing];
     }
 
     public function ensure(): array
     {
+        // The updater is additive to an existing Licora installation. Its migration seeds
+        // updater settings, so a valid core settings table is a hard prerequisite. Report a
+        // controlled updater error instead of leaking an engine-level PDO failure.
+        if (!$this->coreSettingsSchemaReady()) {
+            throw new UpdateException(
+                'UPDATER_BASE_SCHEMA_MISSING',
+                'Licora core settings schema is missing or incomplete. Repair the base database before initializing the updater.',
+                500
+            );
+        }
+
         $status = $this->status();
         if ($status['ready']) { return $status; }
         if (!is_readable($this->migrationPath)) {
@@ -40,6 +49,26 @@ final class UpdateSchema
             throw new UpdateException('UPDATER_SCHEMA_FAILED', 'Updater database schema could not be initialized.', 500);
         }
         return $status;
+    }
+
+    private function tableExists(string $table): bool
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table');
+        $stmt->execute([':table' => $table]);
+        return (int)$stmt->fetchColumn() === 1;
+    }
+
+    private function coreSettingsSchemaReady(): bool
+    {
+        if (!$this->tableExists('settings')) { return false; }
+        $stmt = $this->db->prepare("SELECT COUNT(DISTINCT COLUMN_NAME) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'settings' AND COLUMN_NAME IN ('setting_key','setting_value')");
+        $stmt->execute();
+        if ((int)$stmt->fetchColumn() !== 2) { return false; }
+
+        // Updater settings and the coordinator mutex rely on one row per setting_key.
+        // Confirm that setting_key participates in a single-column UNIQUE/PRIMARY index.
+        $index = $this->db->query("SELECT COUNT(*) FROM (SELECT INDEX_NAME, COUNT(*) AS column_count, SUM(CASE WHEN COLUMN_NAME = 'setting_key' THEN 1 ELSE 0 END) AS key_count FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'settings' AND NON_UNIQUE = 0 GROUP BY INDEX_NAME HAVING column_count = 1 AND key_count = 1) AS unique_setting_key_indexes");
+        return (int)$index->fetchColumn() >= 1;
     }
 
     public static function splitSql(string $sql): array

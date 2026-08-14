@@ -46,7 +46,8 @@ final class UpdateService
         $last=(int)$this->repo->getSetting('updater_last_check_at','0');
         $cachedRaw=(string)$this->repo->getSetting('updater_latest_release_json','');
         $cached=$cachedRaw!=='' ? json_decode($cachedRaw,true) : null;
-        $shouldFetch=$force || ($auto && (!$last || (time()-$last)>=$interval)) || !is_array($cached);
+        // updater_auto_check=0 must not initiate an outbound GitHub request; a Super Admin can still force a manual check.
+        $shouldFetch=$force || ($auto && (!is_array($cached) || !$last || (time()-$last)>=$interval));
         $warning=null;
         if($shouldFetch){
             try{
@@ -84,7 +85,7 @@ final class UpdateService
             $sigInfo=$this->http->download($sigAsset['url'],$temp.'/manifest.sig',[],65536);
             $manifestJson=(string)file_get_contents($manifestInfo['path']);
             $signature=(string)file_get_contents($sigInfo['path']);
-            $manifest=$this->manifestVerifier->verify($manifestJson,$signature,$targetVersion);
+            $manifest=$this->manifestVerifier->verify($manifestJson,$signature,$targetVersion,defined('APP_VERSION')?APP_VERSION:'0.0.0');
             $package=$this->releases->asset($release,(string)$manifest['package']['name']);
             if((int)($manifest['package']['size']??0)!==(int)$package['size']){throw new UpdateException('PACKAGE_SIZE_MISMATCH','GitHub release asset size differs from the signed update manifest.',409);}
             $result=$this->preflight->run($manifest,(int)$package['size']);
@@ -187,7 +188,7 @@ final class UpdateService
 
     private function stageFetchManifest(array $job,UpdateLogger $logger): array
     {
-        $uuid=(string)$job['job_uuid'];$context=$this->repo->context($job);$release=$context['release']??null;if(!is_array($release)){throw new UpdateException('RELEASE_METADATA_MISSING','Update job release metadata is missing.',500);} $jobDir=UpdateRuntime::ensureJob($uuid);$manifestAsset=$this->releases->asset($release,'licora-update-manifest.json');$sigAsset=$this->releases->asset($release,'licora-update-manifest.sig');$logger->info('fetch_manifest','MANIFEST_DOWNLOAD','Downloading signed update manifest.');$manifestInfo=$this->http->download($manifestAsset['url'],$jobDir.'/licora-update-manifest.json',[],2097152);$sigInfo=$this->http->download($sigAsset['url'],$jobDir.'/licora-update-manifest.sig',[],65536);$manifestJson=(string)file_get_contents($manifestInfo['path']);$signature=(string)file_get_contents($sigInfo['path']);$manifest=$this->manifestVerifier->verify($manifestJson,$signature,(string)$job['target_version']);$context['manifest_path']=$manifestInfo['path'];$context['signature_path']=$sigInfo['path'];$context['manifest_verified']=true;$logger->success('fetch_manifest','MANIFEST_SIGNATURE_OK','Update manifest signature verified with the dedicated Licora updater key.');return $this->repo->saveContext($uuid,$context,['manifest_json'=>$manifestJson,'stage'=>'preflight','progress'=>8]);
+        $uuid=(string)$job['job_uuid'];$context=$this->repo->context($job);$release=$context['release']??null;if(!is_array($release)){throw new UpdateException('RELEASE_METADATA_MISSING','Update job release metadata is missing.',500);} $jobDir=UpdateRuntime::ensureJob($uuid);$manifestAsset=$this->releases->asset($release,'licora-update-manifest.json');$sigAsset=$this->releases->asset($release,'licora-update-manifest.sig');$logger->info('fetch_manifest','MANIFEST_DOWNLOAD','Downloading signed update manifest.');$manifestInfo=$this->http->download($manifestAsset['url'],$jobDir.'/licora-update-manifest.json',[],2097152);$sigInfo=$this->http->download($sigAsset['url'],$jobDir.'/licora-update-manifest.sig',[],65536);$manifestJson=(string)file_get_contents($manifestInfo['path']);$signature=(string)file_get_contents($sigInfo['path']);$manifest=$this->manifestVerifier->verify($manifestJson,$signature,(string)$job['target_version'],(string)$job['from_version']);$context['manifest_path']=$manifestInfo['path'];$context['signature_path']=$sigInfo['path'];$context['manifest_verified']=true;$logger->success('fetch_manifest','MANIFEST_SIGNATURE_OK','Update manifest signature verified with the dedicated Licora updater key.');return $this->repo->saveContext($uuid,$context,['manifest_json'=>$manifestJson,'stage'=>'preflight','progress'=>8]);
     }
 
     private function stagePreflight(array $job,UpdateLogger $logger): array
@@ -208,9 +209,16 @@ final class UpdateService
     private function stageSourceBackup(array $job,UpdateLogger $logger): array
     {
         $manifest=$this->manifest($job);$job=$this->backup->sourceStep($job,$manifest,$logger,30);$context=$this->repo->context($job);if(!empty($context['source_backup_complete'])){
-            $migrations=$manifest['migrations']??[];$destructive=false;foreach($migrations as $migration){if(!empty($migration['destructive'])){$destructive=true;break;}}
-            if($migrations&&$destructive){$context['lock_next']='backup_database';$job=$this->repo->saveContext((string)$job['job_uuid'],$context,['stage'=>'lock_update','progress'=>50]);}
-            else{$next=$migrations?'backup_database':'lock_update';$job=$this->repo->updateJob((string)$job['job_uuid'],['stage'=>$next,'progress'=>50]);}
+            $migrations=$manifest['migrations']??[];
+            if($migrations){
+                // The pure-PHP database safety dump spans resumable requests. Enter the
+                // critical lock before any migration backup so Licora writes cannot make
+                // the chunked dump internally inconsistent while it is being captured.
+                $context['lock_next']='backup_database';
+                $job=$this->repo->saveContext((string)$job['job_uuid'],$context,['stage'=>'lock_update','progress'=>50]);
+            }else{
+                $job=$this->repo->updateJob((string)$job['job_uuid'],['stage'=>'lock_update','progress'=>50]);
+            }
         }return $job;
     }
 

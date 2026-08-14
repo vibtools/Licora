@@ -19,6 +19,15 @@ def sha256_file(path: Path) -> str:
 def safe_rel(path: str) -> bool:
     return bool(path) and '\\' not in path and not path.startswith('/') and not re.match(r'^[A-Za-z]:',path) and all(p not in ('','.','..') for p in path.split('/'))
 
+def critical_control(path: str) -> bool:
+    return (
+        path in {'includes/config.php', 'admin/updates.php'}
+        or path.startswith('includes/updater/')
+        or path.startswith('admin/ajax/update-')
+        or path.startswith('admin/assets/js/licora-updater')
+        or path.startswith('admin/assets/css/licora-updater')
+    )
+
 def main() -> int:
     ap=argparse.ArgumentParser();ap.add_argument('--version',required=True);ap.add_argument('--package',required=True);ap.add_argument('--output',required=True);ap.add_argument('--ref',default='HEAD');args=ap.parse_args()
     if not re.fullmatch(r'\d+\.\d+\.\d+',args.version): raise SystemExit('invalid semantic version')
@@ -32,13 +41,25 @@ def main() -> int:
             rel=name[len(prefix):]
             if not rel or rel.endswith('/'): continue
             if not safe_rel(rel): raise SystemExit(f'unsafe package path: {rel}')
+            if rel in files: raise SystemExit(f'duplicate package path: {rel}')
             files[rel]=sha256_bytes(z.read(name))
         spec_name=prefix+'update/release-spec.json'
         if spec_name not in names: raise SystemExit('update/release-spec.json missing from package')
         spec=json.loads(z.read(spec_name).decode('utf-8'))
     if spec.get('protocol_version')!=1 or spec.get('application')!='Licora' or spec.get('version')!=args.version: raise SystemExit('release spec identity mismatch')
+    if spec.get('channel')!='stable': raise SystemExit('only stable release specs are supported')
+    minimum_updater=spec.get('minimum_updater')
+    minimum_php=spec.get('minimum_php')
+    if not isinstance(minimum_updater,str) or not re.fullmatch(r'\d+\.\d+\.\d+',minimum_updater): raise SystemExit('invalid minimum_updater version')
+    if not isinstance(minimum_php,str) or not re.fullmatch(r'\d+\.\d+(?:\.\d+)?',minimum_php): raise SystemExit('invalid minimum_php version')
+    upgrade_from=spec.get('upgrade_from')
+    if not isinstance(upgrade_from,list) or not upgrade_from: raise SystemExit('release spec requires non-empty upgrade_from')
+    if any(not isinstance(v,str) or not re.fullmatch(r'\d+\.\d+\.\d+',v) for v in upgrade_from): raise SystemExit('invalid upgrade_from version')
+    if len(set(upgrade_from)) != len(upgrade_from): raise SystemExit('duplicate upgrade_from version')
     delete_files=spec.get('delete_files',[])
     if not isinstance(delete_files,list) or any(not isinstance(x,str) or not safe_rel(x) for x in delete_files): raise SystemExit('invalid delete_files')
+    if len(set(delete_files)) != len(delete_files): raise SystemExit('duplicate delete_files path')
+    if any(critical_control(x) for x in delete_files): raise SystemExit('protocol v1 cannot delete updater control files')
     migrations=[]
     for item in spec.get('migrations',[]):
         if not isinstance(item,dict): raise SystemExit('invalid migration spec')
@@ -57,7 +78,7 @@ def main() -> int:
     if not re.fullmatch(r'[0-9a-f]{40}',commit): raise SystemExit('invalid commit identity')
     manifest={
         'protocol_version':1,'application':'Licora','version':args.version,'tag':'v'+args.version,'commit':commit,
-        'channel':spec.get('channel','stable'),'minimum_updater':spec.get('minimum_updater','5.3.0'),'minimum_php':spec.get('minimum_php','8.0'),
+        'channel':'stable','minimum_updater':minimum_updater,'minimum_php':minimum_php,'upgrade_from':upgrade_from,
         'package':{'name':package.name,'sha256':sha256_file(package),'size':package.stat().st_size},
         'migrations':migrations,'delete_files':delete_files,'files':dict(sorted(files.items()))
     }

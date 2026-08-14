@@ -29,6 +29,16 @@ The Update Center is the first Licora surface implemented against the approved *
 - Retained source/database backups and downloadable sanitized updater diagnostics.
 - VibTools live log modal with search, severity filter, Copy Logs, Download Diagnostics, visible/total count, pin-to-bottom, progress/stage display, Esc close, and resume after page reload.
 - Release/CI regression coverage for updater manifest security, state machine, UI contract, archive rejection, and MySQL persistence.
+- Signed `upgrade_from` source-version compatibility contract so unsupported direct version jumps are blocked before migration/source mutation.
+- Controlled base-schema prerequisite validation for the core `settings` table used by updater settings and the coordinator mutex.
+- Atomic critical-lock metadata publication plus corrupt-lock recovery so malformed lock metadata cannot indefinitely strand normal requests in HTTP 503.
+- Consistent migration safety backups by entering the critical application lock before any chunked database dump.
+- Release-builder/runtime parity checks for duplicate package paths and protocol-v1 updater control-file deletion.
+- Correct `updater_auto_check=0` semantics: automatic checks stay offline until a Super Admin explicitly forces a check.
+
+## Pre-release CI hardening
+
+The initial v5.3.0 `main` CI run exposed a test-fixture mismatch: the API v2 integration fixture intentionally created a minimal database without the core `settings` table, while the updater migration correctly expected a normal Licora base schema. The updater DB test now owns its prerequisites, verifies the missing-base-schema failure mode explicitly, creates a production-compatible minimal `settings` table, and then verifies updater schema seeding, coordinator locking, jobs/events/migration persistence, and corrupt-lock recovery. This is a pre-release CI/test-isolation correction; no API v1/v2 or license/device contract changes are involved.
 
 ## Security model
 

@@ -21,6 +21,15 @@ All notable public-release changes are recorded here. Historical project notes r
 - Added updater security, manifest, state-machine, failure/recovery, UI-contract, and MySQL integration tests.
 - Added release manifest generation and GitHub Actions signing/publication of `licora-update-manifest.json` and `licora-update-manifest.sig`.
 
+
+### Hardened before release
+- Fixed updater MySQL integration test isolation so the test prepares its own production-compatible core `settings` prerequisite instead of inheriting the intentionally minimal API v2 fixture.
+- Added controlled core-settings schema validation before updater provisioning to replace raw missing-table PDO failures with `UPDATER_BASE_SCHEMA_MISSING`.
+- Added signed `upgrade_from` compatibility metadata and runtime enforcement to prevent unsupported direct release jumps from skipping migration history.
+- Made critical lock writes atomic and recoverable when lock metadata is corrupt, preventing a malformed lock file from indefinitely holding normal traffic in HTTP 503.
+- Acquired the critical application lock before every chunked migration database backup so the safety dump is internally consistent with respect to normal Licora writes.
+- Blocked protocol-v1 deletion of updater control files, aligned release-manifest duplicate-path validation with runtime archive validation, and corrected disabled auto-check behavior.
+
 ### Compatibility
 - Existing license, device, admin, API v1, and Secure API v2 contracts are unchanged.
 - v5.2.2 deployments require one final manual source update to v5.3.0; future compatible signed releases can then use Admin → Updates.

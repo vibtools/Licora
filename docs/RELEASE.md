@@ -68,6 +68,6 @@ Release archives must exclude deployment-private/runtime material including `con
 
 ## Future release rule
 
-Every future release intended for one-click installation must update `update/release-spec.json`, ship signed migration metadata when applicable, keep its `minimum_updater` compatible with the installed updater or provide an intermediate release, and publish the four assets above. Never modify a published manifest/ZIP in place; create a new semantic version.
+Every future release intended for one-click installation must update `update/release-spec.json`, declare the exact direct source versions it supports in signed `upgrade_from`, ship every migration required for those supported direct paths, keep `minimum_updater` compatible, and publish the four assets above. The v5.3.0 updater follows GitHub's latest stable release, so a latest release that does not list the installed version in `upgrade_from` is deliberately blocked rather than silently skipping an intermediate migration. Never modify a published manifest/ZIP in place; create a new semantic version.
 
 See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model and `RELEASE_COMMANDS_v5.3.0.md` for the Windows-friendly command sequence.

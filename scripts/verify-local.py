@@ -270,9 +270,9 @@ if "AI Diagnostics" in updater_page:
     fail("demo-only AI Diagnostics must not ship as a fake updater feature")
 updater_core = "\n".join(read("includes/updater/" + name) for name in [
     "UpdateService.php","UpdateRepository.php","ManifestVerifier.php","ArchiveValidator.php","BackupService.php",
-    "MigrationRunner.php","FileInstaller.php","RollbackService.php","UpdateLock.php","HttpClient.php"
+    "MigrationRunner.php","FileInstaller.php","RollbackService.php","UpdateLock.php","UpdateSchema.php","HttpClient.php"
 ])
-for marker in ["openssl_verify", "withCoordinatorLock", "recoverOrphaned", "AUTO_ROLLBACK_SCHEDULED", "UPDATE_PROTECTED_PATH", "Retry-After: 5"]:
+for marker in ["openssl_verify", "withCoordinatorLock", "recoverOrphaned", "writeAtomic", "UPDATER_BASE_SCHEMA_MISSING", "UPDATE_SOURCE_VERSION_UNSUPPORTED", "upgrade_from", "AUTO_ROLLBACK_SCHEDULED", "UPDATE_PROTECTED_PATH", "Retry-After: 5"]:
     if marker not in updater_core:
         fail(f"secure updater marker missing: {marker}")
 for bad in ["shell_exec(", "system(", "passthru(", "proc_open("]:
@@ -291,6 +291,12 @@ require_action_minimum(ci, "actions/upload-artifact", (6,), "CI")
 for marker in ["mysql-integration", "scripts/package-release.sh", "tests/updater_db_integration.php", "scripts/build-update-manifest.py"]:
     if marker not in ci:
         fail(f"CI automation marker missing: {marker}")
+release_spec = read("update/release-spec.json")
+manifest_builder = read("scripts/build-update-manifest.py")
+for text, label in [(release_spec, "release spec"), (manifest_builder, "manifest builder")]:
+    for marker in ["upgrade_from", "stable"]:
+        if marker not in text:
+            fail(f"updater {label} compatibility marker missing: {marker}")
 for marker in ["tags:", "contents: write", "gh release create", "--verify-tag", "RELEASE_NOTES_${GITHUB_REF_NAME}.md", "scripts/package-release.sh", "LICORA_UPDATE_SIGNING_PRIVATE_KEY", "licora-update-manifest.json", "licora-update-manifest.sig", "openssl dgst -sha256 -sign", "tests/updater_db_integration.php"]:
     if marker not in release:
         fail(f"release automation marker missing: {marker}")

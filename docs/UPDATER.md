@@ -10,7 +10,7 @@ Licora v5.3.0 introduces a Super-Admin-only updater for future official Licora r
 vibtools/Licora GitHub Release
   -> licora-update-manifest.json
   -> RSA/SHA-256 signature verification
-  -> semantic version / updater compatibility
+  -> semantic version / signed source-version compatibility
   -> release ZIP SHA-256
   -> archive path/symlink/root validation
   -> per-file SHA-256 inventory
@@ -54,7 +54,7 @@ Only paths explicitly listed in the signed release manifest may be installed. De
 - `update_events` — ordered live event stream for the VibTools log modal.
 - `app_migrations` — unique migration IDs, release/checksum/status/timing ledger.
 
-The authenticated updater bootstrap can idempotently provision these tables on an upgraded v5.2.2 deployment when **Updates** is opened. Fresh installations receive the same schema through `database.sql`.
+The authenticated updater bootstrap can idempotently provision these tables on an upgraded v5.2.2 deployment when **Updates** is opened. Fresh installations receive the same schema through `database.sql`. The updater migration is additive to Licora and therefore requires the existing core `settings` table with a unique `setting_key`; an incomplete base schema is rejected with `UPDATER_BASE_SCHEMA_MISSING` instead of leaking a raw PDO/MySQL error.
 
 ## State machine
 
@@ -64,8 +64,8 @@ fetch_manifest
  -> download
  -> stage_archive
  -> backup_source
- -> [backup_database when migrations exist]
- -> lock_update
+ -> [lock_update -> backup_database when migrations exist]
+ -> [lock_update when no migration backup is needed]
  -> migrate
  -> apply_files
  -> post_verify
@@ -104,13 +104,13 @@ No shell, Git, SSH, Composer, Python, `exec()`, `shell_exec()`, or `chmod 777` i
 
 Before source mutation, every installed path that will change or be deleted is copied to the private updater runtime directory. Newly introduced target paths are recorded so rollback can remove them.
 
-When a release contains migrations, Licora also creates a chunked pure-PHP database safety dump. Non-destructive migrations must be explicitly idempotent. A destructive signed migration is rejected unless it declares a signed rollback path. Source replacement uses staged checksums and atomic same-filesystem rename operations.
+When a release contains migrations, Licora also creates a chunked pure-PHP database safety dump. Because the dump spans resumable HTTP requests, the critical updater lock is acquired before the dump begins so normal Licora writes cannot produce an internally inconsistent backup. Non-destructive migrations must be explicitly idempotent. A destructive signed migration is rejected unless it declares a signed rollback path. Source replacement uses staged checksums and atomic same-filesystem rename operations.
 
 Backup/runtime data is retained after success so diagnostics and an eligible manual rollback remain available. Operators should still maintain external production backups.
 
 ## Critical update lock
 
-The updater lock is activated only for the critical migration/source-apply phase (or earlier for destructive-migration database safety backup). While active, non-updater application/API requests receive HTTP 503 with `Retry-After: 5`. Update, login, and logout recovery routes remain available. Successful completion or rollback releases the lock.
+The updater lock is activated for the critical migration/source-apply phase and, whenever a release carries migrations, before the chunked database safety backup. While active, non-updater application/API requests receive HTTP 503 with `Retry-After: 5`. Update, login, and logout recovery routes remain available. Lock metadata is atomically published; corrupt/truncated metadata is removed during request boot and orphaned terminal-job locks are recovered from the Update Center. Successful completion or rollback releases the lock.
 
 ## VibTools UI
 
@@ -129,8 +129,15 @@ Environment constants:
 - `LICORA_UPDATE_PUBLIC_KEY_PATH` — dedicated public verification key path.
 - optional `LICORA_GITHUB_TOKEN` — GitHub API token for deployments that need higher API limits; never shown in UI.
 
-Stored settings created idempotently: `updater_auto_check`, `updater_check_interval_seconds`, and `updater_channel`.
+Stored settings created idempotently: `updater_auto_check`, `updater_check_interval_seconds`, and `updater_channel`. In protocol v1, `updater_channel` is a reserved marker fixed to `stable`; there is no selectable beta/dev channel. Setting `updater_auto_check=0` suppresses automatic outbound GitHub checks while still allowing an explicit Super Admin **Check for Updates** request.
 
 ## Release specification
 
-`update/release-spec.json` is maintainer-authored source metadata. `scripts/build-update-manifest.py` combines it with the exact release ZIP inventory and exact Git commit to produce the signed manifest payload. Destructive migrations without rollback metadata and non-destructive migrations not explicitly marked idempotent are rejected at build time.
+`update/release-spec.json` is maintainer-authored source metadata. `scripts/build-update-manifest.py` combines it with the exact release ZIP inventory and exact Git commit to produce the signed manifest payload. The spec must declare a non-empty signed `upgrade_from` list; the installed version must appear in that list before a release can be preflighted or installed. This prevents an unsupported direct jump from silently skipping required intermediate migration history. Protocol v1 also rejects deletion of updater control files during a self-update. Destructive migrations without rollback metadata and non-destructive migrations not explicitly marked idempotent are rejected at build time.
+
+## Protocol v1 operational limits
+
+- The retained SQL file is a **database safety backup**, not an automatic full-database restore engine. Automatic rollback restores source and executes signed migration rollback files when supplied; operators must retain external production backups.
+- Successful-job runtime backups/events are intentionally retained for diagnostics and manual rollback. Automated retention/garbage collection is not yet implemented, so operators should monitor `includes/.licora-updater/` disk usage until a later maintenance feature adds policy-driven cleanup.
+- Update-signing key rotation does not yet implement a dual-key transition protocol. A future key-rotation release requires an explicitly designed trust-transition procedure rather than silently replacing the bundled verification key.
+- The UI currently follows GitHub's latest stable release. Maintainers must publish self-installable releases with a compatible signed `upgrade_from` contract (and cumulative required migrations where direct jumps are supported).

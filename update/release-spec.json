@@ -5,6 +5,9 @@
   "channel": "stable",
   "minimum_updater": "5.3.0",
   "minimum_php": "8.0",
+  "upgrade_from": [
+    "5.2.2"
+  ],
   "delete_files": [],
   "migrations": [
     {
