@@ -141,3 +141,7 @@ Stored settings created idempotently: `updater_auto_check`, `updater_check_inter
 - Successful-job runtime backups/events are intentionally retained for diagnostics and manual rollback. Automated retention/garbage collection is not yet implemented, so operators should monitor `includes/.licora-updater/` disk usage until a later maintenance feature adds policy-driven cleanup.
 - Update-signing key rotation does not yet implement a dual-key transition protocol. A future key-rotation release requires an explicitly designed trust-transition procedure rather than silently replacing the bundled verification key.
 - The UI currently follows GitHub's latest stable release. Maintainers must publish self-installable releases with a compatible signed `upgrade_from` contract (and cumulative required migrations where direct jumps are supported).
+
+## v5.4.0 UI-only signed update
+
+v5.4.0 is the first normal release intended to exercise the v5.3.0 bootstrap updater. Its signed release specification accepts only `5.3.0` as the direct source version and declares no database migration. The update changes the Licora presentation layer to the shared VibTools Light component system while leaving updater signing, manifest validation, job/event persistence, preflight, staging, backup, file apply and rollback semantics unchanged.

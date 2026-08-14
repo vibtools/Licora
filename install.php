@@ -35,8 +35,8 @@ function installer_render_locked(): void
     $basePath = licora_installation_base_path();
     http_response_code(403);
     header('Content-Type: text/html; charset=utf-8');
-    echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Installation already completed</title>';
-    echo '<style>body{font-family:system-ui,-apple-system,sans-serif;background:#f4f6f9;margin:0;padding:40px;color:#212529}.card{max-width:760px;margin:40px auto;background:#fff;border:1px solid #dee2e6;border-radius:14px;padding:32px;box-shadow:0 12px 36px rgba(0,0,0,.08)}h1{color:#b02a37}code{background:#f1f3f5;padding:.15rem .35rem;border-radius:4px}</style></head><body><main class="card">';
+    echo '<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Installation already completed</title>';
+    echo '<link rel="stylesheet" href="' . installer_escape($basePath . '/admin/assets/css/admin-ui.css') . '"></head><body class="licora-installer"><main class="installer-locked">';
     echo '<h1>Installation already completed.</h1><p>Licora detected an existing installation and disabled installer execution. No configuration or database data was changed.</p>';
     echo '<p>For an intentional recovery, place the site in private maintenance mode, back up the database and private configuration, and follow <code>docs/INSTALLATION.md</code> and <code>docs/FIRST_RUN_GUIDE.md</code>.</p>';
     echo '<p><a href="' . installer_escape($basePath . '/admin/login.php') . '">Go to Admin Login</a></p></main></body></html>';
@@ -250,7 +250,7 @@ $stepTitles = [
 ];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -261,18 +261,15 @@ $stepTitles = [
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="<?php echo installer_escape($webBasePath . '/admin/assets/css/admin-ui.css'); ?>">
-    <style>
-        body{background:#f4f6f9}.install-container{max-width:920px;margin:32px auto;padding:0 14px}.installer-card{border:0;border-radius:16px;overflow:hidden}.installer-header{background:linear-gradient(135deg,#1f4e78,#2f6da1);color:#fff;padding:26px}.step-pill{font-size:.82rem;background:rgba(255,255,255,.16);padding:.35rem .7rem;border-radius:999px}.progress{height:7px}.requirement-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #edf0f2}.requirement-row:last-child{border-bottom:0}.status-badge{min-width:82px;text-align:center}.review-list dt{color:#6c757d;font-weight:600}.review-list dd{word-break:break-word}.secret-note{font-size:.9rem}.form-text strong{color:#495057}
-    </style>
 </head>
-<body class="admin-ui">
+<body class="licora-installer">
 <div class="install-container">
     <div class="card shadow-sm installer-card">
         <div class="installer-header">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div>
                     <h2 class="mb-1"><i class="bi bi-shield-check me-2"></i>Licora First-Run Installer</h2>
-                    <div class="opacity-75">Professional installation wizard for Licora v5.3.0</div>
+                    <div class="opacity-75">Professional installation wizard for Licora v5.4.0</div>
                 </div>
                 <span class="step-pill">Step <?php echo $step; ?> of 10</span>
             </div>
@@ -307,7 +304,7 @@ $stepTitles = [
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.3.0 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
+                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.4.0 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
                 <form method="post">
                     <input type="hidden" name="installer_csrf_token" value="<?php echo installer_escape($_SESSION['licora_installer_csrf']); ?>">
                     <button class="btn btn-primary" <?php echo licora_installer_requirements_pass($requirements) ? '' : 'disabled'; ?>>Continue</button>
@@ -358,7 +355,7 @@ $stepTitles = [
                 </form>
 
             <?php elseif ($step === 5): ?>
-                <p>Licora will initialize <code>database.sql</code>, preserving the existing API v1 schema and adding only the Secure API v2 tables introduced in v5.2.0 and retained unchanged through v5.3.0.</p>
+                <p>Licora will initialize <code>database.sql</code>, preserving the existing API v1 schema and adding only the Secure API v2 tables introduced in v5.2.0 and retained unchanged through v5.4.0.</p>
                 <div class="alert alert-warning">The target database must not already contain Licora tables. Unrelated existing tables are never removed. If installation fails, only installer-created objects are cleaned up.</div>
                 <dl class="row review-list">
                     <dt class="col-sm-4">Database</dt><dd class="col-sm-8"><?php echo installer_escape(($dbData['host'] ?? '') . ':' . ($dbData['port'] ?? '') . '/' . ($dbData['name'] ?? '')); ?></dd>
@@ -414,7 +411,7 @@ $stepTitles = [
                 <a class="btn btn-primary" href="?step=1">Restart</a>
             <?php endif; ?>
         </div>
-        <div class="card-footer text-center text-muted py-3"><small>Licora v5.3.0 &middot; Vib Tools &middot; MIT License</small></div>
+        <div class="card-footer text-center text-muted py-3"><small>Licora v5.4.0 &middot; Vib Tools &middot; MIT License</small></div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

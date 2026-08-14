@@ -24,8 +24,13 @@ $expectedImmutableHashes = [
     'migration-v5-hotfix.sql' => 'e735acebfdad6254ca8fc6d6bbec28af2d35db41d6bf43fa77da1e2605e8ed62',
     'cron/cleanup.php' => '62467804576ecf6d29cb9a35a92eb8d8a9bae76490d328784ec0c2aa478e3fc5',
     'cron/check_expiring.php' => 'c52715837a84512f0378d14fc2e57024d928435d1a75c0014d5af616e58a41c2',
-    'admin/assets/css/admin-ui.css' => 'a18773b97f793cd86c011df1fe9bf472613749f26660a9e9a4220582e89d5913',
-    'admin/assets/js/admin-ui.js' => '5722297eec36a653241520b19a2217f9c4653aa43f6c1db6d05758264201e5da'
+    'includes/security.php' => '5cbc2a1e1eb530e9d316d7665a3b3c95d28e8ffc88297125bbe331d4fdfa05c5',
+    'includes/functions.php' => 'be572293fca6c6e8196f1a0166470267641552251c45fbf85cc8c8342520c29d',
+    'includes/auth.php' => '247d326a898a8615a5ce0196be6cdbd9ee2c292f030096e94ec58eae454967cf',
+    'api/verify.php' => '7227ea923216899cd701e843a6d4cbb99d165a6e8bfaff5d25bde33ea1e816d2',
+    'api/check_license.php' => '2ab7054d5cd72ed7d9c0600c16c5a81f1f9d240ad9dc6ac58e34d9a9b5ac9801',
+    'includes/updater/UpdateService.php' => 'c5c768669802b118174afd1c4195df8a9b85494728529506595391ce227051f3',
+    'includes/updater/ManifestVerifier.php' => 'cf94dac517c20f8fa41b84fca7a32e2a6bec290267d5a57503fb2edbf2d9fa84'
 ];
 
 $lineEndingNeutralPaths = [
@@ -91,7 +96,7 @@ foreach ($adminRoutes as $path) {
 }
 
 $config = $read('includes/config.php');
-$assert(strpos($config, "env_value('APP_VERSION', '5.3.0')") !== false, 'application version is v5.3.0');
+$assert(strpos($config, "env_value('APP_VERSION', '5.4.0')") !== false, 'application version is v5.4.0');
 $assert(strpos($config, "if (!defined('DB_PORT'))") !== false, 'database port support is additive');
 $assert(strpos($config, 'licora_enforce_installation_guard') !== false, 'first-run guard is enabled before application boot');
 

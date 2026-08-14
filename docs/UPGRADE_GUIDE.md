@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -123,3 +123,19 @@ v5.3.0 is the **one final manual source upgrade** required before Licora can ins
 8. Configure the GitHub repository secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY` before publishing the v5.3.0 tag; the matching public key is tracked in `includes/updater/update-signing-public.pem`.
 
 No license/API/device schema is changed by this bootstrap migration. From v5.3.0 onward, normal signed releases can use **Admin → Updates** when preflight passes. See `docs/UPDATER.md`.
+
+
+## v5.3.0 to v5.4.0 VibTools Light UI migration
+
+v5.4.0 is the first normal signed release designed to be installed by the v5.3.0 Secure Update Center. It introduces **no database migration**.
+
+1. Confirm the installed application reports `5.3.0` and the current deployment works normally.
+2. Maintain an external production backup even though the updater creates its normal source rollback backup.
+3. Sign in as Super Admin and open **Admin → Updates**.
+4. Check for updates and verify the signed `v5.4.0` release is offered.
+5. Run Preflight. Installation remains blocked unless signature, package, PHP/extensions, storage, source permissions, disk space and updater compatibility all pass.
+6. Install the update and monitor the real VibTools deployment log modal.
+7. After completion, verify the new left sidebar/light component UI plus existing Licenses, Devices, API Keys, Client Apps, V2 Devices, Logs, Settings, Admins and updater operations.
+8. Smoke-test API v1/API v2 clients and normal cron execution.
+
+The signed v5.4.0 release specification accepts only `5.3.0` as its direct source and declares an empty migration list. The release changes presentation only: API, licensing, device, authentication, cron, database and updater backend contracts remain unchanged.

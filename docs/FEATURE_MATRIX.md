@@ -25,4 +25,5 @@
 | CSV and SQL backup | Implemented | Role protected; exported material is sensitive. |
 | Cron cleanup | Implemented | CLI intended; web access denied for Apache in public release. |
 | Secure in-app updates | Implemented in v5.3.0 | Super Admin Update Center checks stable official GitHub releases, verifies a dedicated signed manifest and package inventory, runs preflight, stages/backups, tracks migrations/jobs/events, applies source in resumable chunks, provides live VibTools logs, and supports rollback. v5.2.2 → v5.3.0 itself remains the one manual bootstrap update. |
+| VibTools Light component UI | Implemented in v5.4.0 | Shared light semantic theme, reusable sidebar/topbar shell, cards/forms/tables/modals and responsive drawer based on VibTools Web UI v2.1.2 structure. Primary routes, DOM/form/backend contracts remain unchanged. |
 | Frontend offline mode | Not implemented | UI depends on external CDNs. |

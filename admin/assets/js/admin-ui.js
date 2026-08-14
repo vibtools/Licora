@@ -1,7 +1,8 @@
 (function () {
     'use strict';
 
-    document.documentElement.classList.toggle('ui-dark', localStorage.getItem('license-ui-theme') === 'dark');
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.remove('ui-dark');
 
     function ready(fn) {
         if (document.readyState !== 'loading') fn();
@@ -10,24 +11,6 @@
 
     ready(function () {
         document.body.classList.add('admin-ui');
-        setupNavbarFallback();
-
-        var toggle = document.getElementById('uiThemeToggle');
-        if (toggle) {
-            var icon = toggle.querySelector('i');
-            var sync = function () {
-                var dark = document.documentElement.classList.contains('ui-dark');
-                if (icon) icon.className = dark ? 'bi bi-sun' : 'bi bi-moon-stars';
-                toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-            };
-            sync();
-            toggle.addEventListener('click', function () {
-                document.documentElement.classList.toggle('ui-dark');
-                localStorage.setItem('license-ui-theme', document.documentElement.classList.contains('ui-dark') ? 'dark' : 'light');
-                sync();
-            });
-        }
-
         document.querySelectorAll('form').forEach(function (form) {
             form.addEventListener('submit', function () {
                 if (!form.hasAttribute('data-no-spinner')) showLoader();
@@ -49,28 +32,6 @@
     });
 
 
-    function setupNavbarFallback() {
-        var toggler = document.querySelector('.admin-nav-toggler[data-bs-target="#navbarNav"]');
-        var menu = document.getElementById('navbarNav');
-        if (!toggler || !menu) return;
-
-        // Safety net for Bootstrap collapse when utility CSS conflicts with `.collapse`.
-        toggler.addEventListener('click', function () {
-            setTimeout(function () {
-                if (window.bootstrap && bootstrap.Collapse) return;
-                var isOpen = menu.classList.toggle('show');
-                toggler.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            }, 0);
-        });
-
-        menu.querySelectorAll('a.nav-link, .dropdown-item').forEach(function (link) {
-            link.addEventListener('click', function () {
-                if (window.innerWidth < 992 && menu.classList.contains('show') && window.bootstrap && bootstrap.Collapse) {
-                    bootstrap.Collapse.getOrCreateInstance(menu, { toggle: false }).hide();
-                }
-            });
-        });
-    }
 
     function showLoader() {
         var overlay = document.getElementById('uiLoadingOverlay');
@@ -185,7 +146,7 @@
             if (currentPage > totalPages) currentPage = totalPages;
             rows.forEach(function (row) { row.style.display = 'none'; });
             filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize).forEach(function (row) { row.style.display = ''; });
-            if (empty) empty.style.display = filtered.length ? 'none' : 'block';
+            if (empty) empty.hidden = filtered.length > 0;
             if (pager) {
                 pager.innerHTML = '';
                 for (var i = 1; i <= totalPages; i++) {

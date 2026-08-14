@@ -1,0 +1,180 @@
+/* Reusable component layer. Page-specific design CSS is intentionally forbidden. */
+.admin-ui .card,.licora-installer .card,
+.ui-card {
+  background: var(--component-card-bg)!important;
+  color: var(--text-content);
+  border: 1px solid var(--component-card-border)!important;
+  border-radius: var(--radius-lg)!important;
+  box-shadow: none!important;
+}
+.admin-ui .card-header,.licora-installer .card-header,.ui-card-header {
+  min-height: 40px;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-6);
+  padding: 9px 12px;
+  background: #fbfcfe!important;
+  color: var(--text-primary)!important;
+  border: 0!important;
+  border-bottom: 1px solid var(--border-inner)!important;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0!important;
+  font-weight: var(--font-weight-bold);
+}
+.admin-ui .card-header h5,.licora-installer .card-header h5 { font-size: 13px; }
+.admin-ui .card-body,.licora-installer .card-body,.ui-card-body { padding: 12px; }
+.admin-ui .card-footer,.licora-installer .card-footer,.ui-card-footer { padding: 9px 12px; border-top: 1px solid var(--border-inner); background: #fbfcfe; }
+.admin-ui .form-label,.licora-installer .form-label { margin-bottom: 4px; color: var(--text-content); font-size: 11.5px; font-weight: var(--font-weight-medium); }
+.admin-ui .form-text,.licora-installer .form-text { color: var(--text-muted); font-size: 10.5px; }
+.admin-ui .form-control,.admin-ui .form-select,.admin-ui .input-group-text,
+.licora-installer .form-control,.licora-installer .form-select,.licora-installer .input-group-text,
+.ui-input,.ui-select {
+  min-height: 32px;
+  border: 1px solid var(--component-input-border)!important;
+  border-radius: var(--radius-md)!important;
+  background: var(--component-input-bg)!important;
+  color: var(--text-content)!important;
+  box-shadow: none!important;
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+.admin-ui .input-group > .form-control:not(:first-child),.admin-ui .input-group > .form-select:not(:first-child),.licora-installer .input-group > .form-control:not(:first-child) { border-top-left-radius: 0!important; border-bottom-left-radius: 0!important; }
+.admin-ui .input-group > .input-group-text:first-child,.licora-installer .input-group > .input-group-text:first-child { border-top-right-radius: 0!important; border-bottom-right-radius: 0!important; background: #f7f9fc!important; color: var(--text-secondary)!important; }
+.admin-ui .form-control:focus,.admin-ui .form-select:focus,.licora-installer .form-control:focus,.licora-installer .form-select:focus,.ui-input:focus,.ui-select:focus { border-color: var(--border-focus)!important; box-shadow: var(--licora-focus-ring)!important; outline: 0; }
+.admin-ui .form-check-input,.licora-installer .form-check-input { border-color: var(--border-muted); box-shadow: none!important; }
+.admin-ui .form-check-input:checked,.licora-installer .form-check-input:checked { background-color: var(--licora-primary); border-color: var(--licora-primary); }
+.admin-ui .btn,.licora-installer .btn,.ui-btn {
+  min-height: 30px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  border-radius: var(--radius-md)!important;
+  padding: 5px 9px;
+  border-width: 1px;
+  box-shadow: none!important;
+  font-size: 11.5px;
+  line-height: 1.2;
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+.admin-ui .btn-sm,.licora-installer .btn-sm { min-height: 26px; padding: 3px 7px; font-size: 10.5px; }
+.admin-ui .btn-lg,.licora-installer .btn-lg { min-height: 36px; padding: 7px 12px; font-size: 12px; }
+.admin-ui .btn-primary,.licora-installer .btn-primary,.ui-btn-primary { background: var(--licora-primary)!important; border-color: var(--licora-primary)!important; color: #fff!important; }
+.admin-ui .btn-primary:hover,.licora-installer .btn-primary:hover,.ui-btn-primary:hover { background: #1d4ed8!important; border-color: #1d4ed8!important; }
+.admin-ui .btn-light,.admin-ui .btn-outline-primary,.admin-ui .btn-outline-secondary,.admin-ui .btn-outline-dark,.admin-ui .btn-outline-info,.admin-ui .btn-outline-success,
+.licora-installer .btn-outline-secondary,.licora-installer .btn-outline-primary,.ui-btn-secondary { background: #fff!important; border-color: var(--border-muted)!important; color: var(--text-content)!important; }
+.admin-ui .btn-light:hover,.admin-ui .btn-outline-primary:hover,.admin-ui .btn-outline-secondary:hover,.admin-ui .btn-outline-dark:hover,.admin-ui .btn-outline-info:hover,.admin-ui .btn-outline-success:hover,
+.licora-installer .btn-outline-secondary:hover,.licora-installer .btn-outline-primary:hover,.ui-btn-secondary:hover { background: var(--bg-surface-hover)!important; border-color: var(--border-strong)!important; color: var(--text-primary)!important; }
+.admin-ui .btn-success,.licora-installer .btn-success { background: #168653!important; border-color: #168653!important; color: #fff!important; }
+.admin-ui .btn-warning,.licora-installer .btn-warning { background: #f5a524!important; border-color: #e39617!important; color: #2f250d!important; }
+.admin-ui .btn-danger,.admin-ui .btn-outline-danger,.ui-btn-danger { background: #fff1f2!important; border-color: #f2b8bf!important; color: #b4232f!important; }
+.admin-ui .btn-danger:hover,.admin-ui .btn-outline-danger:hover,.ui-btn-danger:hover { background: #fee2e2!important; }
+.admin-ui .btn-info { background: #eef6ff!important; border-color: #c9e0ff!important; color: #175cd3!important; }
+.admin-ui .btn:disabled,.licora-installer .btn:disabled,.ui-btn:disabled { opacity: .52; cursor: not-allowed; }
+.admin-ui .badge,.licora-installer .badge,.ui-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  min-height: 20px; padding: 2px 6px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px!important;
+  background: var(--component-badge-bg);
+  color: var(--text-secondary);
+  font-size: 10px; font-weight: var(--font-weight-medium);
+}
+.admin-ui .badge.bg-success,.licora-installer .badge.bg-success { background: var(--state-success-bg)!important; border-color: var(--state-success-border)!important; color: var(--state-success-text)!important; }
+.admin-ui .badge.bg-warning,.licora-installer .badge.bg-warning { background: var(--state-warning-bg)!important; border-color: var(--state-warning-border)!important; color: var(--state-warning-text)!important; }
+.admin-ui .badge.bg-danger,.licora-installer .badge.bg-danger { background: var(--state-danger-bg)!important; border-color: var(--state-danger-border)!important; color: var(--state-danger-text)!important; }
+.admin-ui .badge.bg-primary,.admin-ui .badge.bg-info,.admin-ui .badge.bg-secondary,.licora-installer .badge.bg-primary,.licora-installer .badge.bg-info,.licora-installer .badge.bg-secondary { background: #eef4ff!important; border-color: #d6e5ff!important; color: #175cd3!important; }
+.admin-ui .table-responsive,.ui-table-wrap { overflow-x: auto; border: 1px solid var(--border-card); border-radius: var(--radius-lg); background: #fff; }
+.admin-ui .table,.ui-table { width: 100%; margin: 0; color: var(--text-content); font-size: 11.5px; vertical-align: middle; }
+.admin-ui .table > :not(caption) > * > *,.ui-table th,.ui-table td { padding: 8px 9px; border-color: var(--border-inner); }
+.admin-ui .table thead th,.admin-ui .table-dark th,.ui-table thead th { background: var(--component-table-header-bg)!important; color: var(--text-secondary)!important; border-color: var(--border-inner)!important; font-size: 10px; line-height: 1.25; font-weight: var(--font-weight-bold); text-transform: none; white-space: nowrap; }
+.admin-ui .table-dark { --bs-table-bg: transparent; --bs-table-striped-bg: transparent; --bs-table-hover-bg: var(--component-table-row-hover-bg); --bs-table-color: var(--text-content); }
+.admin-ui .table-hover > tbody > tr:hover > * { --bs-table-accent-bg: var(--component-table-row-hover-bg); color: var(--text-content); }
+.admin-ui .pagination { gap: 3px; }
+.admin-ui .page-link { min-width: 28px; min-height: 28px; display: grid; place-items: center; border: 1px solid var(--border-muted); border-radius: var(--radius-sm)!important; color: var(--text-secondary); background: #fff; box-shadow: none!important; font-size: 10.5px; }
+.admin-ui .page-item.active .page-link { background: #eef4ff; border-color: #bfdbfe; color: #175cd3; }
+.admin-ui .alert,.licora-installer .alert,.ui-alert { padding: 8px 10px; border-radius: var(--radius-md); border-width: 1px; box-shadow: none; font-size: 11.5px; }
+.admin-ui .alert-success,.licora-installer .alert-success { background: var(--state-success-bg); border-color: var(--state-success-border); color: var(--state-success-text); }
+.admin-ui .alert-warning,.licora-installer .alert-warning { background: var(--state-warning-bg); border-color: var(--state-warning-border); color: var(--state-warning-text); }
+.admin-ui .alert-danger,.licora-installer .alert-danger { background: var(--state-danger-bg); border-color: var(--state-danger-border); color: var(--state-danger-text); }
+.admin-ui .alert-info,.admin-ui .alert-primary,.admin-ui .alert-secondary,.licora-installer .alert-info,.licora-installer .alert-primary,.licora-installer .alert-secondary { background: #f3f7ff; border-color: #d5e3fb; color: #24466e; }
+.admin-ui .modal-content { border: 1px solid var(--border-card)!important; border-radius: var(--radius-lg)!important; background: #fff!important; box-shadow: none!important; }
+.admin-ui .modal-header,.admin-ui .modal-footer { border-color: var(--border-inner); padding: 9px 12px; }
+.admin-ui .modal-body { padding: 12px; }
+.admin-ui .modal-title { font-size: 13px; }
+.admin-ui .dropdown-menu { border: 1px solid var(--border-card); border-radius: var(--radius-md); background: #fff; box-shadow: none; padding: 4px; font-size: 11.5px; }
+.admin-ui .dropdown-item { border-radius: var(--radius-sm); padding: 6px 8px; color: var(--text-content); }
+.admin-ui .dropdown-item:hover { background: var(--bg-surface-hover); color: var(--text-primary); }
+.ui-toolbar,.admin-ui .ui-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; }
+.ui-toolbar > *,.admin-ui .ui-toolbar > * { min-width: 140px; }
+.bulk-bar { display: none; align-items: center; gap: 8px; padding: 7px 9px; margin-bottom: 8px; border: 1px solid #d6e5ff; border-radius: var(--radius-md); background: #f2f7ff; }
+.bulk-bar.is-visible { display: flex; }
+.empty-state { padding: 28px 14px; text-align: center; color: var(--text-muted); }
+.empty-icon { width: 46px; height: 46px; display: grid; place-items: center; border: 1px solid #d6e5ff; border-radius: var(--radius-lg); background: #eef4ff; color: var(--licora-primary); font-size: 20px; }
+.copyable-code { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; }
+.copyable-code code { max-width: 270px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.api-key-display { padding: 7px 8px; border: 1px solid var(--border-card); border-radius: var(--radius-md); background: #f8fafc; color: var(--text-content); font-family: var(--font-mono); font-size: 10.5px; word-break: break-all; }
+.settings-summary { display: grid; gap: 7px; }
+.settings-summary > div { padding: 8px; border: 1px solid var(--border-card); border-radius: var(--radius-md); background: #fbfcfe; }
+.settings-summary span { display: block; margin-bottom: 2px; color: var(--text-muted); font-size: 10px; }
+.settings-summary code { display: block; color: var(--text-accent); word-break: break-all; white-space: normal; }
+.stat-card { position: relative; overflow: hidden; transition: border-color var(--transition-normal), background var(--transition-normal); }
+.stat-card:hover { border-color: #bfd2ec!important; }
+.stat-card .card-body { min-height: 112px; }
+.stat-card .card-title { margin-bottom: 4px; color: var(--text-secondary); font-size: 10.5px; font-weight: var(--font-weight-medium); }
+.stat-number { margin: 0; color: var(--text-primary)!important; font-size: 22px; line-height: 1.15; letter-spacing: -.03em; font-weight: var(--font-weight-bold); }
+.stat-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: var(--radius-md); font-size: 17px; opacity: 1; }
+.stat-card small { color: var(--text-secondary); }
+.bg-license,.bg-device,.bg-api,.bg-log,.bg-expired { background: #fff!important; color: var(--text-content)!important; }
+.bg-license .stat-icon { background:#eef4ff; color:#2563eb; }
+.bg-device .stat-icon { background:#eefaf3; color:#14804a; }
+.bg-expired .stat-icon { background:#fff1f2; color:#c9363e; }
+.bg-api .stat-icon { background:#fff7e8; color:#b76d00; }
+.bg-log .stat-icon { background:#f5efff; color:#7c3aed; }
+.backup-tile { height: 100%; display: grid; grid-template-columns: 34px 1fr; grid-template-areas:"icon title" "icon desc" "icon action"; gap: 2px 8px; padding: 10px; border: 1px solid var(--border-card); border-radius: var(--radius-md); background: #fff; color: var(--text-content); }
+.backup-tile:hover { border-color: #bfd2ec; background:#fbfdff; text-decoration:none; }
+.backup-icon { grid-area:icon; width:34px;height:34px;display:grid;place-items:center;border-radius:var(--radius-md);background:#eef4ff;color:var(--licora-primary); }
+.backup-tile strong { grid-area:title; color:var(--text-primary); font-size:11.5px; }
+.backup-tile small { grid-area:desc; color:var(--text-muted); font-size:10px; }
+.backup-tile em { grid-area:action; color:var(--text-accent); font-size:10px; font-style:normal; }
+.loading-overlay { position: fixed; inset: 0; z-index: 2000; display: none; align-items: center; justify-content: center; background: rgba(17,24,39,.18); backdrop-filter: blur(2px); }
+.loading-overlay.show { display:flex; }
+.spinner-card { display:flex;align-items:center;gap:8px;padding:9px 11px;border:1px solid var(--border-card);border-radius:var(--radius-md);background:#fff;color:var(--text-content); }
+/* Login / auth component */
+.login-page { min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 12% 0%,rgba(37,99,235,.09),transparent 25rem),var(--licora-page-bg); }
+.login-page .container { max-width: 100%; }
+.login-card { width:100%;max-width:400px;margin:auto;overflow:hidden; }
+.login-header { padding:24px!important;background:#fbfcfe!important;border-bottom:1px solid var(--border-inner)!important;color:var(--text-content)!important; }
+.login-header .empty-icon { margin-left:auto;margin-right:auto;background:#eef4ff!important;color:var(--licora-primary)!important; }
+.login-header h3 { color:var(--text-primary)!important;font-size:18px; }
+.login-page > .container .text-white { color:var(--text-muted)!important; }
+/* Installer component */
+.licora-installer { padding: 24px 12px; background: radial-gradient(circle at 12% 0%,rgba(37,99,235,.08),transparent 28rem),var(--licora-page-bg); }
+.install-container { max-width: 920px; margin: 0 auto; }
+.installer-card { overflow: hidden; }
+.installer-header { padding: 18px; background:#fbfcfe; border-bottom:1px solid var(--border-inner); color:var(--text-content); }
+.installer-header h2 { margin:0; font-size:18px; }
+.installer-header .opacity-75 { color:var(--text-secondary); opacity:1!important; }
+.step-pill { min-height:20px;padding:2px 7px;border:1px solid #d6e5ff;border-radius:999px;background:#eef4ff;color:#175cd3;font-size:10px;font-weight:600; }
+.licora-installer .progress { height:6px; background:#e8edf4!important; }
+.licora-installer .progress-bar { background:var(--licora-primary)!important; }
+.requirement-row { display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--border-inner); }
+.requirement-row:last-child { border-bottom:0; }
+.status-badge { min-width:72px;justify-content:center; }
+.review-list dt { color:var(--text-secondary);font-weight:600; }
+.review-list dd { word-break:break-word; }
+.secret-note { font-size:11px; }
+.installer-locked { max-width:760px;margin:40px auto;padding:18px;border:1px solid var(--border-card);border-radius:var(--radius-lg);background:#fff; }
+.installer-locked h1 { color:#b4232f; font-size:20px; }
+@media (max-width: 767.98px) {
+  .admin-ui .card-header { align-items:flex-start; flex-direction:column; }
+  .ui-toolbar,.admin-ui .ui-toolbar { display:grid; grid-template-columns:1fr; width:100%; }
+  .ui-toolbar > *,.admin-ui .ui-toolbar > * { min-width:0; width:100%; }
+  .admin-ui .table-responsive { border-radius:var(--radius-md); }
+  .admin-ui .btn-group,.admin-ui .btn-group-vertical { display:flex;flex-wrap:wrap;gap:4px; }
+  .admin-ui .btn-group > .btn,.admin-ui .btn-group-vertical > .btn { border-radius:var(--radius-sm)!important; }
+}
+.admin-ui .stat-card.text-white { color:var(--text-content)!important; }
+.admin-ui .stat-card.text-white h1,.admin-ui .stat-card.text-white h2,.admin-ui .stat-card.text-white h3,.admin-ui .stat-card.text-white h4,.admin-ui .stat-card.text-white h5,.admin-ui .stat-card.text-white h6 { color:var(--text-primary)!important; }
+.admin-ui .card-header.bg-primary,.admin-ui .card-header.bg-success,.admin-ui .card-header.bg-dark { background:#fbfcfe!important; color:var(--text-primary)!important; }
+/* Root restricted landing reuses the same light auth components. */
+.root-landing { min-height:100vh;display:grid;place-items:center;margin:0;padding:20px;background:radial-gradient(circle at 12% 0%,rgba(37,99,235,.08),transparent 28rem),var(--licora-page-bg);color:var(--text-content);font-family:var(--font-sans); }
+.root-card { width:min(100%,700px);padding:22px;border:1px solid var(--border-card);border-radius:var(--radius-lg);background:#fff;text-align:center;box-shadow:none; }
+.root-icon { width:52px;height:52px;display:grid;place-items:center;margin:0 auto 10px;border:1px solid #d6e5ff;border-radius:var(--radius-lg);background:#eef4ff;color:var(--licora-primary);font-size:22px; }
+.root-card h1 { color:var(--text-primary);font-size:20px; }
+.root-card .lead { font-size:12.5px;line-height:1.55; }

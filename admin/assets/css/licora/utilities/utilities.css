@@ -1,0 +1,12 @@
+.ui-stack { display:grid; gap:8px; }
+.ui-stack-sm { display:grid; gap:6px; }
+.ui-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.ui-split { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.ui-surface { background:#fff; border:1px solid var(--border-card); border-radius:var(--radius-lg); }
+.ui-muted { color:var(--text-secondary)!important; }
+.ui-scroll-x { overflow-x:auto; }
+.ui-mt-2 { margin-top:8px!important; }
+.ui-mt-3 { margin-top:12px!important; }
+[hidden] { display:none!important; }
+
+.ui-ms-1 { margin-left:4px!important; }

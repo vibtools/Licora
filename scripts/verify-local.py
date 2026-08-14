@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local source verifier for Licora v5.3.0.
+"""Local source verifier for Licora v5.4.0.
 
 This verifier validates source and tests only. It never creates a Git tag, release,
 or GitHub artifact. Release packaging is intentionally owned by GitHub Actions and
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "5.3.0"
+VERSION = "5.4.0"
 
 V1_GIT_BLOBS = {
     "api/verify.php": "4dc549c2afea0772d3f2ffa8b330fd24b8b13ec2",
@@ -28,10 +28,12 @@ V1_GIT_BLOBS = {
 
 REQUIRED = [
     "README.md", "CHANGELOG.md", "SECURITY.md", "REPOSITORY_METADATA.md",
+    "RELEASE_NOTES_v5.4.0.md", "RELEASE_COMMANDS_v5.4.0.md",
     "RELEASE_NOTES_v5.3.0.md", "RELEASE_COMMANDS_v5.3.0.md",
     "RELEASE_NOTES_v5.2.2.md", "RELEASE_COMMANDS_v5.2.2.md",
     "RELEASE_NOTES_v5.2.1.md", "RELEASE_COMMANDS_v5.2.1.md",
     "audit/V5.2.1_PHASE02_STEP001_FORENSIC_AUDIT.md", "audit/V5.2.1_DELTA_PATCH_MANIFEST.txt", "audit/V5.2.1_DELTA_FILE_SHA256SUMS.txt",
+    "audit/V5.4.0_UI_MIGRATION_AUDIT.md",
     "migration-v5.2.0-api-v2.sql", "migration-v5.3.0-updater.sql", "database.sql", "includes/.htaccess",
     "api/verify.php", "api/check_license.php",
     "api/v2/activate.php", "api/v2/refresh.php", "api/v2/status.php", "api/v2/deactivate.php",
@@ -43,8 +45,9 @@ REQUIRED = [
     "scripts/setup-v2.php", "scripts/verify-local.py", "scripts/validate.sh", "scripts/package-release.sh", "scripts/build-update-manifest.py", "update/release-spec.json",
     "tests/api_v1_freeze.php", "tests/api_v2_crypto.php", "tests/api_v2_static.php", "tests/api_v2_db_integration.php", "tests/admin_v2_ui_db_integration.php",
     "tests/updater_static.php", "tests/updater_manifest.php", "tests/updater_state_machine.php", "tests/updater_failure_recovery.php", "tests/updater_ui_contract.php", "tests/updater_db_integration.php",
+    "tests/ui_route_contract.php", "tests/ui_form_contract.php", "tests/ui_component_contract.php", "tests/ui_updater_contract.php",
     "docs/API_V2.md", "docs/API_V2_SECURITY.md", "docs/API_V2_CLIENT_INTEGRATION.md", "docs/API_V2_MIGRATION.md",
-    "docs/CONFIGURATION.md", "docs/ARCHITECTURE.md", "docs/RELEASE.md", "docs/INSTALLATION.md", "docs/UPGRADE_GUIDE.md", "docs/FEATURE_MATRIX.md", "docs/UPDATER.md",
+    "docs/CONFIGURATION.md", "docs/ARCHITECTURE.md", "docs/RELEASE.md", "docs/INSTALLATION.md", "docs/UPGRADE_GUIDE.md", "docs/FEATURE_MATRIX.md", "docs/UPDATER.md", "docs/UI_DESIGN_SYSTEM.md",
     ".github/workflows/ci.yml", ".github/workflows/release.yml",
 ]
 
@@ -64,6 +67,10 @@ TESTS = [
     "tests/updater_failure_recovery.php",
     "tests/updater_ui_contract.php",
     "tests/updater_db_integration.php",
+    "tests/ui_route_contract.php",
+    "tests/ui_form_contract.php",
+    "tests/ui_component_contract.php",
+    "tests/ui_updater_contract.php",
 ]
 
 
@@ -123,10 +130,10 @@ for rel, expected in V1_GIT_BLOBS.items():
 print("[3/12] Release/version consistency")
 config = read("includes/config.php")
 if f"env_value('APP_VERSION', '{VERSION}')" not in config:
-    fail("runtime APP_VERSION is not 5.3.0")
-for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.3.0.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
+    fail("runtime APP_VERSION is not 5.4.0")
+for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.4.0.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
     if VERSION not in read(rel):
-        fail(f"5.3.0 release marker missing from {rel}")
+        fail(f"5.4.0 release marker missing from {rel}")
 
 print("[4/12] API v2 protocol/security contract")
 v2_endpoint_text = "\n".join(read(f"api/v2/{name}.php") for name in ("activate", "refresh", "status", "deactivate"))
@@ -180,9 +187,11 @@ for table in ["update_jobs", "update_events", "app_migrations"]:
 if "-- Licora v5.3.0 Secure In-App Updater additive migration." not in read("database.sql"):
     fail("fresh-install database.sql does not contain updater additive schema")
 release_spec = read("update/release-spec.json")
-for marker in ['"protocol_version": 1', '"version": "5.3.0"', 'migration-v5.3.0-updater.sql']:
+for marker in ['\"protocol_version\": 1', '\"version\": \"5.4.0\"', '\"minimum_updater\": \"5.3.0\"', '\"upgrade_from\"']:
     if marker not in release_spec:
         fail(f"updater release-spec marker missing: {marker}")
+if 'migration-v5.3.0-updater.sql' in release_spec:
+    fail('v5.4.0 UI-only release spec must not replay the v5.3.0 updater migration')
 
 print("[6/12] Signing-key and secret hygiene")
 for rel in [
@@ -239,9 +248,11 @@ if private_key_files:
 
 print("[7/12] Admin/UI integration")
 nav = read("admin/includes/navbar.php")
+navigation = read("admin/includes/ui/navigation.php")
+sidebar = read("admin/includes/ui/sidebar.php")
 for marker in ["client_apps.php", "v2_devices.php", "Client Apps", "V2 Devices"]:
-    if marker not in nav:
-        fail(f"API v2 navigation marker missing: {marker}")
+    if marker not in navigation:
+        fail(f"API v2 sidebar navigation marker missing: {marker}")
 license_ui = read("admin/license.php")
 for marker in ["$v2AppOptions", "$v2AllowedAppIds", "API v2 Client App", "bulk_v2_app_scope", "Selected API v2 client application is not active or does not exist"]:
     if marker not in license_ui:
@@ -259,9 +270,15 @@ for marker in ["information_schema.TABLES", "TABLE_SCHEMA = DATABASE()", "TABLE_
     if marker not in admin_helpers:
         fail(f"admin table-existence regression marker missing: {marker}")
 
-for marker in ["updates.php", "data-licora-update-badge", "update-notifier.js"]:
-    if marker not in nav:
-        fail(f"updater navigation marker missing: {marker}")
+nav_contract = nav + "\n" + navigation + "\n" + sidebar
+for marker in ["ui/sidebar.php", "ui/topbar.php", "data-licora-update-badge", "update-notifier.js"]:
+    if marker not in nav_contract:
+        fail(f"shared sidebar/updater navigation marker missing: {marker}")
+for rel in ["admin/assets/css/licora/licora-ui.css", "admin/assets/css/licora/theme/light.css", "admin/assets/css/licora/layout/app-shell.css", "admin/assets/css/licora/components/core.css", "admin/includes/ui/navigation.php", "admin/includes/ui/sidebar.php", "admin/includes/ui/topbar.php", "admin/assets/js/components/sidebar.js"]:
+    if not (ROOT / rel).is_file():
+        fail(f"shared v5.4.0 UI component missing: {rel}")
+if "admin-topnav" in nav or "navbar-expand" in nav:
+    fail("legacy horizontal primary admin navigation remains in navbar compatibility wrapper")
 updater_page = read("admin/updates.php")
 for marker in ["Secure Update Center", "Copy Logs", "Download Diagnostics", "Pin to bottom", "licora-update-log-modal"]:
     if marker not in updater_page:
@@ -318,7 +335,7 @@ for rel in TESTS:
 
 print("[11/12] JavaScript syntax")
 node = shutil.which("node")
-js_files = [ROOT / "admin/assets/js/admin-ui.js", ROOT / "admin/assets/js/licora-updater.js", ROOT / "admin/assets/js/update-notifier.js"]
+js_files = [ROOT / "admin/assets/js/admin-ui.js", ROOT / "admin/assets/js/components/sidebar.js", ROOT / "admin/assets/js/licora-updater.js", ROOT / "admin/assets/js/update-notifier.js"]
 if node and all(js.is_file() for js in js_files):
     for js in js_files:
         run([node, "--check", str(js)])
@@ -335,4 +352,4 @@ for marker in ["git archive", "scripts/verify-local.py", "sha256", ".licora-v2-s
     if marker not in packager:
         fail(f"release packaging marker missing: {marker}")
 
-print("Licora v5.3.0 local verification passed.")
+print("Licora v5.4.0 local verification passed.")

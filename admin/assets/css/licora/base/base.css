@@ -1,0 +1,25 @@
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--licora-page-bg); }
+body.admin-ui,
+body.licora-installer {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--licora-page-bg);
+  color: var(--text-content);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a { color: var(--text-accent); }
+a:hover { color: #1d4ed8; }
+code, pre, kbd, samp { font-family: var(--font-mono); }
+:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+::selection { background: var(--selection-bg); color: var(--selection-text); }
+.admin-ui h1,.admin-ui h2,.admin-ui h3,.admin-ui h4,.admin-ui h5,.admin-ui h6,
+.licora-installer h1,.licora-installer h2,.licora-installer h3 { color: var(--text-primary); font-weight: var(--font-weight-bold); }
+.admin-ui .text-muted,.licora-installer .text-muted { color: var(--text-secondary)!important; }
+.admin-ui .text-dark { color: var(--text-primary)!important; }
+.admin-ui .text-white { color: #fff!important; }

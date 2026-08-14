@@ -1,21 +1,13 @@
 {
   "protocol_version": 1,
   "application": "Licora",
-  "version": "5.3.0",
+  "version": "5.4.0",
   "channel": "stable",
   "minimum_updater": "5.3.0",
   "minimum_php": "8.0",
   "upgrade_from": [
-    "5.2.2"
+    "5.3.0"
   ],
   "delete_files": [],
-  "migrations": [
-    {
-      "id": "2026-08-14-v5.3.0-updater-core",
-      "path": "migration-v5.3.0-updater.sql",
-      "destructive": false,
-      "idempotent": true,
-      "rollback_path": null
-    }
-  ]
+  "migrations": []
 }

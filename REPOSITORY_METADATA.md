@@ -27,6 +27,16 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
+## v5.4.0 release
+
+- **Tag:** `v5.4.0`
+- **Title:** `Licora v5.4.0 — VibTools Light Component UI`
+- **Release notes:** `RELEASE_NOTES_v5.4.0.md`
+- **Primary assets:** `Licora-5.4.0.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
+- **Database:** no migration; direct signed update from `v5.3.0`.
+
+Licora v5.4.0 is a UI architecture release. It replaces horizontal primary navigation with a reusable left sidebar, centralizes light-theme components over the audited VibTools Web UI v2.1.2 foundation, and migrates admin/login/installer/updater presentation without changing existing license, API, device, cron, authorization or updater backend behavior.
+
 ## v5.3.0 release
 
 - **Tag:** `v5.3.0`

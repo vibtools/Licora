@@ -124,7 +124,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.3.0` |
+| Application version | `APP_VERSION` | `5.4.0` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -153,7 +153,9 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Maintenance](docs/MAINTENANCE.md)
 - [Release guide](docs/RELEASE.md)
 - [Secure in-app updater](docs/UPDATER.md)
+- [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.4.0 release notes](RELEASE_NOTES_v5.4.0.md)
 - [v5.3.0 release notes](RELEASE_NOTES_v5.3.0.md)
 - [v5.2.2 release notes](RELEASE_NOTES_v5.2.2.md)
 - [v5.2.1 release notes](RELEASE_NOTES_v5.2.1.md)
@@ -165,6 +167,12 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
+
+## VibTools Light component UI (v5.4.0)
+
+Licora v5.4.0 adopts the audited **VibTools Web UI v2.1.2** structural, typography and spacing system while preserving Licora's light blue/purple visual identity. Authenticated administration now uses a fixed left sidebar plus compact utility topbar; primary menu items are no longer duplicated across a horizontal header. Tablet/mobile layouts use the same sidebar as an off-canvas drawer.
+
+The UI is component-first. `admin/assets/css/admin-ui.css` delegates to the centralized Licora Light theme/layout/component engine, and `admin/includes/navbar.php` remains only as a compatibility entrypoint that renders the shared sidebar/topbar components. New page-specific design stylesheets and page `<style>` blocks are prohibited by the v5.4.0 UI contract tests. Existing routes, form names, CSRF fields, business logic and backend/API/updater contracts are unchanged. See [docs/UI_DESIGN_SYSTEM.md](docs/UI_DESIGN_SYSTEM.md).
 
 ## Secure in-app updates (v5.3.0)
 

@@ -27,3 +27,7 @@ The supplied historical migrations do not include formal down migrations.
 ## v5.3.0 automatic migration ledger
 
 The Secure Update Center introduces `app_migrations`. Future updater-managed migrations are listed in the signed release manifest with a unique ID and checksum. Non-destructive migrations must be explicitly idempotent; destructive migrations require a signed rollback path and database safety backup. The updater will not blindly replay an already applied migration with a matching checksum and rejects reuse of a migration ID with a different checksum. Historical pre-v5.3.0 migrations remain documentation/upgrade artifacts and are not retroactively inserted into the ledger.
+
+## v5.4.0
+
+No database migration is introduced by v5.4.0. The signed release manifest contains an empty `migrations` list and upgrades directly from v5.3.0. The historical v5.3.0 updater migration remains part of the fresh-install schema and migration history.

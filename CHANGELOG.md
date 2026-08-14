@@ -8,6 +8,23 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
+## [5.4.0] - 2026-08-14
+
+### Changed
+- Replaced the classic horizontal admin primary navigation with a reusable fixed left sidebar and compact utility topbar.
+- Migrated Licora administration, login, installer and Secure Update Center presentation to a centralized component system based on VibTools Web UI v2.1.2 structure, typography and spacing while retaining Licora's light blue/purple identity.
+- Removed the Tailwind CDN runtime dependency from migrated admin pages and removed page-level `<style>` blocks from the migrated admin/login/installer surfaces.
+- Converted the dark updater visual island to the shared Licora Light component system without changing updater jobs, events, signing, migration, preflight, rollback or release protocol behavior.
+
+### Added
+- Added shared PHP sidebar/topbar navigation components, a responsive mobile drawer controller and a single semantic light-theme/component CSS architecture.
+- Added `docs/UI_DESIGN_SYSTEM.md` and automated UI route, DOM/form, component architecture and updater presentation contract tests.
+
+### Compatibility
+- No database migration is included; the signed release specification accepts `v5.3.0` directly and declares an empty migration list.
+- API v1, Secure API v2, licensing, devices, cron, authentication/authorization and Secure Updater backend contracts are unchanged.
+- Existing route names, form field names, CSRF inputs, primary navigation destinations and updater notification hooks are preserved.
+
 ## [5.3.0] - 2026-08-14
 
 ### Added

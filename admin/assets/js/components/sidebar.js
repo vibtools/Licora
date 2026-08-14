@@ -1,0 +1,22 @@
+(function () {
+    'use strict';
+    function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+    ready(function () {
+        var body = document.body;
+        var toggle = document.getElementById('licoraSidebarToggle');
+        var sidebar = document.getElementById('licoraSidebar');
+        var backdrop = document.getElementById('licoraSidebarBackdrop');
+        if (!toggle || !sidebar || !backdrop) return;
+        function setOpen(open) {
+            body.classList.toggle('ui-sidebar-open', !!open);
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+        toggle.addEventListener('click', function () { setOpen(!body.classList.contains('ui-sidebar-open')); });
+        backdrop.addEventListener('click', function () { setOpen(false); });
+        document.addEventListener('keydown', function (event) { if (event.key === 'Escape') setOpen(false); });
+        sidebar.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () { if (window.innerWidth < 900) setOpen(false); });
+        });
+        window.addEventListener('resize', function () { if (window.innerWidth >= 900) setOpen(false); });
+    });
+}());

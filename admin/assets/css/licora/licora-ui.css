@@ -1,0 +1,7 @@
+/* Licora v5.4.0 UI aggregator — VibTools v2.1.2 structure + Licora light identity. */
+@import url('../vibtools/vibtools-theme.css');
+@import url('./theme/light.css');
+@import url('./base/base.css');
+@import url('./layout/app-shell.css');
+@import url('./components/core.css');
+@import url('./utilities/utilities.css');

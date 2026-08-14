@@ -29,3 +29,4 @@ Roadmap items are proposals and must be implemented through reviewed, backward-c
 ## Completed operational foundation
 
 - v5.3.0: signed, resumable Super Admin in-app Update Center with cPanel/VPS-safe no-shell common path, migration ledger, rollback protection, and VibTools live deployment logs.
+- v5.4.0: VibTools Light component UI migration with sidebar navigation, centralized presentation components, responsive shell and frozen backend/API/updater contracts.

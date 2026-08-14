@@ -40,39 +40,14 @@ $recentCalls = $db->query("
 ")->fetchAll();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - License System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-    <script>tailwind = window.tailwind || {}; tailwind.config = { corePlugins: { preflight: false }, darkMode: 'class' };</script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/admin-ui.css">
-    <style>
-        .stat-card { 
-            transition: transform 0.3s, box-shadow 0.3s; 
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .stat-card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .stat-icon {
-            font-size: 2.5rem;
-            opacity: 0.8;
-        }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        .bg-license { background: linear-gradient(45deg, #4e54c8, #8f94fb); }
-        .bg-device { background: linear-gradient(45deg, #11998e, #38ef7d); }
-        .bg-api { background: linear-gradient(45deg, #f46b45, #eea849); }
-        .bg-log { background: linear-gradient(45deg, #8e2de2, #4a00e0); }
-    </style>
 </head>
 <body class="admin-ui">
     <?php include 'includes/navbar.php'; ?>

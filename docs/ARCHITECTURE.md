@@ -103,3 +103,19 @@ chunked FileInstaller → post-verify → success / RollbackService
 `UpdateRepository::withCoordinatorLock()` serializes update/rollback creation through a real database row lock. Each job is additionally advanced under a per-job filesystem `flock`, and the critical `UpdateLock` blocks ordinary application traffic only during source/schema mutation. Job state is persisted after every bounded step so a page reload or transient connection loss can resume rather than restart the deployment.
 
 See [UPDATER.md](UPDATER.md) for the trust, release and rollback contract.
+
+## UI component architecture (v5.4.0)
+
+Authenticated admin pages remain server-rendered PHP but now share a component-first application shell:
+
+```text
+VibTools Web UI v2.1.2 foundation
+  -> Licora Light semantic theme
+  -> shared sidebar + utility topbar
+  -> shared cards/forms/tables/modals/toolbars
+  -> page composition
+```
+
+`admin/includes/navbar.php` is retained as a compatibility include and delegates to `admin/includes/ui/sidebar.php` and `admin/includes/ui/topbar.php`. CSS enters through `admin/assets/css/admin-ui.css`, which delegates to the centralized `admin/assets/css/licora/` component engine. The update live-log viewer uses the same light theme through its reusable updater component stylesheet.
+
+The UI layer is presentation-only: route names, PHP business logic, SQL, form names, CSRF fields, API v1/v2, licensing/device behavior and updater protocol are outside the v5.4.0 migration boundary. See `docs/UI_DESIGN_SYSTEM.md`.
