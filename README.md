@@ -124,7 +124,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.4.0` |
+| Application version | `APP_VERSION` | `5.4.1` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -155,6 +155,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Secure in-app updater](docs/UPDATER.md)
 - [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.4.1 release notes](RELEASE_NOTES_v5.4.1.md)
 - [v5.4.0 release notes](RELEASE_NOTES_v5.4.0.md)
 - [v5.3.0 release notes](RELEASE_NOTES_v5.3.0.md)
 - [v5.2.2 release notes](RELEASE_NOTES_v5.2.2.md)
@@ -167,6 +168,10 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
+
+## Updater recovery and scope integrity (v5.4.1)
+
+Licora v5.4.1 is a no-migration corrective release for the v5.3.0 updater and v5.4.0 component UI scopes. It fixes the live updater DOM selector/runtime-resume defect, strengthens browser/runtime contract tests, bounded stream downloads, archive validation, backup/rollback verification and signed release builder/runtime parity. The signed release accepts direct updates from reviewed `5.3.0` and `5.4.0` updater baselines.
 
 ## VibTools Light component UI (v5.4.0)
 

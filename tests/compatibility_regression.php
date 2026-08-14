@@ -30,7 +30,6 @@ $expectedImmutableHashes = [
     'api/verify.php' => '7227ea923216899cd701e843a6d4cbb99d165a6e8bfaff5d25bde33ea1e816d2',
     'api/check_license.php' => '2ab7054d5cd72ed7d9c0600c16c5a81f1f9d240ad9dc6ac58e34d9a9b5ac9801',
     'includes/updater/UpdateService.php' => 'c5c768669802b118174afd1c4195df8a9b85494728529506595391ce227051f3',
-    'includes/updater/ManifestVerifier.php' => 'cf94dac517c20f8fa41b84fca7a32e2a6bec290267d5a57503fb2edbf2d9fa84'
 ];
 
 $lineEndingNeutralPaths = [
@@ -96,7 +95,7 @@ foreach ($adminRoutes as $path) {
 }
 
 $config = $read('includes/config.php');
-$assert(strpos($config, "env_value('APP_VERSION', '5.4.0')") !== false, 'application version is v5.4.0');
+$assert(strpos($config, "env_value('APP_VERSION', '5.4.1')") !== false, 'application version is v5.4.1');
 $assert(strpos($config, "if (!defined('DB_PORT'))") !== false, 'database port support is additive');
 $assert(strpos($config, 'licora_enforce_installation_guard') !== false, 'first-run guard is enabled before application boot');
 

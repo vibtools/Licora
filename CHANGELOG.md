@@ -8,6 +8,16 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
+## [5.4.1] - 2026-08-14
+
+### Fixed
+- Corrected the updater live-log JavaScript/HTML DOM selector mismatch that could leave a real update job at `fetch_manifest / 1%` before the browser began driving resumable steps.
+- Hardened terminal-job UI state, updater DOM validation, light confirmation components, bounded PHP-stream downloads, archive entry validation, verified source/database backup writes and rollback integrity.
+- Aligned signed-manifest builder/runtime validation and added exact signed-release runtime verification before GitHub publication.
+
+### Compatibility
+- No database migration. Signed direct-update sources are `v5.3.0` and `v5.4.0`. API v1/v2, licensing, device, cron, authentication and the v5.4.0 component UI architecture remain unchanged.
+
 ## [5.4.0] - 2026-08-14
 
 ### Changed

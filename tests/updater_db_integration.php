@@ -12,6 +12,12 @@ require_once $root . '/includes/updater/UpdateRuntime.php';
 require_once $root . '/includes/updater/UpdateSchema.php';
 require_once $root . '/includes/updater/UpdateRepository.php';
 require_once $root . '/includes/updater/UpdateLock.php';
+require_once $root . '/includes/updater/UpdateLogger.php';
+require_once $root . '/includes/updater/BackupService.php';
+require_once $root . '/includes/updater/FileInstaller.php';
+require_once $root . '/includes/updater/RollbackService.php';
+require_once $root . '/includes/updater/ManifestVerifier.php';
+require_once $root . '/includes/updater/ArchiveValidator.php';
 
 function ud_ok($value, string $message): void
 {
@@ -89,6 +95,30 @@ $repo->startMigration('test-updater-migration', '5.3.1', str_repeat('a', 64));
 $repo->finishMigration('test-updater-migration', 5);
 $migration = $repo->migration('test-updater-migration');
 ud_ok(($migration['status'] ?? '') === 'applied', 'migration ledger persisted');
+
+// Source backup and rollback must preserve verified content, not only file names.
+$fixtureRel = 'tests/.licora-updater-backup-fixture.txt';
+$fixturePath = $root . '/' . $fixtureRel;
+$originalFixture = "pre-update fixture\n";
+file_put_contents($fixturePath, $originalFixture, LOCK_EX);
+try {
+    $logger = new UpdateLogger($repo, (string)$job['job_uuid']);
+    $backup = new BackupService($repo);
+    $manifestFixture = ['files' => [$fixtureRel => hash('sha256', "target fixture\n")], 'delete_files' => []];
+    $job = $backup->sourceStep($job, $manifestFixture, $logger, 10);
+    $context = $repo->context($job);
+    ud_ok(!empty($context['source_backup_complete']), 'source backup completed');
+    ud_ok(($context['source_backup_hashes'][$fixtureRel] ?? '') === hash('sha256', $originalFixture), 'source backup hash persisted');
+    file_put_contents($fixturePath, "mutated fixture\n", LOCK_EX);
+    $rollback = new RollbackService($repo);
+    $job = $rollback->sourceStep($job, $logger, 10);
+    $context = $repo->context($job);
+    if (empty($context['rollback_source_complete'])) { $job = $rollback->sourceStep($job, $logger, 10); }
+    ud_ok((string)file_get_contents($fixturePath) === $originalFixture, 'source rollback restored verified content');
+} finally {
+    @unlink($fixturePath);
+    ArchiveValidator::removeTree(UpdateRuntime::jobDir((string)$job['job_uuid']));
+}
 
 // A truncated/corrupt filesystem lock must never strand ordinary Licora traffic in 503.
 UpdateRuntime::ensure();

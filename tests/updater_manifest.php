@@ -103,5 +103,48 @@ try { $v->verify($bad, $badSig, '5.3.1', '5.3.0'); }
 catch (UpdateException $e) { $failed = $e->errorCode() === 'UPDATE_MANIFEST_INVALID'; }
 um_ok($failed, 'invalid compatibility version rejected');
 
+
+$caseCollision = $manifest;
+$caseCollision['files']['readme.md'] = str_repeat('d', 64);
+$bad = json_encode($caseCollision, JSON_UNESCAPED_SLASHES);
+openssl_sign($bad, $badSig, $private, OPENSSL_ALGO_SHA256);
+$failed = false;
+try { $v->verify($bad, $badSig, '5.3.1', '5.3.0'); }
+catch (UpdateException $e) { $failed = $e->errorCode() === 'UPDATE_MANIFEST_INVALID'; }
+um_ok($failed, 'case-colliding source paths rejected');
+
+$nonIdempotent = $manifest;
+$nonIdempotent['files']['migration-test.sql'] = str_repeat('e', 64);
+$nonIdempotent['migrations'] = [[
+    'id' => 'test.migration', 'path' => 'migration-test.sql', 'checksum' => str_repeat('e',64),
+    'destructive' => false, 'idempotent' => false, 'rollback_path' => null,
+]];
+$bad = json_encode($nonIdempotent, JSON_UNESCAPED_SLASHES);
+openssl_sign($bad, $badSig, $private, OPENSSL_ALGO_SHA256);
+$failed = false;
+try { $v->verify($bad, $badSig, '5.3.1', '5.3.0'); }
+catch (UpdateException $e) { $failed = $e->errorCode() === 'UPDATE_MANIFEST_INVALID'; }
+um_ok($failed, 'non-destructive migration must be explicitly idempotent');
+
+$duplicateMigration = $manifest;
+$duplicateMigration['files']['migration-test.sql'] = str_repeat('e', 64);
+$migration = ['id'=>'test.migration','path'=>'migration-test.sql','checksum'=>str_repeat('e',64),'destructive'=>false,'idempotent'=>true,'rollback_path'=>null];
+$duplicateMigration['migrations'] = [$migration,$migration];
+$bad = json_encode($duplicateMigration, JSON_UNESCAPED_SLASHES);
+openssl_sign($bad, $badSig, $private, OPENSSL_ALGO_SHA256);
+$failed = false;
+try { $v->verify($bad, $badSig, '5.3.1', '5.3.0'); }
+catch (UpdateException $e) { $failed = $e->errorCode() === 'UPDATE_MANIFEST_INVALID'; }
+um_ok($failed, 'duplicate migration IDs rejected');
+
+$badMigrationList = $manifest;
+$badMigrationList['migrations'] = 'not-a-list';
+$bad = json_encode($badMigrationList, JSON_UNESCAPED_SLASHES);
+openssl_sign($bad, $badSig, $private, OPENSSL_ALGO_SHA256);
+$failed = false;
+try { $v->verify($bad, $badSig, '5.3.1', '5.3.0'); }
+catch (UpdateException $e) { $failed = $e->errorCode() === 'UPDATE_MANIFEST_INVALID'; }
+um_ok($failed, 'non-array migration list rejected');
+
 @unlink($tmp);
 echo "Updater signed-manifest checks passed.\n";

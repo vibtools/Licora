@@ -53,9 +53,7 @@ final class HttpClient
             }
             @unlink($tmp);throw new UpdateException('HTTP_REDIRECT_LIMIT','Too many redirects while downloading update data.',502);
         }
-        $data=$this->streamGet($url,array_merge(['Accept: application/octet-stream'],$headers),$maxBytes); if(@file_put_contents($tmp,$data,LOCK_EX)===false){throw new UpdateException('UPDATE_STORAGE_UNWRITABLE','Downloaded update could not be saved.',500);} unset($data);
-        if(!@rename($tmp,$destination)){@unlink($tmp);throw new UpdateException('UPDATE_STORAGE_UNWRITABLE','Downloaded update could not be finalized.',500);}
-        return ['path'=>$destination,'size'=>(int)filesize($destination),'sha256'=>hash_file('sha256',$destination)];
+        return $this->streamDownload($url,$destination,$tmp,array_merge(['Accept: application/octet-stream'],$headers),$maxBytes);
     }
 
     private function curlGet(string $url,array $headers,int $maxBytes): string
@@ -80,6 +78,52 @@ final class HttpClient
             if(!$ok||$status<200||$status>=300){error_log('Licora updater cURL request failed: '.$err);throw new UpdateException('HTTP_REQUEST_FAILED','GitHub request failed.'.($status?' HTTP '.$status:''),502);}return $body;
         }
         throw new UpdateException('HTTP_REDIRECT_LIMIT','Too many redirects while downloading update data.',502);
+    }
+
+    private function streamDownload(string $url,string $destination,string $tmp,array $headers,int $maxBytes): array
+    {
+        $current=$url;
+        for($redirect=0;$redirect<=5;$redirect++){
+            $this->assertUrl($current);
+            $headerLines=array_merge(['Accept: application/octet-stream','User-Agent: Licora-Updater/'.(defined('APP_VERSION')?APP_VERSION:'unknown')],$headers);
+            $context=stream_context_create(['http'=>['method'=>'GET','header'=>implode("\r\n",$headerLines),'timeout'=>$this->timeout,'ignore_errors'=>true,'follow_location'=>0,'max_redirects'=>0],'ssl'=>['verify_peer'=>true,'verify_peer_name'=>true]]);
+            $remote=@fopen($current,'rb',false,$context);
+            $resp=$http_response_header??[];$status=0;if(isset($resp[0])&&preg_match('/\s(\d{3})\s/',$resp[0],$m)){$status=(int)$m[1];}
+            if(in_array($status,[301,302,303,307,308],true)){
+                if(is_resource($remote)){fclose($remote);}
+                $location='';foreach($resp as $line){if(stripos($line,'Location:')===0){$location=trim(substr($line,9));break;}}
+                if($location===''){throw new UpdateException('HTTP_REDIRECT_INVALID','GitHub returned an invalid redirect.',502);}
+                $current=$this->resolveRedirect($current,$location);continue;
+            }
+            if(!is_resource($remote)||$status<200||$status>=300){if(is_resource($remote)){fclose($remote);}throw new UpdateException('DOWNLOAD_FAILED','Update asset download failed.'.($status?' HTTP '.$status:''),502);}
+            $local=@fopen($tmp,'wb');if($local===false){fclose($remote);throw new UpdateException('UPDATE_STORAGE_UNWRITABLE','Update download file could not be opened.',500);}
+            $bytes=0;
+            try{
+                while(!feof($remote)){
+                    $chunk=fread($remote,65536);
+                    if($chunk===false){throw new UpdateException('DOWNLOAD_FAILED','Update asset stream could not be read.',502);}
+                    if($chunk===''){
+                        $meta=stream_get_meta_data($remote);
+                        if(!empty($meta['timed_out'])){throw new UpdateException('DOWNLOAD_FAILED','Update asset download timed out.',502);}
+                        if(!feof($remote)){usleep(10000);}
+                        continue;
+                    }
+                    $bytes+=strlen($chunk);
+                    if($bytes>$maxBytes){throw new UpdateException('DOWNLOAD_TOO_LARGE','Update asset exceeds the configured size limit.',413);}
+                    $written=fwrite($local,$chunk);
+                    if($written===false||$written!==strlen($chunk)){throw new UpdateException('UPDATE_STORAGE_UNWRITABLE','Downloaded update could not be written completely.',500);}
+                }
+                if(!fflush($local)){throw new UpdateException('UPDATE_STORAGE_UNWRITABLE','Downloaded update could not be flushed to storage.',500);}
+            }catch(Throwable $e){
+                fclose($remote);fclose($local);@unlink($tmp);throw $e;
+            }
+            fclose($remote);fclose($local);
+            if(!@rename($tmp,$destination)){@unlink($tmp);throw new UpdateException('UPDATE_STORAGE_UNWRITABLE','Downloaded update could not be finalized.',500);}
+            $size=@filesize($destination);$hash=@hash_file('sha256',$destination);
+            if($size===false||!is_string($hash)){@unlink($destination);throw new UpdateException('DOWNLOAD_FAILED','Downloaded update could not be verified on disk.',500);}
+            return ['path'=>$destination,'size'=>(int)$size,'sha256'=>$hash];
+        }
+        @unlink($tmp);throw new UpdateException('HTTP_REDIRECT_LIMIT','Too many redirects while downloading update data.',502);
     }
 
     private function streamGet(string $url,array $headers,int $maxBytes): string

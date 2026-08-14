@@ -145,3 +145,13 @@ Stored settings created idempotently: `updater_auto_check`, `updater_check_inter
 ## v5.4.0 UI-only signed update
 
 v5.4.0 is the first normal release intended to exercise the v5.3.0 bootstrap updater. Its signed release specification accepts only `5.3.0` as the direct source version and declares no database migration. The update changes the Licora presentation layer to the shared VibTools Light component system while leaving updater signing, manifest validation, job/event persistence, preflight, staging, backup, file apply and rollback semantics unchanged.
+
+**Operational correction:** the first real v5.3.0 → v5.4.0 browser-driven install exposed a pre-existing v5.3.0 JavaScript/HTML live-log title ID mismatch. The backend job remained resumable at the pre-critical `fetch_manifest` stage, but the browser controller stopped before driving steps. v5.4.1 corrects that runtime DOM contract and adds tests that execute the browser controller against the rendered ID inventory.
+
+## v5.4.1 corrective updater integrity
+
+v5.4.1 is a no-migration corrective release. It fixes the latent live-log DOM selector defect that could create an update job but stop the browser before `driveJob()` began calling `update-step.php`. The updater now validates its required DOM contract at startup, distinguishes terminal jobs from active jobs, and uses the shared Licora Light confirmation component instead of browser-native confirmation UI.
+
+The backend trust path is also tightened without changing protocol identity: PHP-stream package downloads are bounded to disk, archive directory/symlink/special-entry and case-collision checks run before extraction, source/database backup writes are checked, v5.4.1-created source backups retain SHA-256 inventory, and the release builder/runtime enforce matching protected-path/deletion/migration rules. The tag workflow runs `scripts/verify-release-update.php` against the exact signed release artifacts before publication.
+
+The signed release accepts direct source versions `5.3.0` and `5.4.0`. A deployment with an already-running older target job must resume that job rather than create another. The corrective forensic distribution provides a minimal browser-controller rescue overlay for the observed pre-critical `fetch_manifest / 1%` incident.

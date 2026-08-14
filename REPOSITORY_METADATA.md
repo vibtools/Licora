@@ -27,6 +27,16 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
+## v5.4.1 release
+
+- **Tag:** `v5.4.1`
+- **Title:** `Licora v5.4.1 — Updater Recovery and Scope Integrity Hotfix`
+- **Release notes:** `RELEASE_NOTES_v5.4.1.md`
+- **Primary assets:** `Licora-5.4.1.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
+- **Database:** no migration; signed direct update from reviewed `v5.3.0` or `v5.4.0` updater baselines.
+
+Licora v5.4.1 corrects updater browser-runtime/DOM integration and hardens download, archive, backup/rollback and release-manifest integrity without changing API, license, device, cron or database contracts.
+
 ## v5.4.0 release
 
 - **Tag:** `v5.4.0`

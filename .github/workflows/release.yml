@@ -105,6 +105,11 @@ jobs:
             --output release/licora-update-manifest.json
           openssl dgst -sha256 -sign "$private_key" -out release/licora-update-manifest.sig release/licora-update-manifest.json
           openssl dgst -sha256 -verify includes/updater/update-signing-public.pem -signature release/licora-update-manifest.sig release/licora-update-manifest.json
+          php scripts/verify-release-update.php \
+            --version "$version" \
+            --package "release/Licora-${version}.zip" \
+            --manifest release/licora-update-manifest.json \
+            --signature release/licora-update-manifest.sig
           rm -f "$private_key" "$RUNNER_TEMP/private-derived-public.der" "$RUNNER_TEMP/tracked-public.der"
 
       - name: Publish GitHub Release

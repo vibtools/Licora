@@ -163,3 +163,7 @@ The v5.4.0 UI migration must not change:
 - existing form field names, CSRF fields, route/action URLs or required JavaScript hooks.
 
 The UI contract tests under `tests/ui_*_contract.php` enforce the major boundaries above.
+
+## v5.4.1 updater UI integrity
+
+The updater follows the same component contract. Runtime JavaScript IDs must exist in `admin/updates.php` and are checked automatically by `tests/updater_dom_contract.php` plus the Node browser-runtime fixture. Install/rollback confirmation uses the shared Licora Light modal rather than browser-native `confirm()` UI. This does not change updater backend semantics.

@@ -119,3 +119,7 @@ VibTools Web UI v2.1.2 foundation
 `admin/includes/navbar.php` is retained as a compatibility include and delegates to `admin/includes/ui/sidebar.php` and `admin/includes/ui/topbar.php`. CSS enters through `admin/assets/css/admin-ui.css`, which delegates to the centralized `admin/assets/css/licora/` component engine. The update live-log viewer uses the same light theme through its reusable updater component stylesheet.
 
 The UI layer is presentation-only: route names, PHP business logic, SQL, form names, CSRF fields, API v1/v2, licensing/device behavior and updater protocol are outside the v5.4.0 migration boundary. See `docs/UI_DESIGN_SYSTEM.md`.
+
+## Updater corrective integrity (v5.4.1)
+
+v5.4.1 preserves the v5.3.0 updater state machine and v5.4.0 component shell while tightening the boundary between release-builder validation, signed runtime manifest validation, archive extraction, retained rollback backups and browser DOM control. The release introduces no database or API contract change. The tag workflow now executes the runtime signed-release verifier against the exact signed ZIP before publication.

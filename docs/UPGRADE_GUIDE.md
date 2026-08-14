@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -139,3 +139,16 @@ v5.4.0 is the first normal signed release designed to be installed by the v5.3.0
 8. Smoke-test API v1/API v2 clients and normal cron execution.
 
 The signed v5.4.0 release specification accepts only `5.3.0` as its direct source and declares an empty migration list. The release changes presentation only: API, licensing, device, authentication, cron, database and updater backend contracts remain unchanged.
+
+
+## v5.4.0 to v5.4.1 updater recovery hotfix
+
+v5.4.1 introduces **no database migration** and preserves the v5.4.0 sidebar/component UI plus all API/license/device/cron contracts.
+
+1. Maintain the normal external production backup.
+2. If there is no active updater job, use **Admin → Updates** after the v5.4.1 signed release is published.
+3. If an older v5.3.0/v5.4.0 browser controller already left a real job at `running / fetch_manifest / 1%`, do not delete or edit the database job. Apply the verified browser rescue overlay, reload **Updates**, and let the same persistent job resume.
+4. Verify the live log modal opens, stages advance beyond `fetch_manifest`, and the job reaches a terminal state.
+5. Verify sidebar/UI, API v1/v2, Licenses, Devices, Client Apps/V2 Devices and cron regressions.
+
+The signed v5.4.1 release accepts reviewed direct source versions `5.3.0` and `5.4.0`, with an empty migration list. A pre-existing active job still targets the version recorded when that job was created and must be resumed/finalized before a later release can start.
