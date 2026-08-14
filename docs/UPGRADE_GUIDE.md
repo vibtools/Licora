@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -94,3 +94,17 @@ v5.2.1 is a source/security-maintenance update for the existing API v2 implement
 7. Confirm Client Apps, V2 Devices, activation, refresh, status, deactivation, device limit/revocation, API v1, admin, cron and existing encrypted-data behavior.
 
 The v5.2.1 overwrite does not run the fresh-install wizard and does not require schema changes when API v2 is already provisioned. The authenticated admin provisioning action exists specifically for cPanel/shared-hosting environments without shell access.
+
+## v5.2.1 to v5.2.2 Admin UI schema-detection fix
+
+v5.2.2 is a source-only production correctness patch. It introduces **no database migration** and leaves the existing v5.2.0 five-table API v2 schema unchanged.
+
+1. Back up the database and all private/runtime files.
+2. Preserve `includes/config.local.php`, `.licora-encryption.key`, `.licora-installed`, and both API v2 signing-key files.
+3. Overwrite tracked application source with v5.2.2.
+4. Do not rerun the first-run installer and do not re-provision API v2 when it is already ready.
+5. Confirm active Client Apps appear in the existing License API v2 app-scope selector.
+6. Confirm successfully activated credentials appear in V2 Devices without a false provisioning warning.
+7. Smoke-test API v1 and API v2 clients.
+
+The patch changes only admin metadata discovery and release/test synchronization; API v2 activation, token, proof, refresh, license-scope, device-limit, and revoke contracts remain unchanged.

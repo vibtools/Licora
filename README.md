@@ -120,7 +120,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.2.1` |
+| Application version | `APP_VERSION` | `5.2.2` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -149,6 +149,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Maintenance](docs/MAINTENANCE.md)
 - [Release guide](docs/RELEASE.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.2.2 release notes](RELEASE_NOTES_v5.2.2.md)
 - [v5.2.1 release notes](RELEASE_NOTES_v5.2.1.md)
 - [v5.2.0 release notes](RELEASE_NOTES_v5.2.0.md)
 - [v5.1.0 release notes](RELEASE_NOTES_v5.1.0.md)
@@ -158,11 +159,11 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
-## Secure API v2 (v5.2.1)
+## Secure API v2 (v5.2.2)
 
-Secure API v2, introduced in v5.2.0 and hardened in v5.2.1, provides `/api/v2/activate.php`, `/refresh.php`, `/status.php`, and `/deactivate.php` for public/desktop clients. It uses registered App IDs, P-256 device keys, RS256 server-signed short-lived access tokens, rotating hashed refresh tokens, nonce/timestamp replay protection, device revocation, matching server signing-key validation, and persistent refresh rate-limit enforcement. API v1 remains unchanged for existing integrations.
+Secure API v2, introduced in v5.2.0, hardened in v5.2.1, and given consistent Admin UI schema discovery in v5.2.2, provides `/api/v2/activate.php`, `/refresh.php`, `/status.php`, and `/deactivate.php` for public/desktop clients. It uses registered App IDs, P-256 device keys, RS256 server-signed short-lived access tokens, rotating hashed refresh tokens, nonce/timestamp replay protection, device revocation, matching server signing-key validation, and persistent refresh rate-limit enforcement. API v1 remains unchanged for existing integrations.
 
-Fresh installations provision API v2 during the installer. Existing cPanel/shared-hosting deployments can preserve private/runtime files, overwrite the source, then use **Admin → Client Apps → Initialize API v2** without shell access. CLI-capable deployments may instead run `php scripts/setup-v2.php`. Both paths reuse the same additive v5.2.0 schema and never silently replace existing signing key files. See [API v2](docs/API_V2.md), [security model](docs/API_V2_SECURITY.md), [client integration](docs/API_V2_CLIENT_INTEGRATION.md), and [migration](docs/API_V2_MIGRATION.md).
+Fresh installations provision API v2 during the installer. In v5.2.2, the existing License app-scope selector and V2 Devices page use the same exact schema-discovery contract as API v2 runtime, preventing false-empty/false-provisioning states on compatible hosts. Existing cPanel/shared-hosting deployments can preserve private/runtime files, overwrite the source, then use **Admin → Client Apps → Initialize API v2** without shell access. CLI-capable deployments may instead run `php scripts/setup-v2.php`. Both paths reuse the same additive v5.2.0 schema and never silently replace existing signing key files. See [API v2](docs/API_V2.md), [security model](docs/API_V2_SECURITY.md), [client integration](docs/API_V2_CLIENT_INTEGRATION.md), and [migration](docs/API_V2_MIGRATION.md).
 
 ## Known limitations
 

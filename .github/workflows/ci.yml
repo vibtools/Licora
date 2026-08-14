@@ -75,7 +75,14 @@ jobs:
           LICORA_TEST_DB_DSN: mysql:host=127.0.0.1;port=3306;dbname=licora_test;charset=utf8mb4
           LICORA_TEST_DB_USER: root
           LICORA_TEST_DB_PASS: licora-test-root
-        run: php tests/api_v2_db_integration.php
+          LICENSE_DB_HOST: 127.0.0.1
+          LICENSE_DB_PORT: '3306'
+          LICENSE_DB_NAME: licora_test
+          LICENSE_DB_USER: root
+          LICENSE_DB_PASS: licora-test-root
+        run: |
+          php tests/api_v2_db_integration.php
+          php tests/admin_v2_ui_db_integration.php
 
   package:
     name: Build verified source artifact
@@ -110,14 +117,14 @@ jobs:
         run: |
           short_sha="${GITHUB_SHA:0:12}"
           mkdir -p release
-          bash scripts/package-release.sh v5.2.1 "$GITHUB_SHA" "release/Licora-5.2.1-ci-${short_sha}.zip"
+          bash scripts/package-release.sh v5.2.2 "$GITHUB_SHA" "release/Licora-5.2.2-ci-${short_sha}.zip"
 
       - name: Upload CI release-candidate artifact
         uses: actions/upload-artifact@v6
         with:
-          name: Licora-5.2.1-${{ github.sha }}
+          name: Licora-5.2.2-${{ github.sha }}
           path: |
-            release/Licora-5.2.1-ci-*.zip
-            release/Licora-5.2.1-ci-*.zip.sha256
+            release/Licora-5.2.2-ci-*.zip
+            release/Licora-5.2.2-ci-*.zip.sha256
           if-no-files-found: error
           retention-days: 14

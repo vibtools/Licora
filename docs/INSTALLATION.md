@@ -1,6 +1,6 @@
 # Installation
 
-Licora v5.2.1 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
+Licora v5.2.2 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
 
 ## Requirements
 
@@ -82,7 +82,7 @@ The sanitized schema includes a temporary local-development account for manual i
 - Username: `admin`
 - Password: `ChangeMe!2026`
 
-Change it immediately. The v5.2.1 wizard replaces that temporary row before installation completes.
+Change it immediately. The v5.2.2 wizard replaces that temporary row before installation completes.
 
 ## Database port
 
@@ -113,7 +113,7 @@ After installation:
 
 Existing v5.0.1 and v5.0.1.1 deployments must not run the first-run wizard. Preserve private configuration and encrypted-key material, replace application source, and follow `UPGRADE_GUIDE.md`.
 
-## v5.2.1 production-readiness checks
+## v5.2.2 production-readiness checks
 
 Before public exposure:
 
@@ -125,11 +125,11 @@ Before public exposure:
 - Restore restrictive permissions after installation.
 - Review `COMPATIBILITY_MATRIX.md` for server-specific validation.
 
-Licora defines no dedicated upload, cache, or storage directory. v5.2.1 does not introduce one.
+Licora defines no dedicated upload, cache, or storage directory. v5.2.2 does not introduce one.
 
 ## Secure API v2 installation
 
-Fresh v5.2.1 wizard installations generate the deployment RSA-3072 API v2 signing key pair automatically and create the additive v2 tables through `database.sql`. The private key is never shown in the UI.
+Fresh v5.2.2 wizard installations generate the deployment RSA-3072 API v2 signing key pair automatically and create the additive v2 tables through `database.sql`. The private key is never shown in the UI.
 
 For an existing Licora deployment upgraded from v5.1.0 or v5.2.0, preserve all private/runtime files and overwrite only the application source. Then initialize/verify API v2 by either method:
 

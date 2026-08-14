@@ -27,6 +27,16 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
+## v5.2.2 release
+
+- **Tag:** `v5.2.2`
+- **Title:** `Licora v5.2.2 — API v2 Admin UI Schema Detection Consistency Fix`
+- **Release notes:** `RELEASE_NOTES_v5.2.2.md`
+- **Assets:** automatically generated `Licora-5.2.2.zip` and `Licora-5.2.2.zip.sha256` after tag publication
+- **Publication:** tag-triggered `.github/workflows/release.yml`
+
+Licora v5.2.2 is a backward-compatible correctness patch for Admin UI schema discovery. It aligns the shared admin table-existence helper with API v2 runtime/provisioning, restoring existing active Client App scope options and V2 device rows when the v2 schema is already present. API v1, API v2 protocol/cryptography, license behavior, and the five-table v5.2.0 schema remain unchanged.
+
 ## v5.2.1 release
 
 - **Tag:** `v5.2.1`

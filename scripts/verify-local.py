@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local source verifier for Licora v5.2.1.
+"""Local source verifier for Licora v5.2.2.
 
 This verifier validates source and tests only. It never creates a Git tag, release,
 or GitHub artifact. Release packaging is intentionally owned by GitHub Actions and
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "5.2.1"
+VERSION = "5.2.2"
 
 V1_GIT_BLOBS = {
     "api/verify.php": "4dc549c2afea0772d3f2ffa8b330fd24b8b13ec2",
@@ -28,6 +28,7 @@ V1_GIT_BLOBS = {
 
 REQUIRED = [
     "README.md", "CHANGELOG.md", "SECURITY.md", "REPOSITORY_METADATA.md",
+    "RELEASE_NOTES_v5.2.2.md", "RELEASE_COMMANDS_v5.2.2.md",
     "RELEASE_NOTES_v5.2.1.md", "RELEASE_COMMANDS_v5.2.1.md",
     "audit/V5.2.1_PHASE02_STEP001_FORENSIC_AUDIT.md", "audit/V5.2.1_DELTA_PATCH_MANIFEST.txt", "audit/V5.2.1_DELTA_FILE_SHA256SUMS.txt",
     "migration-v5.2.0-api-v2.sql", "database.sql", "includes/.htaccess",
@@ -37,7 +38,7 @@ REQUIRED = [
     "includes/v2/V2DeviceProof.php", "includes/v2/ApiV2.php", "includes/v2/V2Repository.php", "includes/v2/V2Provisioner.php", "includes/v2/bootstrap.php",
     "admin/client_apps.php", "admin/v2_devices.php",
     "scripts/setup-v2.php", "scripts/verify-local.py", "scripts/validate.sh", "scripts/package-release.sh",
-    "tests/api_v1_freeze.php", "tests/api_v2_crypto.php", "tests/api_v2_static.php", "tests/api_v2_db_integration.php",
+    "tests/api_v1_freeze.php", "tests/api_v2_crypto.php", "tests/api_v2_static.php", "tests/api_v2_db_integration.php", "tests/admin_v2_ui_db_integration.php",
     "docs/API_V2.md", "docs/API_V2_SECURITY.md", "docs/API_V2_CLIENT_INTEGRATION.md", "docs/API_V2_MIGRATION.md",
     "docs/CONFIGURATION.md", "docs/ARCHITECTURE.md", "docs/RELEASE.md", "docs/INSTALLATION.md", "docs/UPGRADE_GUIDE.md", "docs/FEATURE_MATRIX.md",
     ".github/workflows/ci.yml", ".github/workflows/release.yml",
@@ -52,6 +53,7 @@ TESTS = [
     "tests/api_v2_crypto.php",
     "tests/api_v2_static.php",
     "tests/api_v2_db_integration.php",
+    "tests/admin_v2_ui_db_integration.php",
 ]
 
 
@@ -111,10 +113,10 @@ for rel, expected in V1_GIT_BLOBS.items():
 print("[3/12] Release/version consistency")
 config = read("includes/config.php")
 if f"env_value('APP_VERSION', '{VERSION}')" not in config:
-    fail("runtime APP_VERSION is not 5.2.1")
-for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.2.1.md", "CHANGELOG.md"]:
+    fail("runtime APP_VERSION is not 5.2.2")
+for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.2.2.md", "CHANGELOG.md"]:
     if VERSION not in read(rel):
-        fail(f"5.2.1 release marker missing from {rel}")
+        fail(f"5.2.2 release marker missing from {rel}")
 
 print("[4/12] API v2 protocol/security contract")
 v2_endpoint_text = "\n".join(read(f"api/v2/{name}.php") for name in ("activate", "refresh", "status", "deactivate"))
@@ -228,6 +230,10 @@ for marker in ["V2Provisioner", "initialize_v2", "Initialize API v2", "authentic
 setup_v2 = read("scripts/setup-v2.php")
 if "V2Provisioner" not in setup_v2:
     fail("CLI API v2 setup does not use the shared provisioner")
+admin_helpers = read("includes/admin_helpers.php")
+for marker in ["information_schema.TABLES", "TABLE_SCHEMA = DATABASE()", "TABLE_NAME = :t", "SHOW TABLES", "tableExists information_schema", "tableExists fallback"]:
+    if marker not in admin_helpers:
+        fail(f"admin table-existence regression marker missing: {marker}")
 
 print("[8/12] GitHub CI/release automation")
 ci = read(".github/workflows/ci.yml")
@@ -278,4 +284,4 @@ for marker in ["git archive", "scripts/verify-local.py", "sha256", ".licora-v2-s
     if marker not in packager:
         fail(f"release packaging marker missing: {marker}")
 
-print("Licora v5.2.1 local verification passed.")
+print("Licora v5.2.2 local verification passed.")

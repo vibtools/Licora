@@ -8,6 +8,26 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
+## [5.2.2] - 2026-08-14
+
+### Fixed
+
+- Aligned the shared admin table-existence helper with the `information_schema.TABLES` schema-discovery contract used by Secure API v2 runtime/provisioning.
+- Fixed active API v2 Client Apps being hidden from the existing License app-scope selector when the legacy admin metadata probe returned a false negative.
+- Fixed the V2 Devices page incorrectly reporting API v2 provisioning as incomplete and skipping existing device credentials under the same false-negative condition.
+- Added a safe exact-table fallback and server-side metadata diagnostic logging without exposing database errors in the UI.
+
+### Verification
+
+- Added MySQL-backed regression coverage for admin V2 table detection, active Client App loading, and activated V2 device-list loading.
+- Preserved API v1 freeze checks and the existing API v2 protocol, cryptographic, refresh, device-limit, and revocation tests.
+
+### Compatibility
+
+- No API v1 or API v2 public contract changed.
+- No database schema or migration changed.
+- No License, Client Apps, V2 Devices layout, naming, workflow, or existing runtime behavior was redesigned.
+
 ## [5.2.1] - 2026-08-08
 
 ### Fixed

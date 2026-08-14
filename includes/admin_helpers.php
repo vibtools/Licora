@@ -4,14 +4,36 @@ require_once __DIR__ . '/security.php';
 
 class AdminHelpers {
     public static function tableExists($table) {
-        try {
-            $db = Database::getInstance();
-            $s = $db->prepare("SHOW TABLES LIKE :t");
-            $s->execute([':t' => $table]);
-            return $s->fetch() !== false;
-        } catch (Exception $e) {
+        $table = (string)$table;
+        if ($table === '' || !preg_match('/^[A-Za-z0-9_]+$/', $table)) {
             return false;
         }
+
+        $db = Database::getInstance();
+        try {
+            // Match the API v2 runtime/provisioner schema-discovery contract.
+            $s = $db->prepare("SELECT COUNT(*) AS c FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :t");
+            $s->execute([':t' => $table]);
+            if ((int)$s->fetchColumn() === 1) {
+                return true;
+            }
+            return false;
+        } catch (Throwable $e) {
+            error_log('tableExists information_schema: ' . $table . ' - ' . $e->getMessage());
+        }
+
+        try {
+            // Compatibility fallback for hosts where information_schema metadata is unavailable.
+            $s = $db->query('SHOW TABLES');
+            foreach ($s->fetchAll(PDO::FETCH_NUM) as $row) {
+                if (isset($row[0]) && strcasecmp((string)$row[0], $table) === 0) {
+                    return true;
+                }
+            }
+        } catch (Throwable $e) {
+            error_log('tableExists fallback: ' . $table . ' - ' . $e->getMessage());
+        }
+        return false;
     }
 
     public static function columnExists($table, $col) {
