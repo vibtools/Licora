@@ -129,3 +129,15 @@
   .page-hero,.ui-page-header { flex-direction: column!important; align-items: stretch!important; gap: var(--space-6)!important; }
   .ui-topbar-context { display: none; }
 }
+
+/* v5.5.0 compact shell refinements. */
+.ui-sidebar-brand { min-height: var(--licora-topbar-height); justify-content:flex-start; padding:0 10px; }
+.ui-brand-logo { display:block; width:auto; max-width:150px; height:30px; object-fit:contain; }
+.ui-nav-submenu { display:grid; gap:2px; margin:2px 0 2px 22px; padding-left:8px; border-left:1px solid var(--border-inner); }
+.ui-nav-sublink { min-height:27px; display:flex; align-items:center; gap:7px; padding:0 7px; border:1px solid transparent; border-radius:var(--radius-sm); color:var(--text-muted); font-size:10.75px; line-height:1.2; text-decoration:none; }
+.ui-nav-sublink:hover { color:var(--text-primary); background:var(--bg-surface-hover); text-decoration:none; }
+.ui-nav-sublink.active,.ui-nav-sublink[aria-current="page"] { color:#174ea6; background:#eef4ff; border-color:#d6e5ff; }
+.ui-nav-subicon { width:14px; height:14px; display:grid; place-items:center; font-size:11px; }
+.page-hero,.ui-page-header { align-items:center; margin-bottom:12px!important; padding-bottom:8px!important; }
+.page-hero h1,.page-hero h2,.ui-page-header h1,.ui-page-header h2 { margin:0!important; font-size:18px; line-height:1.2; }
+.admin-shell { padding-top:calc(var(--licora-topbar-height) + 12px)!important; padding-bottom:24px!important; }

@@ -57,7 +57,7 @@ flowchart TB
 - **Licensed client to API:** API key, license key, device hash, IP rate limit.
 - **PHP to database:** PDO credentials and SQL permissions.
 - **Scheduler to cron scripts:** operating-system process identity and private file access.
-- **Browser to CDNs:** Bootstrap, Bootstrap Icons, Tailwind CDN, and Chart.js.
+- **Browser to CDNs:** Bootstrap, Bootstrap Icons, and Chart.js where used. The v5.4+ component shell does not require Tailwind at runtime.
 
 ## State model
 
@@ -123,3 +123,13 @@ The UI layer is presentation-only: route names, PHP business logic, SQL, form na
 ## Updater corrective integrity (v5.4.1)
 
 v5.4.1 preserves the v5.3.0 updater state machine and v5.4.0 component shell while tightening the boundary between release-builder validation, signed runtime manifest validation, archive extraction, retained rollback backups and browser DOM control. The release introduces no database or API contract change. The tag workflow now executes the runtime signed-release verifier against the exact signed ZIP before publication.
+
+## Compact UI and Settings truth boundary (v5.5.0)
+
+v5.5.0 keeps the v5.4 component shell but tightens presentation composition around one compact DataTable/form/action/confirmation/feedback contract. License and Device pages are recomposed at the markup level while retaining the same server-side actions, field names, CSRF requirements and business logic.
+
+`admin/includes/ui/integration.php` is a presentation-side integration helper for detected URLs, Cron CLI commands and Secure API v2 public-key metadata. It does not become a second API router or configuration authority. The Settings save path is explicitly whitelisted to values consumed by the current runtime; legacy stored-only database keys remain untouched.
+
+`admin/ajax/v2-public-key.php` exposes only the deployment public signing key to an authenticated Super Admin. The server private key remains outside the browser trust boundary.
+
+Supplied assets under `admin/assets/brand/` are presentation resources only and do not change authentication, licensing, API or updater behavior.

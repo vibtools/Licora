@@ -1,6 +1,6 @@
 # Installation
 
-Licora v5.4.1 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
+Licora v5.5.0 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
 
 ## Requirements
 
@@ -82,7 +82,7 @@ The sanitized schema includes a temporary local-development account for manual i
 - Username: `admin`
 - Password: `ChangeMe!2026`
 
-Change it immediately. The v5.4.1 wizard replaces that temporary row before installation completes.
+Change it immediately. The v5.5.0 wizard replaces that temporary row before installation completes.
 
 ## Database port
 
@@ -113,7 +113,7 @@ After installation:
 
 Existing v5.0.1 and v5.0.1.1 deployments must not run the first-run wizard. Preserve private configuration and encrypted-key material, replace application source, and follow `UPGRADE_GUIDE.md`.
 
-## v5.4.1 production-readiness checks
+## v5.5.0 production-readiness checks
 
 Before public exposure:
 
@@ -125,11 +125,11 @@ Before public exposure:
 - Restore restrictive permissions after installation.
 - Review `COMPATIBILITY_MATRIX.md` for server-specific validation.
 
-Licora defines no dedicated upload, cache, or storage directory. v5.4.1 retains private updater runtime storage under `includes/.licora-updater/`; it is created on demand, web-denied by the parent `includes/` rule, ignored by Git, and must be writable by the PHP process for in-app updates.
+Licora defines no dedicated upload, cache, or storage directory. v5.5.0 retains private updater runtime storage under `includes/.licora-updater/`; it is created on demand, web-denied by the parent `includes/` rule, ignored by Git, and must be writable by the PHP process for in-app updates.
 
 ## Secure API v2 installation
 
-Fresh v5.4.1 wizard installations generate the deployment RSA-3072 API v2 signing key pair automatically and create the additive v2 tables through `database.sql`. The private key is never shown in the UI.
+Fresh v5.5.0 wizard installations generate the deployment RSA-3072 API v2 signing key pair automatically and create the additive v2 tables through `database.sql`. The private key is never shown in the UI.
 
 For an existing Licora deployment upgraded from v5.1.0 or v5.2.0, preserve all private/runtime files and overwrite only the application source. Then initialize/verify API v2 by either method:
 
@@ -140,4 +140,8 @@ Both paths apply only the existing additive `migration-v5.2.0-api-v2.sql`, gener
 
 ### Updater readiness
 
-Fresh v5.4.1 installs include updater persistence in `database.sql`. Existing v5.2.2 deployments receive the same additive schema idempotently when a Super Admin first opens **Admin → Updates**. For future one-click updates, enable `ZipArchive`, OpenSSL, PDO MySQL, and either cURL or HTTPS streams; ensure the PHP process can write the tracked source paths and `includes/.licora-updater/`. The updater never requires Git, SSH, Composer, Python, `exec()`, or `shell_exec()` on the hosted application.
+Fresh v5.5.0 installs include updater persistence in `database.sql`. Existing v5.2.2 deployments receive the same additive schema idempotently when a Super Admin first opens **Admin → Updates**. For future one-click updates, enable `ZipArchive`, OpenSSL, PDO MySQL, and either cURL or HTTPS streams; ensure the PHP process can write the tracked source paths and `includes/.licora-updater/`. The updater never requires Git, SSH, Composer, Python, `exec()`, or `shell_exec()` on the hosted application.
+
+## v5.5.0 product identity
+
+The first-run UI presents the fixed product name **Licora** and uses the tracked Licora branding assets. The installer still writes the same private configuration/runtime data and does not introduce a database migration. `APP_NAME` remains a compatibility configuration value, but the product UI is not a tenant/site-name customization surface.

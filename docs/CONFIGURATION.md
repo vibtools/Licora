@@ -22,7 +22,7 @@ Environment variables are preferred in managed hosting and containers. On shared
 | `DB_PASS` | `LICENSE_DB_PASS`, fallback `DB_PASS` | empty | Required when the database account has a password. |
 | `APP_NAME` | `APP_NAME` | `Licora` | Application label. |
 | `APP_URL` | `APP_URL` | `http://localhost` | Public application root, without a query string or fragment. |
-| `APP_VERSION` | `APP_VERSION` | `5.4.1` | Source release identity returned by the verification API. |
+| `APP_VERSION` | `APP_VERSION` | `5.5.0` | Source release identity returned by the verification API. |
 | `APP_TIMEZONE` | `APP_TIMEZONE` | `Asia/Dhaka` | PHP runtime timezone. |
 | `APP_LOCALE` | `APP_LOCALE` | `en` | Application locale metadata. |
 | `MAIL_FROM_NAME` | `MAIL_FROM_NAME` | `APP_NAME` | Mail display name. CR/LF characters are rejected by the installer. |
@@ -59,7 +59,7 @@ LICENSE_ALLOWED_ORIGIN=https://app.example.com
 
 ## Installer-generated private configuration
 
-A fresh v5.4.1 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
+A fresh v5.5.0 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
 
 Never commit or publish:
 
@@ -71,7 +71,9 @@ Never commit or publish:
 
 ## Stored settings
 
-The `settings` table and admin page store system name, timezone, default license hours, default device limit, API rate limit, retention, two-factor toggle, maintenance mode, license prefix, and API base URL. Some stored settings remain informational or only partially connected to runtime behavior. Review [FEATURE_MATRIX.md](FEATURE_MATRIX.md) before relying on a toggle.
+The `settings` table contains both active runtime-backed values and legacy/stored-only values retained for backward compatibility. In v5.5.0 the Admin Settings page exposes only controls that the current runtime actually consumes: `default_license_hours`, `default_device_limit`, `license_min_hours`, `license_max_hours`, and `log_retention_days`. Stored-only legacy keys are not deleted by this release and are not presented as active controls.
+
+API endpoints, runtime limits, application version/environment, Cron CLI commands and Secure API v2 key status/fingerprint are displayed as read-only operational information. The API v2 public key may be downloaded by a Super Admin; the private signing key remains server-only and is never displayed or downloadable. Review [FEATURE_MATRIX.md](FEATURE_MATRIX.md) for implementation status.
 
 ## Database privileges
 

@@ -99,3 +99,14 @@
 .licora-confirm-body p { margin:0;color:var(--text-content);font-size:11px;line-height:1.6; }
 .licora-confirm-actions { display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:9px 12px;border-top:1px solid var(--border-inner);background:var(--bg-surface-soft); }
 @media(max-width:520px){.licora-confirm-actions{align-items:stretch;flex-direction:column-reverse}.licora-confirm-actions .vib-button{width:100%}}
+
+/* v5.5.0 compact updater refinements. */
+.licora-updater-head { align-items:center; padding-bottom:8px; }
+.licora-updater-title { font-size:18px; }
+.licora-updater-subtitle,.licora-updater-card > p,.licora-updater-card .licora-card-heading p { display:none!important; }
+.licora-updater-card { padding:10px; }
+.licora-release-notes,.licora-history-scroll { scrollbar-width:thin; scrollbar-color:#bdc7d4 #f5f7fa; }
+.licora-release-notes::-webkit-scrollbar,.licora-history-scroll::-webkit-scrollbar { width:7px; height:7px; }
+.licora-release-notes::-webkit-scrollbar-track,.licora-history-scroll::-webkit-scrollbar-track { background:#f5f7fa; }
+.licora-release-notes::-webkit-scrollbar-thumb,.licora-history-scroll::-webkit-scrollbar-thumb { background:#bdc7d4; border:2px solid #f5f7fa; border-radius:999px; }
+.vib-button { min-height:28px; padding:4px 8px; }

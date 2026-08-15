@@ -2,11 +2,11 @@
 
 ## Authority
 
-Licora v5.4.0 migrates the application UI to the **VibTools Web UI v2.1.2 structural system** while preserving Licora's established light blue/purple product identity. The design source of truth is component-first: individual pages compose shared components and may not introduce independent color, spacing, radius, table, form, button, modal or navigation systems.
+Licora v5.5.0 uses the **VibTools Web UI v2.1.2 structural system** while preserving Licora's established light blue/purple product identity. The design source of truth is component-first: individual pages compose shared components and may not introduce independent color, spacing, radius, table, form, button, modal or navigation systems.
 
 ## Theme contract
 
-The v5.4.0 production target is **light theme only**.
+The v5.5.0 production target is **light theme only**.
 
 - Page background: light gray/white.
 - Surfaces: white/light neutral.
@@ -65,7 +65,7 @@ Primary navigation is never duplicated in the topbar.
 - License Management: Licenses, Devices
 - API & Clients: API Keys, Client Apps, V2 Devices
 - Operations: Logs, Updates
-- System: Settings, Admins
+- System: Settings (Audit Trail, Backup & Export, System Health, About Licora), Admins
 
 Existing authorization is preserved. The Updates item remains restricted by the same Super Admin permission contract and retains the live update-available badge hook.
 
@@ -167,3 +167,30 @@ The UI contract tests under `tests/ui_*_contract.php` enforce the major boundari
 ## v5.4.1 updater UI integrity
 
 The updater follows the same component contract. Runtime JavaScript IDs must exist in `admin/updates.php` and are checked automatically by `tests/updater_dom_contract.php` plus the Node browser-runtime fixture. Install/rollback confirmation uses the shared Licora Light modal rather than browser-native `confirm()` UI. This does not change updater backend semantics.
+
+## v5.5.0 compact/no-growth contract
+
+The v5.5.0 refinement is stricter than the initial v5.4 shell migration. Shared components use the compact VibTools geometry rather than page-specific Bootstrap composition:
+
+- form controls: 30px compact height where a one-line control is appropriate;
+- standard action buttons: 28px compact height;
+- table body: 12px compact text with approximately 6px vertical / 12px horizontal cell padding;
+- table headers: compact 11–12px labels;
+- icon row actions: 26×26px trigger with a shared action menu;
+- table search/filter/bulk controls share one compact toolbar whenever viewport width allows;
+- light scrollbars are shared across release notes, tables and compact scroll surfaces;
+- cards, page headers and sections do not carry decorative descriptions or helper paragraphs. Functional validation/errors/security warnings remain visible.
+
+License creation uses one responsive shared modal with Single/Bulk modes. Data tables remain full-width instead of sacrificing permanent page columns to create forms.
+
+## Feedback and confirmation
+
+Production admin pages must not use browser-native `confirm()`. Destructive/important actions use the shared Licora Light confirmation component. Informational completion states use the shared toast/feedback path, including explicit Update Center “up to date” feedback.
+
+## Branding
+
+The authoritative product identity is **Licora**. Tracked assets live under `admin/assets/brand/` and are used by the shell, login, root landing page, installer and About page. Settings is not a site-name/product-name customization surface.
+
+## Settings presentation truthfulness
+
+Editable Settings controls must map to a current runtime consumer. Stored-only legacy database values remain preserved but are not presented as working controls. Runtime endpoints, Cron commands and Secure API v2 public-key metadata are read-only operational information. The server private signing key is never exposed through the browser.

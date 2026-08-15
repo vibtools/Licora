@@ -29,7 +29,7 @@ if (!function_exists('env_value')) {
 // Resolve release identity before private local configuration is loaded.
 // This prevents an installer-generated local configuration from pinning
 // future source upgrades while retaining the APP_VERSION environment override.
-if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.4.1'));
+if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.5.0'));
 
 // Optional private local override. Keep this file outside public web root where possible.
 $localConfig = __DIR__ . '/config.local.php';

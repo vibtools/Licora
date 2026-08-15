@@ -30,7 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - License System</title>
+    <title>Admin Login - Licora</title>
+    <link rel="icon" href="assets/brand/favicon/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/admin-ui.css">
@@ -41,8 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
                 <div class="card login-card">
                     <div class="card-header login-header text-white text-center py-4">
-                        <div class="empty-icon mx-auto mb-3"><i class="bi bi-shield-lock"></i></div><h3 class="fw-bold mb-1">License System</h3>
-                        <p class="mb-0">Admin Panel</p>
+                        <img src="assets/brand/logos/logo-md.png" alt="Licora" class="ui-login-logo">
                     </div>
                     <div class="card-body p-4">
                         <?php if ($error): ?>
@@ -77,16 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </form>
                         
-                        <div class="text-center mt-3">
-                            <small class="text-muted">
-                                <i class="bi bi-shield-check"></i> Secure Admin Access
-                            </small>
-                        </div>
                     </div>
                 </div>
                 
                 <div class="text-center mt-3 text-white">
-                    <small>© <?php echo date('Y'); ?> License Management System</small>
+                    <small>© <?php echo date('Y'); ?> Vib Tools · Licora</small>
                 </div>
             </div>
         </div>

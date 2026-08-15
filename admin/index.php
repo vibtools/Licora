@@ -44,7 +44,8 @@ $recentCalls = $db->query("
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - License System</title>
+    <title>Dashboard · Licora</title>
+    <link rel="icon" href="assets/brand/favicon/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/admin-ui.css">
@@ -54,10 +55,7 @@ $recentCalls = $db->query("
     
     <div class="container-fluid admin-shell">
         <div class="page-hero d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-            <div>
-                <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
-                <p>Welcome back, <?php echo htmlspecialchars($auth->getUsername()); ?>. Monitor licenses, devices, API usage, and system health.</p>
-            </div>
+            <div><h2><i class="bi bi-speedometer2"></i> Dashboard</h2></div>
             <a href="license.php?action=create" class="btn btn-light"><i class="bi bi-plus-circle"></i> Create License</a>
         </div>
         
@@ -209,7 +207,7 @@ $recentCalls = $db->query("
                         <a href="logs.php" class="btn btn-sm btn-outline-primary">View All</a>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="table-responsive ui-scrollbar">
                             <table class="table table-sm table-hover" id="recent-calls-table" data-ui-paginate="true" data-ui-page-size="10">
                                 <thead>
                                     <tr>
@@ -222,7 +220,7 @@ $recentCalls = $db->query("
                                 <tbody>
                                     <?php if (empty($recentCalls)): ?>
                                     <tr>
-                                        <td colspan="4"><div class="empty-state py-4"><div class="empty-icon"><i class="bi bi-activity"></i></div><h6>No API calls yet</h6><p class="mb-0">Recent verification traffic will appear here.</p></div></td>
+                                        <td colspan="4"><div class="empty-state py-4"><div class="empty-icon"><i class="bi bi-activity"></i></div><h6>No API calls yet</h6></div></td>
                                     </tr>
                                     <?php else: ?>
                                     <?php foreach ($recentCalls as $call): ?>

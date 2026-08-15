@@ -2,7 +2,7 @@
 
 ## Current release contract
 
-Licora uses semantic version tags. The current release is `5.4.1`; runtime, installer, verifier, release notes, update release specification and GitHub workflow markers must agree before a tag can publish.
+Licora uses semantic version tags. The current release is `5.5.0`; runtime, installer, verifier, release notes, update release specification and GitHub workflow markers must agree before a tag can publish.
 
 Every v5.3.0+ official release intended for the in-app updater consists of four updater-facing assets:
 
@@ -14,6 +14,22 @@ licora-update-manifest.sig
 ```
 
 The ZIP/checksum are generated from the exact Git ref by `scripts/package-release.sh`. `scripts/build-update-manifest.py` inventories the exact ZIP, records per-file SHA-256 values, package hash/size, commit identity, migration metadata, protected deletion intent and compatibility requirements. GitHub Actions signs the exact manifest bytes with the dedicated repository secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY`; the matching public key is tracked at `includes/updater/update-signing-public.pem`.
+
+## v5.5.0 release specification
+
+v5.5.0 is a no-migration UI/UX and branding update from the official v5.4.1 baseline:
+
+```json
+{
+  "version": "5.5.0",
+  "minimum_updater": "5.3.0",
+  "upgrade_from": ["5.4.1"],
+  "migrations": [],
+  "delete_files": []
+}
+```
+
+It refines the VibTools compact light component composition, Settings truthfulness, branding/About and verification portability. API v1/v2, license/device/cron contracts and updater protocol/state-machine behavior remain unchanged.
 
 ## v5.4.1 release specification
 
@@ -48,7 +64,7 @@ No database migration is run for this release.
 ## Mandatory pre-tag gates
 
 ```bash
-python3 scripts/verify-local.py
+python scripts/verify-local.py
 bash scripts/validate.sh
 php tests/ui_route_contract.php
 php tests/ui_form_contract.php
@@ -81,10 +97,26 @@ The release workflow derives the public key from that secret and compares it to 
 From a clean committed working tree:
 
 ```bash
-bash scripts/package-release.sh v5.4.1 v5.4.1
+bash scripts/package-release.sh v5.5.0 v5.5.0
 ```
 
 The official ZIP is still produced from the exact tag by GitHub Actions.
+
+## v5.5.0 publication
+
+After all local checks and the pushed commit's complete CI are green:
+
+```bash
+git add -A
+git diff --cached --check
+git commit -m "feat: refine VibTools compact UI and branding in Licora v5.5.0"
+git push origin main
+
+git tag -a v5.5.0 -m "Licora v5.5.0 - VibTools Compact Light UI"
+git push origin v5.5.0
+```
+
+The Release workflow packages/signs the exact tag and validates the exact signed ZIP/manifest/signature through the installed runtime verifier before publication.
 
 ## v5.4.1 publication
 
@@ -120,4 +152,4 @@ Release archives must exclude deployment-private/runtime material including `con
 
 Every future release intended for one-click installation must update `update/release-spec.json`, declare the exact direct source versions it supports in signed `upgrade_from`, ship every migration required for those supported direct paths, keep `minimum_updater` compatible, and publish the four assets above. A latest release that does not list the installed version in `upgrade_from` is deliberately blocked rather than silently skipping an intermediate migration. Never modify a published manifest/ZIP in place; create a new semantic version.
 
-See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model, [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) for the v5.4.0 presentation contract, and `RELEASE_COMMANDS_v5.4.1.md` for the current Windows-friendly command sequence.
+See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model, [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) for the v5.4.0 presentation contract, and `RELEASE_COMMANDS_v5.5.0.md` for the current Windows-friendly command sequence.

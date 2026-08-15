@@ -155,3 +155,9 @@ v5.4.1 is a no-migration corrective release. It fixes the latent live-log DOM se
 The backend trust path is also tightened without changing protocol identity: PHP-stream package downloads are bounded to disk, archive directory/symlink/special-entry and case-collision checks run before extraction, source/database backup writes are checked, v5.4.1-created source backups retain SHA-256 inventory, and the release builder/runtime enforce matching protected-path/deletion/migration rules. The tag workflow runs `scripts/verify-release-update.php` against the exact signed release artifacts before publication.
 
 The signed release accepts direct source versions `5.3.0` and `5.4.0`. A deployment with an already-running older target job must resume that job rather than create another. The corrective forensic distribution provides a minimal browser-controller rescue overlay for the observed pre-critical `fetch_manifest / 1%` incident.
+
+## v5.5.0 presentation-only updater integration
+
+v5.5.0 does not change updater protocol v1, signing, job/event persistence, preflight, staging, file application, rollback or migration handling. The Update Center receives compact light presentation refinements, a themed scrollbar and explicit manual-check feedback when Licora is already current or when a newer stable release is available.
+
+The signed v5.5.0 release specification accepts only `5.4.1` and declares no database migration or deleted files.

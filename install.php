@@ -165,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             } elseif ($step === 4) {
                 $application = [
-                    'app_name' => trim((string)($_POST['app_name'] ?? 'Licora')),
+                    'app_name' => 'Licora',
                     'timezone' => trim((string)($_POST['timezone'] ?? 'Asia/Dhaka')),
                     'locale' => trim((string)($_POST['locale'] ?? 'en')),
                     'base_url' => rtrim(trim((string)($_POST['base_url'] ?? '')), '/'),
@@ -258,6 +258,7 @@ $stepTitles = [
     <?php if ($step === 9 && is_array($successData)): ?>
     <meta http-equiv="refresh" content="8;url=?step=10">
     <?php endif; ?>
+    <link rel="icon" href="<?php echo installer_escape($webBasePath . '/admin/assets/brand/favicon/favicon.ico'); ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="<?php echo installer_escape($webBasePath . '/admin/assets/css/admin-ui.css'); ?>">
@@ -267,10 +268,7 @@ $stepTitles = [
     <div class="card shadow-sm installer-card">
         <div class="installer-header">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                <div>
-                    <h2 class="mb-1"><i class="bi bi-shield-check me-2"></i>Licora First-Run Installer</h2>
-                    <div class="opacity-75">Professional installation wizard for Licora v5.4.1</div>
-                </div>
+                <div class="installer-brand"><img src="<?php echo installer_escape($webBasePath . '/admin/assets/brand/logos/logo-md.png'); ?>" alt="Licora" class="installer-brand-logo"><strong>First-Run Installer</strong></div>
                 <span class="step-pill">Step <?php echo $step; ?> of 10</span>
             </div>
             <div class="progress mt-4 bg-white bg-opacity-25">
@@ -304,7 +302,7 @@ $stepTitles = [
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.4.1 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
+                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.5.0 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
                 <form method="post">
                     <input type="hidden" name="installer_csrf_token" value="<?php echo installer_escape($_SESSION['licora_installer_csrf']); ?>">
                     <button class="btn btn-primary" <?php echo licora_installer_requirements_pass($requirements) ? '' : 'disabled'; ?>>Continue</button>
@@ -344,7 +342,7 @@ $stepTitles = [
                 <form method="post">
                     <input type="hidden" name="installer_csrf_token" value="<?php echo installer_escape($_SESSION['licora_installer_csrf']); ?>">
                     <div class="row g-3">
-                        <div class="col-md-6"><label class="form-label">Application Name</label><input class="form-control" name="app_name" value="<?php echo installer_escape($appData['app_name'] ?? 'Licora'); ?>" required></div>
+                        <input type="hidden" name="app_name" value="Licora">
                         <div class="col-md-6"><label class="form-label">Mail From Name</label><input class="form-control" name="mail_from_name" value="<?php echo installer_escape($appData['mail_from_name'] ?? 'Licora'); ?>" required></div>
                         <div class="col-md-6"><label class="form-label">Timezone</label><input class="form-control" name="timezone" value="<?php echo installer_escape($appData['timezone'] ?? 'Asia/Dhaka'); ?>" required></div>
                         <div class="col-md-6"><label class="form-label">Locale</label><input class="form-control" name="locale" value="<?php echo installer_escape($appData['locale'] ?? 'en'); ?>" required></div>
@@ -355,7 +353,7 @@ $stepTitles = [
                 </form>
 
             <?php elseif ($step === 5): ?>
-                <p>Licora will initialize <code>database.sql</code>, preserving the existing API v1 schema and adding only the Secure API v2 tables introduced in v5.2.0 and retained unchanged through v5.4.1.</p>
+                <p>Licora will initialize <code>database.sql</code>, preserving the existing API v1 schema and adding only the Secure API v2 tables introduced in v5.2.0 and retained unchanged through v5.5.0.</p>
                 <div class="alert alert-warning">The target database must not already contain Licora tables. Unrelated existing tables are never removed. If installation fails, only installer-created objects are cleaned up.</div>
                 <dl class="row review-list">
                     <dt class="col-sm-4">Database</dt><dd class="col-sm-8"><?php echo installer_escape(($dbData['host'] ?? '') . ':' . ($dbData['port'] ?? '') . '/' . ($dbData['name'] ?? '')); ?></dd>
@@ -411,7 +409,7 @@ $stepTitles = [
                 <a class="btn btn-primary" href="?step=1">Restart</a>
             <?php endif; ?>
         </div>
-        <div class="card-footer text-center text-muted py-3"><small>Licora v5.4.1 &middot; Vib Tools &middot; MIT License</small></div>
+        <div class="card-footer text-center text-muted py-3"><small>Licora v5.5.0 &middot; Vib Tools &middot; MIT License</small></div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

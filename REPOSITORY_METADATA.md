@@ -27,6 +27,16 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
+## v5.5.0 release
+
+- **Tag:** `v5.5.0`
+- **Title:** `Licora v5.5.0 — VibTools Compact Light UI`
+- **Release notes:** `RELEASE_NOTES_v5.5.0.md`
+- **Primary assets:** `Licora-5.5.0.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
+- **Database:** no migration; signed direct update from `v5.4.1`.
+
+Licora v5.5.0 completes the compact VibTools presentation pass, tracks the supplied Licora brand assets, removes misleading stored-only Settings controls, adds read-only integration/key metadata and About, and fixes Windows Python test portability without changing API, licensing, device, cron, database or updater protocol contracts.
+
 ## v5.4.1 release
 
 - **Tag:** `v5.4.1`

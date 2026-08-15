@@ -112,7 +112,8 @@ if ($schemaReady) {
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API v2 Client Applications</title>
+    <title>Client Apps · Licora</title>
+    <link rel="icon" href="assets/brand/favicon/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/admin-ui.css">
@@ -120,63 +121,44 @@ if ($schemaReady) {
 <body class="admin-ui">
 <?php include 'includes/navbar.php'; ?>
 <div class="container-fluid admin-shell">
-    <div class="page-hero d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3">
-        <div><h2><i class="bi bi-boxes"></i> API v2 Client Applications</h2><p>Register public application identities and token policies. No client master API key is created or displayed here.</p></div>
-        <a class="btn btn-outline-light" href="v2_devices.php"><i class="bi bi-shield-check"></i> V2 Devices</a>
+    <div class="page-hero d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-2">
+        <h2><i class="bi bi-boxes"></i> API v2 Client Apps</h2>
+        <div class="d-flex gap-2"><a class="btn btn-outline-secondary" href="v2_devices.php"><i class="bi bi-shield-check"></i> V2 Devices</a><?php if (AdminHelpers::canManage()): ?><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createClientAppModal" <?php echo $v2Ready ? '' : 'disabled'; ?>><i class="bi bi-plus-circle"></i> Create Client App</button><?php endif; ?></div>
     </div>
     <?php if (!$v2Ready): ?>
-    <div class="alert alert-warning">
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-            <div>
-                <strong>Secure API v2 provisioning is incomplete.</strong>
-                <div class="small mt-1">Schema: <?php echo $schemaReady ? 'ready' : 'missing'; ?> · Signing key pair: <?php echo !empty($provisionStatus['key_pair_ready']) ? 'ready' : 'missing or invalid'; ?>.</div>
-                <div class="small">cPanel/shared-hosting upgrades can initialize the additive v2 schema and missing signing key pair here. Existing signing key files are never replaced automatically.</div>
-            </div>
-            <form method="post" class="m-0">
-                <input type="hidden" name="csrf_token" value="<?php echo Security::escape(Security::generateCSRFToken()); ?>">
-                <input type="hidden" name="action" value="initialize_v2">
-                <button class="btn btn-warning" type="submit" onclick="return confirm('Initialize/verify Secure API v2 now? Existing API v1 data and existing signing key files will not be replaced.');"><i class="bi bi-shield-lock"></i> Initialize API v2</button>
-            </form>
-        </div>
-    </div>
+    <div class="alert alert-warning"><div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-2"><div><strong>Secure API v2 provisioning is incomplete.</strong><div class="ui-meta-line">Schema: <?php echo $schemaReady ? 'ready' : 'missing'; ?> · Signing key pair: <?php echo !empty($provisionStatus['key_pair_ready']) ? 'ready' : 'missing or invalid'; ?></div></div><form method="post" class="m-0"><input type="hidden" name="csrf_token" value="<?php echo Security::escape(Security::generateCSRFToken()); ?>"><input type="hidden" name="action" value="initialize_v2"><button class="btn btn-warning" type="submit" data-confirm="Initialize or verify Secure API v2 now? Existing API v1 data and signing key files will not be replaced."><i class="bi bi-shield-lock"></i> Initialize API v2</button></form></div></div>
     <?php endif; ?>
     <?php if ($success): ?><div class="alert alert-success"><?php echo Security::escape($success); ?></div><?php endif; ?>
     <?php if ($error): ?><div class="alert alert-danger"><?php echo Security::escape($error); ?></div><?php endif; ?>
 
-    <div class="row g-4">
-        <div class="col-xl-4">
-            <div class="card"><div class="card-header"><h5 class="mb-0">Create Client App</h5></div><div class="card-body">
-                <form method="post">
-                    <input type="hidden" name="csrf_token" value="<?php echo Security::escape(Security::generateCSRFToken()); ?>"><input type="hidden" name="action" value="create">
-                    <div class="mb-3"><label class="form-label">App ID</label><input class="form-control" name="app_id" placeholder="vibrapilot" pattern="[a-z0-9][a-z0-9._-]{1,118}[a-z0-9]" required><div class="form-text">Stable public identifier. It cannot be renamed from this page after creation.</div></div>
-                    <div class="mb-3"><label class="form-label">Display Name</label><input class="form-control" name="display_name" maxlength="160" required></div>
-                    <div class="mb-3"><label class="form-label">Minimum Version (optional)</label><input class="form-control" name="min_version" placeholder="1.0.6.2"></div>
-                    <div class="row g-2"><div class="col-6"><label class="form-label">Access TTL (s)</label><input class="form-control" type="number" name="access_token_ttl" min="300" max="86400" value="3600"></div><div class="col-6"><label class="form-label">Refresh TTL (s)</label><input class="form-control" type="number" name="refresh_token_ttl" min="3600" max="31536000" value="2592000"></div></div>
-                    <div class="row g-2 mt-1"><div class="col-6"><label class="form-label">Clock Skew (s)</label><input class="form-control" type="number" name="clock_skew_seconds" min="30" max="900" value="300"></div><div class="col-6"><label class="form-label">Rate / hour</label><input class="form-control" type="number" name="rate_limit_per_hour" min="10" max="100000" value="300"></div></div>
-                    <button class="btn btn-primary w-100 mt-3" <?php echo $v2Ready ? '' : 'disabled'; ?>>Create Client App</button>
-                </form>
-            </div></div>
-        </div>
-        <div class="col-xl-8">
-            <?php if (!$apps): ?><div class="card"><div class="card-body text-muted">No API v2 client applications are configured.</div></div><?php endif; ?>
-            <?php foreach ($apps as $app): ?>
-            <div class="card mb-3"><div class="card-body">
-                <form method="post" class="row g-3 align-items-end">
+    <section class="ui-table-panel">
+        <div class="ui-table-toolbar"><div class="ui-table-toolbar-main"><input type="search" class="form-control" placeholder="Search client apps" data-ui-table-search="client-apps-list"><select class="form-select" data-ui-table-status="client-apps-list"><option value="">All status</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div><div class="ui-table-toolbar-actions"><span class="ui-meta-line"><?php echo count($apps); ?> apps</span></div></div>
+        <div id="client-apps-list">
+        <?php if (!$apps): ?><div class="empty-state py-4"><h6>No API v2 client apps found</h6></div><?php endif; ?>
+        <?php foreach ($apps as $app): ?>
+            <article class="ui-compact-record" data-ui-search="<?php echo Security::escape(($app['app_id'] ?? '') . ' ' . ($app['display_name'] ?? '') . ' ' . ($app['min_version'] ?? '')); ?>" data-ui-status="<?php echo (int)$app['is_active'] ? 'active' : 'inactive'; ?>">
+                <form method="post" class="ui-client-app-form">
                     <input type="hidden" name="csrf_token" value="<?php echo Security::escape(Security::generateCSRFToken()); ?>"><input type="hidden" name="action" value="update"><input type="hidden" name="id" value="<?php echo (int)$app['id']; ?>">
-                    <div class="col-md-4"><label class="form-label">App ID</label><input class="form-control" value="<?php echo Security::escape($app['app_id']); ?>" readonly></div>
-                    <div class="col-md-4"><label class="form-label">Display Name</label><input class="form-control" name="display_name" maxlength="160" value="<?php echo Security::escape($app['display_name']); ?>" required></div>
-                    <div class="col-md-4"><label class="form-label">Minimum Version</label><input class="form-control" name="min_version" value="<?php echo Security::escape($app['min_version'] ?? ''); ?>"></div>
-                    <div class="col-md-3"><label class="form-label">Access TTL</label><input class="form-control" type="number" name="access_token_ttl" min="300" max="86400" value="<?php echo (int)$app['access_token_ttl']; ?>"></div>
-                    <div class="col-md-3"><label class="form-label">Refresh TTL</label><input class="form-control" type="number" name="refresh_token_ttl" min="3600" max="31536000" value="<?php echo (int)$app['refresh_token_ttl']; ?>"></div>
-                    <div class="col-md-2"><label class="form-label">Clock Skew</label><input class="form-control" type="number" name="clock_skew_seconds" min="30" max="900" value="<?php echo (int)$app['clock_skew_seconds']; ?>"></div>
-                    <div class="col-md-2"><label class="form-label">Rate/hour</label><input class="form-control" type="number" name="rate_limit_per_hour" min="10" max="100000" value="<?php echo (int)$app['rate_limit_per_hour']; ?>"></div>
-                    <div class="col-md-1"><div class="form-check"><input class="form-check-input" type="checkbox" name="is_active" id="active-<?php echo (int)$app['id']; ?>" <?php echo (int)$app['is_active'] ? 'checked' : ''; ?>><label class="form-check-label" for="active-<?php echo (int)$app['id']; ?>">Active</label></div></div>
-                    <div class="col-md-1"><button class="btn btn-outline-primary w-100" title="Save"><i class="bi bi-save"></i></button></div>
+                    <div><label class="form-label">App ID</label><input class="form-control" value="<?php echo Security::escape($app['app_id']); ?>" readonly></div>
+                    <div><label class="form-label">Display Name</label><input class="form-control" name="display_name" maxlength="160" value="<?php echo Security::escape($app['display_name']); ?>" required></div>
+                    <div><label class="form-label">Minimum Version</label><input class="form-control" name="min_version" value="<?php echo Security::escape($app['min_version'] ?? ''); ?>"></div>
+                    <div><label class="form-label">Access TTL</label><input class="form-control" type="number" name="access_token_ttl" min="300" max="86400" value="<?php echo (int)$app['access_token_ttl']; ?>"></div>
+                    <div><label class="form-label">Refresh TTL</label><input class="form-control" type="number" name="refresh_token_ttl" min="3600" max="31536000" value="<?php echo (int)$app['refresh_token_ttl']; ?>"></div>
+                    <div><label class="form-label">Clock Skew</label><input class="form-control" type="number" name="clock_skew_seconds" min="30" max="900" value="<?php echo (int)$app['clock_skew_seconds']; ?>"></div>
+                    <div><label class="form-label">Rate / hour</label><input class="form-control" type="number" name="rate_limit_per_hour" min="10" max="100000" value="<?php echo (int)$app['rate_limit_per_hour']; ?>"></div>
+                    <label class="ui-switch-field"><input class="form-check-input" type="checkbox" name="is_active" <?php echo (int)$app['is_active'] ? 'checked' : ''; ?>><span>Active</span></label>
+                    <?php if (AdminHelpers::canManage()): ?><button class="ui-icon-button" title="Save client app" aria-label="Save client app"><i class="bi bi-save"></i></button><?php endif; ?>
                 </form>
-            </div></div>
-            <?php endforeach; ?>
+            </article>
+        <?php endforeach; ?>
         </div>
-    </div>
+    </section>
 </div>
+
+<div class="modal fade" id="createClientAppModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form method="post">
+    <div class="modal-header"><h5 class="modal-title"><i class="bi bi-plus-circle"></i> Create Client App</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body"><input type="hidden" name="csrf_token" value="<?php echo Security::escape(Security::generateCSRFToken()); ?>"><input type="hidden" name="action" value="create"><div class="ui-form-grid"><div><label class="form-label">App ID</label><input class="form-control" name="app_id" placeholder="vibrapilot" pattern="[a-z0-9][a-z0-9._-]{1,118}[a-z0-9]" required></div><div><label class="form-label">Display Name</label><input class="form-control" name="display_name" maxlength="160" required></div><div><label class="form-label">Minimum Version</label><input class="form-control" name="min_version" placeholder="1.0.6.2"></div><div><label class="form-label">Access TTL</label><input class="form-control" type="number" name="access_token_ttl" min="300" max="86400" value="3600"></div><div><label class="form-label">Refresh TTL</label><input class="form-control" type="number" name="refresh_token_ttl" min="3600" max="31536000" value="2592000"></div><div><label class="form-label">Clock Skew</label><input class="form-control" type="number" name="clock_skew_seconds" min="30" max="900" value="300"></div><div><label class="form-label">Rate / hour</label><input class="form-control" type="number" name="rate_limit_per_hour" min="10" max="100000" value="300"></div></div></div>
+    <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary" <?php echo $v2Ready ? '' : 'disabled'; ?>><i class="bi bi-plus-circle"></i> Create Client App</button></div>
+</form></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script><script src="assets/js/admin-ui.js"></script>
 </body></html>

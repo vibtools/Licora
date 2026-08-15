@@ -152,8 +152,8 @@ function renderHistory(rows){
         var v=document.createElement('td');v.textContent=r.from_version+' → '+r.target_version;
         var st=document.createElement('td');var b=document.createElement('span');b.className='vib-badge '+statusClass(r.status);b.textContent=r.status;st.appendChild(b);
         var started=document.createElement('td');started.textContent=r.created_at||'—';var finished=document.createElement('td');finished.textContent=r.finished_at||'—';
-        var actions=document.createElement('td');var d=document.createElement('a');d.className='vib-button';d.href='ajax/update-diagnostics.php?job='+encodeURIComponent(r.job_uuid);d.textContent='Diagnostics';actions.appendChild(d);
-        if(r.status==='success'&&el('current-version').textContent===r.target_version){var rb=document.createElement('button');rb.type='button';rb.className='vib-button vib-button-danger';rb.classList.add('ui-ms-1');rb.dataset.updateRollback=r.job_uuid;rb.textContent='Rollback';actions.appendChild(rb);}
+        var actions=document.createElement('td');var d=document.createElement('a');d.className='ui-icon-button';d.href='ajax/update-diagnostics.php?job='+encodeURIComponent(r.job_uuid);d.title='Download diagnostics';d.setAttribute('aria-label','Download diagnostics');d.innerHTML='<i class=\"bi bi-download\"></i>';actions.appendChild(d);
+        if(r.status==='success'&&el('current-version').textContent===r.target_version){var rb=document.createElement('button');rb.type='button';rb.className='ui-icon-button is-danger';rb.classList.add('ui-ms-1');rb.dataset.updateRollback=r.job_uuid;rb.title='Rollback';rb.setAttribute('aria-label','Rollback');rb.innerHTML='<i class=\"bi bi-arrow-counterclockwise\"></i>';actions.appendChild(rb);}
         tr.append(v,st,started,finished,actions);body.appendChild(tr);
     });
 }
@@ -169,7 +169,7 @@ function askConfirmation(message,proceedLabel,danger){
     el('licora-update-confirm-modal').hidden=false;document.body.style.overflow='hidden';
     return new Promise(function(resolve){confirmResolver=resolve;setTimeout(function(){try{proceed.focus();}catch(ignore){}},0);});
 }
-async function checkUpdates(){showPageError('');el('update-check-button').disabled=true;try{var res=await api('ajax/update-check.php',{method:'POST',body:{force:true}});updateReleaseUI(res.data);if(res.active_job)renderJob(res.active_job);}catch(err){showPageError((err.code?err.code+': ':'')+err.message);}finally{el('update-check-button').disabled=false;}}
+async function checkUpdates(){showPageError('');el('update-check-button').disabled=true;try{var res=await api('ajax/update-check.php',{method:'POST',body:{force:true}});updateReleaseUI(res.data);if(res.active_job)renderJob(res.active_job);if(window.LicoraUI&&typeof window.LicoraUI.toast==='function'){var latest=res.data&&res.data.latest&&res.data.latest.version;if(res.data&&res.data.update_available&&latest){window.LicoraUI.toast('Licora v'+latest+' is available.','info');}else{window.LicoraUI.toast('Licora is up to date — v'+el('current-version').textContent+'.','success');}}}catch(err){showPageError((err.code?err.code+': ':'')+err.message);if(window.LicoraUI&&typeof window.LicoraUI.toast==='function')window.LicoraUI.toast('Update check failed: '+err.message,'danger');}finally{el('update-check-button').disabled=false;}}
 async function runPreflight(){
     var version=state.update&&state.update.latest&&state.update.latest.version;if(!version)return;
     showPageError('');var btn=el('update-preflight-button');btn.disabled=true;el('preflight-summary').textContent='Running…';

@@ -99,7 +99,8 @@ $csrf = Security::generateCSRFToken();
 <html lang="en" data-theme="light">
 <head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admins</title>
+    <title>Admins · Licora</title>
+    <link rel="icon" href="assets/brand/favicon/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/admin-ui.css">
@@ -108,51 +109,36 @@ $csrf = Security::generateCSRFToken();
 <?php include 'includes/navbar.php'; ?>
 <div class="container-fluid admin-shell">
     <div class="page-hero d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3">
-        <div>
-            <h2><i class="bi bi-people"></i> Admin Users</h2>
-            <p>Create, edit, delete, and control Super Admin, Manager, Viewer permission. Viewer শুধু দেখতে পারবে।</p>
-        </div>
+        <div><h2><i class="bi bi-people"></i> Admin Users</h2></div>
         <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createAdminModal" <?php echo AdminHelpers::canDelete() ? '' : 'disabled'; ?>><i class="bi bi-person-plus"></i> New Admin</button>
     </div>
 
     <?php if ($msg): ?><div class="alert alert-success alert-dismissible fade show"><?php echo Security::escape($msg); ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div><?php endif; ?>
     <?php if ($error): ?><div class="alert alert-danger alert-dismissible fade show"><?php echo Security::escape($error); ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div><?php endif; ?>
-    <?php if (!$hasRole): ?><div class="alert alert-warning"><i class="bi bi-exclamation-triangle"></i> Role column নেই। Role control চালু করতে migration-v4.sql run করতে হবে। Existing admin create/edit/delete কাজ করবে।</div><?php endif; ?>
+    <?php if (!$hasRole): ?><div class="alert alert-warning"><i class="bi bi-exclamation-triangle"></i> The role column is unavailable. Run migration-v4.sql to enable role controls. Existing admin create, edit, and delete actions remain available.</div><?php endif; ?>
 
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="bi bi-shield-lock"></i> Admin Account List</h5>
-            <span class="badge bg-light text-dark">Default 10 rows</span>
-        </div>
+        <div class="card-header"><h5 class="mb-0"><i class="bi bi-shield-lock"></i> Admin Account List</h5></div>
         <div class="card-body">
-            <div class="table-responsive">
+            <div class="ui-table-toolbar mb-2"><div class="ui-table-toolbar-main"><input type="search" class="form-control" placeholder="Search admins" data-ui-table-search="admins-table"><select class="form-select" data-ui-table-status="admins-table"><option value="">All roles</option><option value="super_admin">Super Admin</option><option value="manager">Manager</option><option value="viewer">Viewer</option></select></div><div class="ui-table-toolbar-actions"><select class="form-select" data-ui-table-size="admins-table"><option value="10">10 / page</option><option value="25">25 / page</option><option value="50">50 / page</option></select></div></div>
+            <div class="table-responsive ui-scrollbar">
                 <table class="table table-hover align-middle" data-ui-paginate="true" data-ui-page-size="10" id="admins-table">
                     <thead class="table-dark"><tr><th>ID</th><th>Username</th><th>Email</th><th>Current Role</th><th>Last Login</th><th>Actions</th></tr></thead>
                     <tbody>
                     <?php foreach ($users as $u): ?>
-                        <tr>
+                        <tr data-ui-search="<?php echo Security::escape(($u['username'] ?? '') . ' ' . ($u['email'] ?? '') . ' ' . ($u['role'] ?? 'super_admin')); ?>" data-ui-status="<?php echo Security::escape($u['role'] ?? 'super_admin'); ?>">
                             <td>#<?php echo (int)$u['id']; ?></td>
                             <td><strong><?php echo Security::escape($u['username']); ?></strong><?php if ((int)$u['id'] === $currentAdminId): ?> <span class="badge bg-info">You</span><?php endif; ?></td>
                             <td><?php echo Security::escape($u['email'] ?? ''); ?></td>
                             <td><span class="badge bg-primary"><?php echo Security::escape($u['role'] ?? 'super_admin'); ?></span></td>
                             <td><?php echo Security::escape($u['last_login'] ?? 'Never'); ?></td>
-                            <td>
-                                <div class="d-flex gap-2 flex-wrap">
-                                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editAdmin<?php echo (int)$u['id']; ?>" <?php echo AdminHelpers::canDelete() ? '' : 'disabled'; ?>><i class="bi bi-pencil"></i> Edit</button>
-                                    <form method="POST" data-confirm="Delete this admin user?" class="d-inline">
-                                        <input type="hidden" name="csrf_token" value="<?php echo Security::escape($csrf); ?>">
-                                        <input type="hidden" name="delete_admin" value="1">
-                                        <input type="hidden" name="admin_id" value="<?php echo (int)$u['id']; ?>">
-                                        <button class="btn btn-sm btn-outline-danger" <?php echo (AdminHelpers::canDelete() && (int)$u['id'] !== $currentAdminId) ? '' : 'disabled'; ?>><i class="bi bi-trash"></i> Delete</button>
-                                    </form>
-                                </div>
-                            </td>
+                            <td class="text-end"><details class="ui-action-menu"><summary class="ui-icon-button" aria-label="Admin actions"><i class="bi bi-three-dots"></i></summary><div class="ui-action-menu-panel"><button type="button" data-bs-toggle="modal" data-bs-target="#editAdmin<?php echo (int)$u['id']; ?>" <?php echo AdminHelpers::canDelete() ? '' : 'disabled'; ?>><i class="bi bi-pencil"></i> Edit</button><form method="POST" data-confirm="Delete this admin user?" class="m-0"><input type="hidden" name="csrf_token" value="<?php echo Security::escape($csrf); ?>"><input type="hidden" name="delete_admin" value="1"><input type="hidden" name="admin_id" value="<?php echo (int)$u['id']; ?>"><button class="is-danger" <?php echo (AdminHelpers::canDelete() && (int)$u['id'] !== $currentAdminId) ? '' : 'disabled'; ?>><i class="bi bi-trash"></i> Delete</button></form></div></details></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-            <nav><ul class="pagination justify-content-end" data-ui-pager-for="admins-table"></ul></nav>
+            <div class="ui-table-footer"><span data-ui-count-for="admins-table"></span><nav><ul class="pagination mb-0" data-ui-pager-for="admins-table"></ul></nav></div>
         </div>
     </div>
 </div>
@@ -185,7 +171,7 @@ $csrf = Security::generateCSRFToken();
                 <input type="hidden" name="admin_id" value="<?php echo (int)$u['id']; ?>">
                 <div class="mb-3"><label class="form-label">Username</label><input type="text" name="username" class="form-control" value="<?php echo Security::escape($u['username']); ?>" required maxlength="50"></div>
                 <div class="mb-3"><label class="form-label">Email</label><input type="email" name="email" class="form-control" value="<?php echo Security::escape($u['email'] ?? ''); ?>" maxlength="100"></div>
-                <div class="mb-3"><label class="form-label">New Password <small class="text-muted">blank রাখলে আগের password থাকবে</small></label><input type="password" name="password" class="form-control" minlength="6"></div>
+                <div class="mb-3"><label class="form-label">New Password</label><input type="password" name="password" class="form-control" minlength="6"></div>
                 <div class="mb-3"><label class="form-label">Role</label><select name="role" class="form-select" <?php echo $hasRole ? '' : 'disabled'; ?>><option value="super_admin" <?php echo (($u['role'] ?? 'super_admin') === 'super_admin') ? 'selected' : ''; ?>>Super Admin</option><option value="manager" <?php echo (($u['role'] ?? '') === 'manager') ? 'selected' : ''; ?>>Manager</option><option value="viewer" <?php echo (($u['role'] ?? '') === 'viewer') ? 'selected' : ''; ?>>Viewer</option></select></div>
             </div>
             <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary"><i class="bi bi-save"></i> Save Changes</button></div>

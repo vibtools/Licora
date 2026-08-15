@@ -85,9 +85,24 @@ jobs:
           php tests/admin_v2_ui_db_integration.php
           php tests/updater_db_integration.php
 
+  windows-python-contract:
+    name: Windows Python builder portability
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Verify builder portability
+        run: python tests/updater_builder_contract.py
+
   package:
     name: Build verified source artifact
-    needs: [validate, mysql-integration]
+    needs: [validate, mysql-integration, windows-python-contract]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -118,18 +133,18 @@ jobs:
         run: |
           short_sha="${GITHUB_SHA:0:12}"
           mkdir -p release
-          bash scripts/package-release.sh v5.4.1 "$GITHUB_SHA" "release/Licora-5.4.1-ci-${short_sha}.zip"
-          cp "release/Licora-5.4.1-ci-${short_sha}.zip" "release/Licora-5.4.1.zip"
-          python3 scripts/build-update-manifest.py --version 5.4.1 --ref "$GITHUB_SHA" --package "release/Licora-5.4.1.zip" --output release/licora-update-manifest.json
-          rm "release/Licora-5.4.1.zip"
+          bash scripts/package-release.sh v5.5.0 "$GITHUB_SHA" "release/Licora-5.5.0-ci-${short_sha}.zip"
+          cp "release/Licora-5.5.0-ci-${short_sha}.zip" "release/Licora-5.5.0.zip"
+          python3 scripts/build-update-manifest.py --version 5.5.0 --ref "$GITHUB_SHA" --package "release/Licora-5.5.0.zip" --output release/licora-update-manifest.json
+          rm "release/Licora-5.5.0.zip"
 
       - name: Upload CI release-candidate artifact
         uses: actions/upload-artifact@v6
         with:
-          name: Licora-5.4.1-${{ github.sha }}
+          name: Licora-5.5.0-${{ github.sha }}
           path: |
-            release/Licora-5.4.1-ci-*.zip
-            release/Licora-5.4.1-ci-*.zip.sha256
+            release/Licora-5.5.0-ci-*.zip
+            release/Licora-5.5.0-ci-*.zip.sha256
             release/licora-update-manifest.json
           if-no-files-found: error
           retention-days: 14

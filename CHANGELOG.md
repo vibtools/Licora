@@ -8,6 +8,24 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
+## [5.5.0] - 2026-08-14
+
+### Changed
+- Refined the v5.4 VibTools Light shell to the compact/no-growth table, form, toolbar, action, scrollbar, confirmation and feedback composition used by the audited VibTools Web UI v2.1.2 reference.
+- Reworked Licenses into a full-width table with one compact toolbar and responsive Single/Bulk create modal while preserving existing form/CSRF/backend contracts.
+- Reworked Devices and other data-heavy admin surfaces to compact searchable/filterable tables and shared action menus.
+- Made Admin Settings truthful by exposing only runtime-backed editable settings; legacy stored-only keys remain preserved but hidden from the active UI.
+- Fixed visible product identity to Licora and applied the supplied tracked Licora logos/icons/favicons across shell/login/root/installer/About.
+
+### Added
+- Added nested Settings navigation for Audit Trail, Backup & Export, System Health and About Licora.
+- Added read-only detected API/runtime/Cron information and Super-Admin Secure API v2 public-key fingerprint/status/download; private signing-key export remains prohibited.
+- Added explicit Update Center up-to-date/update-available feedback and shared light scrollbars.
+- Added Windows CI coverage for updater manifest-builder portability and changed the test to use the current Python interpreter rather than hardcoded `python3`.
+
+### Compatibility
+- No database migration or deleted files. Signed direct source is `v5.4.1`. API v1/v2, license/device/cron semantics, authentication/roles and updater protocol/state machine remain unchanged.
+
 ## [5.4.1] - 2026-08-14
 
 ### Fixed

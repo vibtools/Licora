@@ -124,7 +124,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.4.1` |
+| Application version | `APP_VERSION` | `5.5.0` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -155,6 +155,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Secure in-app updater](docs/UPDATER.md)
 - [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.5.0 release notes](RELEASE_NOTES_v5.5.0.md)
 - [v5.4.1 release notes](RELEASE_NOTES_v5.4.1.md)
 - [v5.4.0 release notes](RELEASE_NOTES_v5.4.0.md)
 - [v5.3.0 release notes](RELEASE_NOTES_v5.3.0.md)
@@ -168,6 +169,12 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
+
+## VibTools compact UI and Licora branding (v5.5.0)
+
+Licora v5.5.0 refines the existing VibTools Light component architecture into the compact/no-growth presentation contract: full-width data tables, single-row toolbars, compact row actions, responsive Single/Bulk license creation, light themed scrollbars and reusable confirmation/feedback UI. Supplied Licora logos/icons/favicons are now tracked and used across the application shell, login, installer, root landing page and About page.
+
+The Settings page is also made truthful. Only settings consumed by the current runtime remain editable; legacy stored-only values remain in the database for compatibility but are no longer presented as active controls. Runtime/API endpoints, limits, Cron CLI commands and Secure API v2 public-key metadata are read-only operational information. The API v2 private signing key remains server-only and is never displayed or downloadable. No database migration, API protocol change, license/device behavior change, cron behavior change or updater state-machine change is included.
 
 ## Updater recovery and scope integrity (v5.4.1)
 

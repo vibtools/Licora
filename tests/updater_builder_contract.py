@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 import json, subprocess, tempfile, zipfile
+import sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 SCRIPT=ROOT/'scripts/build-update-manifest.py'
@@ -19,7 +20,7 @@ def run_case(name:str, files:dict[str,bytes], spec:dict, expect_ok:bool, marker:
         (gitrepo/'fixture.txt').write_text('fixture\n',encoding='utf-8')
         subprocess.run(['git','add','fixture.txt'],cwd=gitrepo,check=True)
         subprocess.run(['git','commit','-q','-m','fixture'],cwd=gitrepo,check=True)
-        proc=subprocess.run(['python3',str(SCRIPT),'--version',VERSION,'--ref','HEAD','--package',str(package),'--output',str(out)],cwd=gitrepo,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        proc=subprocess.run([sys.executable,str(SCRIPT),'--version',VERSION,'--ref','HEAD','--package',str(package),'--output',str(out)],cwd=gitrepo,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         if expect_ok and proc.returncode!=0: raise SystemExit(f'FAIL: {name}: expected success, got {proc.stderr.strip()}')
         if not expect_ok and proc.returncode==0: raise SystemExit(f'FAIL: {name}: expected rejection')
         combined=(proc.stdout+'\n'+proc.stderr).lower()
