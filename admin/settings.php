@@ -73,7 +73,7 @@ $v2Keys = licora_ui_v2_key_status();
     <?php if ($message): ?><div class="alert alert-success alert-dismissible fade show"><?php echo Security::escape($message); ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div><?php endif; ?>
     <?php if ($error): ?><div class="alert alert-danger alert-dismissible fade show"><?php echo Security::escape($error); ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div><?php endif; ?>
 
-    <nav class="ui-shortcuts mb-2" aria-label="Management shortcuts">
+    <nav class="ui-shortcuts ui-shortcut-grid mb-2" aria-label="Management shortcuts">
         <a href="license.php" class="btn btn-outline-secondary"><i class="bi bi-key"></i> Licenses</a>
         <a href="device.php" class="btn btn-outline-secondary"><i class="bi bi-devices"></i> Devices</a>
         <a href="api_keys.php" class="btn btn-outline-secondary"><i class="bi bi-key-fill"></i> API Keys</a>
@@ -85,7 +85,7 @@ $v2Keys = licora_ui_v2_key_status();
 
     <form method="POST" id="settings-form" class="needs-validation" novalidate>
         <input type="hidden" name="update_settings" value="1"><input type="hidden" name="csrf_token" value="<?php echo Security::escape(Security::generateCSRFToken()); ?>">
-        <div class="ui-settings-grid">
+        <div class="ui-settings-grid ui-settings-grid-summary">
             <section class="ui-settings-section">
                 <div class="ui-settings-section-header"><span><i class="bi bi-sliders"></i> License Defaults</span></div>
                 <div class="ui-settings-section-body"><div class="ui-form-grid">
@@ -100,8 +100,10 @@ $v2Keys = licora_ui_v2_key_status();
                 <div class="ui-settings-section-header"><span><i class="bi bi-clock-history"></i> Operations</span></div>
                 <div class="ui-settings-section-body"><div class="ui-form-grid"><div><label class="form-label">Log Retention Days</label><input type="number" class="form-control" name="log_retention_days" value="<?php echo Security::escape($settings['log_retention_days']); ?>" min="1" max="3650" required></div><div><label class="form-label">Environment</label><input type="text" class="form-control" value="<?php echo Security::escape(ENVIRONMENT); ?>" readonly></div><div><label class="form-label">App Version</label><input type="text" class="form-control" value="<?php echo Security::escape(APP_VERSION); ?>" readonly></div><div><label class="form-label">Server Time</label><input type="text" class="form-control" value="<?php echo date('Y-m-d H:i:s'); ?>" readonly></div></div></div>
             </section>
+        </div>
 
-            <section class="ui-settings-section ui-span-2">
+        <div class="ui-settings-detail-grid mt-2">
+            <section class="ui-settings-section ui-settings-integration">
                 <div class="ui-settings-section-header"><span><i class="bi bi-hdd-network"></i> API & Integration</span></div>
                 <div class="ui-settings-section-body"><div class="ui-info-list">
                     <?php foreach ($endpoints as $label => $value): ?><div class="ui-info-row"><span class="ui-info-label"><?php echo Security::escape($label); ?></span><code class="ui-info-value"><?php echo Security::escape($value); ?></code><button type="button" class="btn btn-outline-secondary ui-copy-button" data-copy="<?php echo Security::escape($value); ?>" aria-label="Copy <?php echo Security::escape($label); ?>"><i class="bi bi-clipboard"></i></button></div><?php endforeach; ?>
@@ -114,23 +116,25 @@ $v2Keys = licora_ui_v2_key_status();
                 </div></div>
             </section>
 
-            <section class="ui-settings-section">
-                <div class="ui-settings-section-header"><span><i class="bi bi-terminal"></i> Cron Jobs</span></div>
-                <div class="ui-settings-section-body"><div class="ui-info-list">
-                    <?php foreach ($cronJobs as $label => $job): ?><div class="ui-info-row"><span class="ui-info-label"><?php echo Security::escape($label); ?></span><code class="ui-info-value"><?php echo Security::escape($job['command']); ?></code><button type="button" class="btn btn-outline-secondary ui-copy-button" data-copy="<?php echo Security::escape($job['command']); ?>" aria-label="Copy <?php echo Security::escape($label); ?> cron command"><i class="bi bi-clipboard"></i></button></div><?php endforeach; ?>
-                </div></div>
-            </section>
+            <div class="ui-settings-stack">
+                <section class="ui-settings-section">
+                    <div class="ui-settings-section-header"><span><i class="bi bi-terminal"></i> Cron Jobs</span></div>
+                    <div class="ui-settings-section-body"><div class="ui-info-list">
+                        <?php foreach ($cronJobs as $label => $job): ?><div class="ui-info-row"><span class="ui-info-label"><?php echo Security::escape($label); ?></span><code class="ui-info-value"><?php echo Security::escape($job['command']); ?></code><button type="button" class="btn btn-outline-secondary ui-copy-button" data-copy="<?php echo Security::escape($job['command']); ?>" aria-label="Copy <?php echo Security::escape($label); ?> cron command"><i class="bi bi-clipboard"></i></button></div><?php endforeach; ?>
+                    </div></div>
+                </section>
 
-            <section class="ui-settings-section">
-                <div class="ui-settings-section-header"><span><i class="bi bi-shield-check"></i> API v2 Signing</span></div>
-                <div class="ui-settings-section-body"><div class="ui-info-list">
-                    <div class="ui-info-row"><span class="ui-info-label">Key ID</span><code class="ui-info-value"><?php echo Security::escape($v2Keys['key_id']); ?></code><button type="button" class="btn btn-outline-secondary ui-copy-button" data-copy="<?php echo Security::escape($v2Keys['key_id']); ?>" aria-label="Copy key ID"><i class="bi bi-clipboard"></i></button></div>
-                    <div class="ui-info-row"><span class="ui-info-label">Private Key</span><span class="ui-info-value"><span class="badge bg-<?php echo $v2Keys['private_configured'] ? 'success' : 'danger'; ?>"><?php echo $v2Keys['private_configured'] ? 'Configured' : 'Missing'; ?></span></span><span></span></div>
-                    <div class="ui-info-row"><span class="ui-info-label">Public Key</span><span class="ui-info-value"><span class="badge bg-<?php echo $v2Keys['public_configured'] ? 'success' : 'danger'; ?>"><?php echo $v2Keys['public_configured'] ? 'Configured' : 'Missing'; ?></span></span><?php if ($v2Keys['public_configured'] && AdminHelpers::canDelete()): ?><a class="btn btn-outline-secondary ui-copy-button" href="ajax/v2-public-key.php" aria-label="Download API v2 public key"><i class="bi bi-download"></i></a><?php else: ?><span></span><?php endif; ?></div>
-                    <div class="ui-info-row"><span class="ui-info-label">Pair Status</span><span class="ui-info-value"><span class="badge bg-<?php echo $v2Keys['pair_valid'] ? 'success' : 'warning'; ?>"><?php echo $v2Keys['pair_valid'] ? 'Verified' : 'Unavailable'; ?></span></span><span></span></div>
-                    <div class="ui-info-row"><span class="ui-info-label">Public Fingerprint</span><code class="ui-info-value"><?php echo Security::escape($v2Keys['public_fingerprint'] ?: 'Unavailable'); ?></code><?php if ($v2Keys['public_fingerprint']): ?><button type="button" class="btn btn-outline-secondary ui-copy-button" data-copy="<?php echo Security::escape($v2Keys['public_fingerprint']); ?>" aria-label="Copy public-key fingerprint"><i class="bi bi-clipboard"></i></button><?php else: ?><span></span><?php endif; ?></div>
-                </div></div>
-            </section>
+                <section class="ui-settings-section">
+                    <div class="ui-settings-section-header"><span><i class="bi bi-shield-check"></i> API v2 Signing</span></div>
+                    <div class="ui-settings-section-body"><div class="ui-info-list">
+                        <div class="ui-info-row"><span class="ui-info-label">Key ID</span><code class="ui-info-value"><?php echo Security::escape($v2Keys['key_id']); ?></code><button type="button" class="btn btn-outline-secondary ui-copy-button" data-copy="<?php echo Security::escape($v2Keys['key_id']); ?>" aria-label="Copy key ID"><i class="bi bi-clipboard"></i></button></div>
+                        <div class="ui-info-row"><span class="ui-info-label">Private Key</span><span class="ui-info-value"><span class="badge bg-<?php echo $v2Keys['private_configured'] ? 'success' : 'danger'; ?>"><?php echo $v2Keys['private_configured'] ? 'Configured' : 'Missing'; ?></span></span><span></span></div>
+                        <div class="ui-info-row"><span class="ui-info-label">Public Key</span><span class="ui-info-value"><span class="badge bg-<?php echo $v2Keys['public_configured'] ? 'success' : 'danger'; ?>"><?php echo $v2Keys['public_configured'] ? 'Configured' : 'Missing'; ?></span></span><?php if ($v2Keys['public_configured'] && AdminHelpers::canDelete()): ?><a class="btn btn-outline-secondary ui-copy-button" href="ajax/v2-public-key.php" aria-label="Download API v2 public key"><i class="bi bi-download"></i></a><?php else: ?><span></span><?php endif; ?></div>
+                        <div class="ui-info-row"><span class="ui-info-label">Pair Status</span><span class="ui-info-value"><span class="badge bg-<?php echo $v2Keys['pair_valid'] ? 'success' : 'warning'; ?>"><?php echo $v2Keys['pair_valid'] ? 'Verified' : 'Unavailable'; ?></span></span><span></span></div>
+                        <div class="ui-info-row"><span class="ui-info-label">Public Fingerprint</span><code class="ui-info-value"><?php echo Security::escape($v2Keys['public_fingerprint'] ?: 'Unavailable'); ?></code><?php if ($v2Keys['public_fingerprint']): ?><button type="button" class="btn btn-outline-secondary ui-copy-button" data-copy="<?php echo Security::escape($v2Keys['public_fingerprint']); ?>" aria-label="Copy public-key fingerprint"><i class="bi bi-clipboard"></i></button><?php else: ?><span></span><?php endif; ?></div>
+                    </div></div>
+                </section>
+            </div>
         </div>
         <?php if (AdminHelpers::canManage()): ?><div class="ui-save-bar mt-2"><button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save Settings</button></div><?php endif; ?>
     </form>

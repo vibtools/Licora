@@ -2,11 +2,11 @@
 
 ## Authority
 
-Licora v5.5.0 uses the **VibTools Web UI v2.1.2 structural system** while preserving Licora's established light blue/purple product identity. The design source of truth is component-first: individual pages compose shared components and may not introduce independent color, spacing, radius, table, form, button, modal or navigation systems.
+Licora v5.5.1 uses the **VibTools Web UI v2.1.2 structural system** while preserving Licora's established light blue/purple product identity. The design source of truth is component-first: individual pages compose shared components and may not introduce independent color, spacing, radius, table, form, button, modal or navigation systems.
 
 ## Theme contract
 
-The v5.5.0 production target is **light theme only**.
+The v5.5.1 production target is **light theme only**.
 
 - Page background: light gray/white.
 - Surfaces: white/light neutral.
@@ -194,3 +194,10 @@ The authoritative product identity is **Licora**. Tracked assets live under `adm
 ## Settings presentation truthfulness
 
 Editable Settings controls must map to a current runtime consumer. Stored-only legacy database values remain preserved but are not presented as working controls. Runtime endpoints, Cron commands and Secure API v2 public-key metadata are read-only operational information. The server private signing key is never exposed through the browser.
+
+## v5.5.1 navigation and information-layout contract
+
+- Settings shortcut actions use an equal-width responsive grid on desktop instead of intrinsic-width left clustering.
+- Tall/short Settings content must not share a stretching grid row when it creates blank card space; related compact cards may be stacked in a dedicated secondary column.
+- Sidebar child navigation is collapsed by default, uses a dedicated button with `aria-expanded`/`aria-controls`, and automatically expands when a child route is active.
+- Product/About pages use shared hero, feature-grid, company and metadata components. Page-specific CSS remains prohibited.

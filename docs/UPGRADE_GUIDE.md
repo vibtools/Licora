@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -152,6 +152,14 @@ v5.4.1 introduces **no database migration** and preserves the v5.4.0 sidebar/com
 5. Verify sidebar/UI, API v1/v2, Licenses, Devices, Client Apps/V2 Devices and cron regressions.
 
 The signed v5.4.1 release accepts reviewed direct source versions `5.3.0` and `5.4.0`, with an empty migration list. A pre-existing active job still targets the version recorded when that job was created and must be resumed/finalized before a later release can start.
+
+## v5.5.0 to v5.5.1 Settings/About UI hotfix
+
+v5.5.1 is a signed **no-migration** update from `v5.5.0`. It corrects Settings shortcut distribution, removes the lower-grid blank-space composition, adds a collapsible Settings child menu, and rebuilds About Licora with verified product/company information.
+
+1. Back up the deployment normally.
+2. Open **Admin → Updates** on v5.5.0 and run preflight after the official signed v5.5.1 release is published.
+3. Install v5.5.1 and verify Settings, nested navigation, and About.
 
 ## v5.4.1 to v5.5.0 compact UI and branding
 

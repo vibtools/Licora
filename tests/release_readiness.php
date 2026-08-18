@@ -19,13 +19,13 @@ $read = static function (string $path) use ($root): string {
 $config = $read('includes/config.php');
 $installer = $read('install.php');
 $installation = $read('includes/installation.php');
-$releaseNotes = $read('RELEASE_NOTES_v5.5.0.md');
+$releaseNotes = $read('RELEASE_NOTES_v5.5.1.md');
 $changelog = $read('CHANGELOG.md');
 $configuration = $read('docs/CONFIGURATION.md');
 $releaseGuide = $read('docs/RELEASE.md');
 $packager = $read('scripts/package-release.sh');
 
-$versionDefinition = "if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.5.0'));";
+$versionDefinition = "if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.5.1'));";
 $localConfigRequire = 'require_once $localConfig;';
 $versionPosition = strpos($config, $versionDefinition);
 $localConfigPosition = strpos($config, $localConfigRequire);
@@ -36,7 +36,7 @@ $assert(
     'runtime version resolves before preserved private configuration'
 );
 $assert(strpos($config, "env_value('APP_NAME', 'Licora')") !== false, 'default application name is Licora');
-$assert(strpos($installation, "'APP_VERSION' => '5.5.0'") !== false, 'generated installer configuration targets v5.4.1');
+$assert(strpos($installation, "'APP_VERSION' => '5.5.1'") !== false, 'generated installer configuration targets v5.5.1');
 $assert(strpos($installer, 'First-Run Installer') !== false, 'installer uses the compact Licora first-run branding');
 $assert(strpos($installer, 'assets/brand/logos/logo-md.png') !== false, 'installer uses the supplied Licora logo asset');
 $assert(strpos($installer, 'name="app_name" value="Licora"') !== false, 'installer fixes the visible product identity to Licora');
@@ -106,6 +106,8 @@ $assert(
 );
 
 foreach ([
+    'RELEASE_NOTES_v5.5.1.md',
+    'RELEASE_COMMANDS_v5.5.1.md',
     'RELEASE_NOTES_v5.5.0.md',
     'RELEASE_COMMANDS_v5.5.0.md',
     'RELEASE_NOTES_v5.4.1.md',
@@ -121,10 +123,10 @@ foreach ([
     $assert(is_file($root . '/' . $path), 'release documentation exists: ' . $path);
 }
 
-$assert(strpos($releaseNotes, 'Licora v5.5.0') !== false, 'release notes identify v5.5.0');
-$assert(strpos($changelog, '## [5.5.0] - 2026-08-14') !== false, 'changelog contains the v5.5.0 release date');
-$assert(strpos($configuration, '`APP_VERSION` | `APP_VERSION` | `5.5.0`') !== false, 'configuration reference matches v5.5.0 runtime version');
-$assert(strpos($releaseGuide, 'scripts/package-release.sh v5.5.0 v5.5.0') !== false, 'release guide uses the v5.5.0 packager command');
+$assert(strpos($releaseNotes, 'Licora v5.5.1') !== false, 'release notes identify v5.5.1');
+$assert(strpos($changelog, '## [5.5.1] - 2026-08-18') !== false, 'changelog contains the v5.5.1 release date');
+$assert(strpos($configuration, '`APP_VERSION` | `APP_VERSION` | `5.5.1`') !== false, 'configuration reference matches v5.5.1 runtime version');
+$assert(strpos($releaseGuide, 'scripts/package-release.sh v5.5.1 v5.5.1') !== false, 'release guide uses the v5.5.1 packager command');
 $assert(strpos($packager, 'git archive --format=zip') !== false, 'release package is created from a Git ref');
 $assert(strpos($packager, 'git diff --quiet') !== false, 'release packager rejects tracked working-tree changes');
 
@@ -134,10 +136,10 @@ foreach ([
     'install.php',
     'config.sample.php',
     'CHANGELOG.md',
-    'RELEASE_NOTES_v5.5.0.md',
+    'RELEASE_NOTES_v5.5.1.md',
 ] as $path) {
     $content = $read($path);
-    $assert(strpos($content, '5.5.1') === false, 'v5.5.0 release file does not contain future version marker: ' . $path);
+    $assert(strpos($content, '5.5.2') === false, 'v5.5.1 release file does not contain future version marker: ' . $path);
 }
 
 if ($failures !== []) {

@@ -29,5 +29,6 @@
 | Truthful Admin Settings | Implemented in v5.5.0 | Only runtime-consumed license defaults/limits and log retention are editable; legacy stored-only keys remain preserved but hidden from the active Settings UI. |
 | API/runtime integration information | Implemented in v5.5.0 | Read-only detected API endpoints, runtime limits, Cron CLI commands, environment/version and API v2 public-key status/fingerprint are shown with copy/download actions. Private signing-key export is prohibited. |
 | Licora product branding | Implemented in v5.5.0 | Supplied Licora logos/icons/favicons are tracked and used across shell/login/root/installer/About; visible product identity is fixed to Licora. |
+| Settings/About UI finishing | Implemented in v5.5.1 | Equal-width Settings shortcuts, non-stretching Cron/Signing composition, collapsible Settings submenu and complete About Licora product/company presentation. |
 | VibTools Compact Light UI | Implemented in v5.5.0 | Compact tables/forms/toolbars/action menus/scrollbars and responsive License/Device recomposition refine the existing v5.4 component shell without changing backend contracts. |
 | Frontend offline mode | Not implemented | UI depends on external CDNs. |

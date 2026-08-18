@@ -19,21 +19,36 @@ $initial = strtoupper(substr($username, 0, 1));
                 <p class="ui-nav-label"><?php echo Security::escape($groupLabel); ?></p>
                 <?php foreach ($visibleItems as $item):
                     $active = licora_ui_item_active($item, $currentPage);
-                    $hasChildren = !empty($item['children']); ?>
-                    <a class="ui-nav-link<?php echo $active ? ' active' : ''; ?>" href="<?php echo Security::escape($item['file']); ?>"<?php echo $currentPage === $item['file'] ? ' aria-current="page"' : ''; ?>>
-                        <span class="ui-nav-icon"><i class="bi <?php echo Security::escape($item['icon']); ?>"></i></span>
-                        <span class="ui-nav-text"><?php echo Security::escape($item['label']); ?></span>
-                        <?php if (!empty($item['update_badge'])): ?><span class="ui-nav-badge" data-licora-update-badge hidden></span><?php endif; ?>
-                    </a>
+                    $hasChildren = !empty($item['children']);
+                    $childActive = false;
+                    foreach (($item['children'] ?? []) as $child) {
+                        if (($child['file'] ?? '') === $currentPage) { $childActive = true; break; }
+                    }
+                    $submenuId = 'licoraSubmenu' . preg_replace('/[^A-Za-z0-9]/', '', (string)($item['label'] ?? 'Navigation')); ?>
                     <?php if ($hasChildren): ?>
-                        <div class="ui-nav-submenu" aria-label="<?php echo Security::escape($item['label']); ?> submenu">
-                            <?php foreach ($item['children'] as $child): $childActive = $currentPage === $child['file']; ?>
-                                <a class="ui-nav-sublink<?php echo $childActive ? ' active' : ''; ?>" href="<?php echo Security::escape($child['file']); ?>"<?php echo $childActive ? ' aria-current="page"' : ''; ?>>
+                        <div class="ui-nav-parent<?php echo $active ? ' active' : ''; ?>">
+                            <a class="ui-nav-link<?php echo $active ? ' active' : ''; ?>" href="<?php echo Security::escape($item['file']); ?>"<?php echo $currentPage === $item['file'] ? ' aria-current="page"' : ''; ?>>
+                                <span class="ui-nav-icon"><i class="bi <?php echo Security::escape($item['icon']); ?>"></i></span>
+                                <span class="ui-nav-text"><?php echo Security::escape($item['label']); ?></span>
+                            </a>
+                            <button type="button" class="ui-nav-submenu-toggle" data-ui-submenu-toggle aria-expanded="<?php echo $childActive ? 'true' : 'false'; ?>" aria-controls="<?php echo Security::escape($submenuId); ?>" aria-label="Toggle <?php echo Security::escape($item['label']); ?> submenu">
+                                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="ui-nav-submenu" id="<?php echo Security::escape($submenuId); ?>" aria-label="<?php echo Security::escape($item['label']); ?> submenu"<?php echo $childActive ? '' : ' hidden'; ?>>
+                            <?php foreach ($item['children'] as $child): $isChildActive = $currentPage === $child['file']; ?>
+                                <a class="ui-nav-sublink<?php echo $isChildActive ? ' active' : ''; ?>" href="<?php echo Security::escape($child['file']); ?>"<?php echo $isChildActive ? ' aria-current="page"' : ''; ?>>
                                     <span class="ui-nav-subicon"><i class="bi <?php echo Security::escape($child['icon']); ?>"></i></span>
                                     <span><?php echo Security::escape($child['label']); ?></span>
                                 </a>
                             <?php endforeach; ?>
                         </div>
+                    <?php else: ?>
+                        <a class="ui-nav-link<?php echo $active ? ' active' : ''; ?>" href="<?php echo Security::escape($item['file']); ?>"<?php echo $currentPage === $item['file'] ? ' aria-current="page"' : ''; ?>>
+                            <span class="ui-nav-icon"><i class="bi <?php echo Security::escape($item['icon']); ?>"></i></span>
+                            <span class="ui-nav-text"><?php echo Security::escape($item['label']); ?></span>
+                            <?php if (!empty($item['update_badge'])): ?><span class="ui-nav-badge" data-licora-update-badge hidden></span><?php endif; ?>
+                        </a>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </section>

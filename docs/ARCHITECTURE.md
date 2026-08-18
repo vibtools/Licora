@@ -133,3 +133,7 @@ v5.5.0 keeps the v5.4 component shell but tightens presentation composition arou
 `admin/ajax/v2-public-key.php` exposes only the deployment public signing key to an authenticated Super Admin. The server private key remains outside the browser trust boundary.
 
 Supplied assets under `admin/assets/brand/` are presentation resources only and do not change authentication, licensing, API or updater behavior.
+
+## Settings and About presentation boundary (v5.5.1)
+
+v5.5.1 keeps the v5.4/v5.5 shared component architecture and changes only presentation composition: Settings uses a summary grid plus an API/secondary-stack detail grid, nested Settings navigation is controlled by the shared sidebar component, and About uses reusable product/feature/company metadata components. API, license/device, cron, authentication and updater execution paths are unchanged.

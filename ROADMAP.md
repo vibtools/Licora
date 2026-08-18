@@ -32,3 +32,4 @@ Roadmap items are proposals and must be implemented through reviewed, backward-c
 - v5.4.0: VibTools Light component UI migration with sidebar navigation, centralized presentation components, responsive shell and frozen backend/API/updater contracts.
 - v5.4.1: updater recovery and v5.3/v5.4 scope-integrity hotfix with browser DOM contract coverage and release/rollback hardening.
 - v5.5.0: VibTools compact light UI refinement, truthful runtime-backed Settings, tracked Licora branding, About page and Windows builder-test portability; no database/API/updater protocol change.
+- v5.5.1: Settings layout, collapsible Settings submenu, and professional About Licora UI hotfix; no database/API/updater behavior change.

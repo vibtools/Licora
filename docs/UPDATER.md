@@ -161,3 +161,7 @@ The signed release accepts direct source versions `5.3.0` and `5.4.0`. A deploym
 v5.5.0 does not change updater protocol v1, signing, job/event persistence, preflight, staging, file application, rollback or migration handling. The Update Center receives compact light presentation refinements, a themed scrollbar and explicit manual-check feedback when Licora is already current or when a newer stable release is available.
 
 The signed v5.5.0 release specification accepts only `5.4.1` and declares no database migration or deleted files.
+
+## v5.5.1 UI-only release integration
+
+v5.5.1 does not change updater protocol v1, signing, persistence, staging, file application, rollback or migration behavior. Its signed release specification accepts exactly `5.5.0`, declares no migrations and deletes no files.

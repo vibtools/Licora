@@ -8,6 +8,17 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue reviewed Zero Freedom development after the v5.1.0 installer release.
 
+## [5.5.1] - 2026-08-18
+
+### Fixed
+- Rebalanced Settings management shortcuts into an equal-width responsive row instead of left-clustered intrinsic-width buttons.
+- Rebuilt the Settings lower layout so Cron Jobs no longer stretches beside the taller API panel and API v2 Signing stays immediately visible below it.
+- Converted Settings child navigation to an accessible collapsible submenu with active-child auto-expansion.
+- Rebuilt About Licora with a product hero, verified capability cards, Vib Tools company information and compact project metadata.
+
+### Compatibility
+- No database migration or deleted files. Signed direct source is `v5.5.0`; API v1/v2, license/device/cron behavior, authentication/roles and updater protocol/state machine remain unchanged.
+
 ## [5.5.0] - 2026-08-14
 
 ### Changed

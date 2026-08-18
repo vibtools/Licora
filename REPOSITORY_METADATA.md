@@ -27,6 +27,15 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
+## v5.5.1 release
+
+- **Tag:** `v5.5.1`
+- **Title:** `Licora v5.5.1 — Settings and About UI Hotfix`
+- **Release notes:** `RELEASE_NOTES_v5.5.1.md`
+- **Primary assets:** `Licora-5.5.1.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
+
+Licora v5.5.1 is a no-migration corrective presentation release over v5.5.0. It fixes Settings shortcut distribution, lower-grid card composition, collapsible nested Settings navigation and the About Licora product/company presentation while preserving backend, API, licensing, device, cron and updater contracts.
+
 ## v5.5.0 release
 
 - **Tag:** `v5.5.0`
