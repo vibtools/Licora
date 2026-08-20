@@ -4,14 +4,14 @@
 
 | Field | Value |
 |---|---|
-| Baseline | `v5.5.1` |
-| Target version | `v5.6.0` |
+| Baseline | `v5.6.0 / 5c68563` (current corrective baseline; phase program originated at v5.5.1) |
+| Target version | `v5.6.1` |
 | Total phases | `2` |
 | Completed phases | `0` |
 | Remaining phases | `2` |
-| Current phase | `Phase 1 — IMPLEMENTED; DB/CI GATE PENDING` |
+| Current phase | `Phase 1 — v5.6.1 CORRECTIVE SOURCE PREPARED; REMOTE DB/CI RE-RUN PENDING` |
 | Runtime code changes | `Phase 1 source implemented` |
-| Last confirmed action | Full local verifier passed; DB-backed gates skipped because no dedicated MySQL environment is available locally |
+| Last confirmed action | PR #8 run 32420291770 root-caused; v5.6.1 corrective source prepared from uploaded v5.6.0 baseline |
 
 ---
 
@@ -47,6 +47,10 @@ Fill only after implementation and verification.
 
 ## Verification Evidence
 
+- PR #8 Actions run `32420291770`: **FAILED at Dashboard DB integration fixture cleanup**; PHP 8.0–8.4 validation and Windows portability passed.
+- Root cause: MySQL FK `fk_v2_refresh_device` prevented dropping `v2_device_credentials` before dependent v2 tables.
+- v5.6.1 corrective source: foreign-key-safe fixture isolation + contract/readiness fixes; corrected remote CI re-run pending.
+
 - `python3 scripts/verify-local.py`: **PASS**
 - PHP syntax: **PASS**
 - Dashboard data contract: **PASS**
@@ -63,7 +67,7 @@ Fill only after implementation and verification.
 - Truthful license/device/API/expiration/health data definitions
 - Initial Dashboard switched to the centralized read model
 - CI/release Dashboard DB gate wiring
-- v5.6.0 release identity/documentation
+- v5.6.0 Phase 1 identity/documentation plus v5.6.1 corrective identity/documentation
 
 DB-backed correctness remains pending the mandatory MySQL gate.
 
@@ -135,13 +139,13 @@ DO NOT REPEAT:
 ## Current Pointer
 
 ```text
-LAST VERIFIED BASELINE/COMMIT: v5.5.1 / 2f48ef569e6c532ab0de974a418c644e4ea8423f
-TARGET SOURCE: v5.6.0 Phase 1 candidate
+LAST VERIFIED BASELINE/COMMIT: v5.6.0 / 5c685636e955422bc70e3bf07694f55d9c7fb1dc
+TARGET SOURCE: v5.6.1 Phase 1 corrective candidate
 COMPLETED PHASES: 0/2
-CURRENT PHASE: Phase 1 — IMPLEMENTED; DB/CI GATE PENDING
-LAST COMPLETED STEP: Full local verifier PASS with environment-dependent DB/ZipArchive skips recorded
+CURRENT PHASE: Phase 1 — IMPLEMENTED; v5.6.1 CORRECTIVE SOURCE PREPARED; REMOTE DB/CI RE-RUN PENDING
+LAST COMPLETED STEP: v5.6.0 PR #8 CI failure root-caused; v5.6.1 corrective implementation prepared
 CURRENT WORKTREE STATE: Phase 1 scoped changes only; not committed/pushed
-KNOWN FAILURES: No local test failure; required DB integrations not executed locally because dedicated MySQL is unavailable; updater recovery skipped because ZipArchive is unavailable
-NEXT EXACT STEP: Apply delta to clean v5.5.1, run GitHub/dedicated MySQL CI gates, and only if they pass mark Phase 1 COMPLETE + VERIFIED
+KNOWN FAILURES: PR #8 run 32420291770 failed because dashboard_db_integration dropped v2_device_credentials before dependent v2_refresh_tokens; v5.6.1 corrects this. Remote corrected MySQL gate has not run yet.
+NEXT EXACT STEP: apply/push the v5.6.1 corrective delta to PR #8, run GitHub CI once, and only if all required checks pass mark Phase 1 COMPLETE + VERIFIED
 DO NOT REPEAT: Phase 1 implementation or completed v5.5.1 work unless a concrete failing test requires a targeted fix
 ```

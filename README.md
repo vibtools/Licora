@@ -124,7 +124,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.6.0` |
+| Application version | `APP_VERSION` | `5.6.1` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -155,6 +155,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Secure in-app updater](docs/UPDATER.md)
 - [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.6.1 release notes](RELEASE_NOTES_v5.6.1.md)
 - [v5.6.0 release notes](RELEASE_NOTES_v5.6.0.md)
 - [v5.5.1 release notes](RELEASE_NOTES_v5.5.1.md)
 - [v5.5.0 release notes](RELEASE_NOTES_v5.5.0.md)
@@ -171,6 +172,10 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
+
+## Phase 1 verification corrective update (v5.6.1)
+
+Licora v5.6.1 is a no-migration corrective update over the applied v5.6.0 Phase 1 source baseline; v5.6.0 was not published as a GitHub tag/release and is superseded by v5.6.1. It fixes the MySQL integration-test foreign-key cleanup exposed by PR #8 CI, aligns the authenticated Dashboard JSON envelope with its documented top-level `recent_activity` field, and makes the Dashboard API v2 `Ready` status depend on a verified matching server signing key pair rather than the public key alone. Licora remains a browser-based PHP application and contains no Google Chrome installer/downloader dependency. Phase 2 reload-free polling/UI work remains unimplemented.
 
 ## Dashboard data truth and read model (v5.6.0)
 

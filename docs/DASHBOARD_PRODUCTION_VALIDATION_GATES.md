@@ -224,3 +224,10 @@ DECISION: COMPLETE / INCOMPLETE
 ```
 
 Any skipped critical test keeps the phase `INCOMPLETE` unless explicitly accepted and documented with rationale.
+
+
+## v5.6.1 Corrective Gate Evidence
+
+PR #8 workflow run `32420291770` passed PHP 8.0–8.4 validation and Windows Python portability but failed the MySQL integration job in `tests/dashboard_db_integration.php` with MySQL error 3730: `v2_device_credentials` could not be dropped while `v2_refresh_tokens.fk_v2_refresh_device` referenced it.
+
+v5.6.1 fixes the fixture cleanup using foreign-key-safe isolation. The corrected MySQL job must run green once after the v5.6.1 commit is pushed; an unchanged failing run must not be repeatedly retried.

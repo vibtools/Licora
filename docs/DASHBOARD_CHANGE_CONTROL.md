@@ -101,6 +101,15 @@ Use this section for any roadmap deviation.
 - Decision: create documentation-only planning delta before implementation
 - Runtime change: none
 
+### Decision D-001 — v5.6.1 Phase 1 Verification Corrective
+
+- Status: AUTHORIZED BY USER REQUEST
+- Trigger: PR #8 Actions run `32420291770` plus forensic source audit
+- Scope: fix Dashboard DB test FK cleanup, restore documented `recent_activity` response parity, require a matching API v2 signing key pair for Dashboard `Ready`, update version/docs/tests to v5.6.1
+- Database migration: none
+- Phase 2 UI/polling: excluded
+- Chrome finding: no Chrome installer/downloader exists in the Licora runtime; no unsupported launcher was added
+
 ### Future Decision Template
 
 ```text

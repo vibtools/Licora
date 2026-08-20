@@ -69,13 +69,13 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
 </head>
 <body class="admin-ui">
     <?php include 'includes/navbar.php'; ?>
-    
+
     <div class="container-fluid admin-shell">
         <div class="page-hero d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
             <div><h2><i class="bi bi-speedometer2"></i> Dashboard</h2></div>
             <a href="license.php?action=create" class="btn btn-light"><i class="bi bi-plus-circle"></i> Create License</a>
         </div>
-        
+
         <!-- Statistics Cards -->
         <div class="row g-3 mb-4">
             <div class="col-xl col-md-6">
@@ -92,7 +92,7 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-xl col-md-6">
                 <div class="card stat-card text-white bg-device">
                     <div class="card-body">
@@ -107,7 +107,7 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
                     </div>
                 </div>
             </div>
-            
+
 
             <div class="col-xl col-md-6">
                 <div class="card stat-card text-white bg-expired">
@@ -137,7 +137,7 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-xl col-md-6">
                 <div class="card stat-card text-white bg-log">
                     <div class="card-body">
@@ -153,7 +153,7 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
                 </div>
             </div>
         </div>
-        
+
 
         <div class="row g-3 mb-4">
             <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Tracked API Activity</h5></div><div class="card-body"><canvas id="dailyApiChart" height="180"></canvas></div></div></div>
@@ -216,7 +216,7 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-lg-6 mb-4">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -266,7 +266,7 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
                 </div>
             </div>
         </div>
-        
+
         <!-- System Status -->
         <div class="row">
             <div class="col-12">
@@ -296,7 +296,7 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
                             </div>
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center mb-3">
-                                    <?php $v2Ready = !empty($health['api_v2']['schema_ready']) && !empty($health['api_v2']['public_key_ready']); ?>
+                                    <?php $v2Ready = !empty($health['api_v2']['schema_ready']) && !empty($health['api_v2']['key_pair_ready']); ?>
                                     <div class="me-3"><div class="p-2 bg-<?php echo $v2Ready ? 'success' : 'warning'; ?> rounded-circle"><i class="bi bi-shield-check text-white"></i></div></div>
                                     <div><h6 class="mb-0">API v2</h6><small class="text-muted"><?php echo $v2Ready ? 'Ready' : 'Needs setup'; ?></small></div>
                                 </div>
@@ -307,7 +307,7 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/js/admin-ui.js"></script>

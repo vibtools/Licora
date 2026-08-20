@@ -1,6 +1,6 @@
 # Licora Actual Implementation Ledger
 
-This ledger distinguishes **what actually works in frozen v5.5.1** from planned work.
+This ledger preserves the original v5.5.1 state and tracks the current uploaded v5.6.0 baseline plus the v5.6.1 corrective candidate.
 
 Never mark a feature `ACTUAL WORKING` from roadmap text alone.
 
@@ -15,7 +15,7 @@ Status:
 
 ---
 
-# A. Baseline v5.5.1 — Actual Working
+# A. Original v5.5.1 Baseline — Actual Working
 
 | Area | Status | Actual behavior |
 |---|---|---|
@@ -51,6 +51,15 @@ Status:
 
 ---
 
+# A2. Current v5.6.0 Corrective Baseline
+
+- Uploaded baseline SHA-256: `ba99c6e4fd74c2b59d392c3010b3aefe493390b3b0b0c94bd3c211218f14d597`
+- Git commit: `5c685636e955422bc70e3bf07694f55d9c7fb1dc`
+- Phase 1 source is present.
+- PR #8 CI reached the MySQL gate and failed only when the new Dashboard DB fixture attempted an FK-invalid table drop.
+- v5.6.1 corrective candidate fixes the DB fixture, declared top-level `recent_activity` response parity, and API v2 signing-key-pair readiness.
+- Phase 2 remains not implemented.
+
 # B. After Phase 1 — Expected Verified Working State
 
 Do not move items here to `ACTUAL WORKING` until tests pass.
@@ -68,7 +77,7 @@ Do not move items here to `ACTUAL WORKING` until tests pass.
 
 ### Phase 1 actual additions
 
-Source/static verification confirms the v5.6.0 implementation exists and preserves frozen contracts. The mandatory disposable-MySQL gate has not executed in this environment, so these items are **not yet promoted to final `ACTUAL WORKING` production status**.
+Source/static verification confirms the Phase 1 implementation exists. PR #8 run `32420291770` reached the mandatory disposable-MySQL gate and exposed a test-fixture FK cleanup defect. v5.6.1 corrects that defect plus the top-level `recent_activity` and API v2 key-pair readiness mismatches. Final promotion to `ACTUAL WORKING` remains pending a green corrected remote MySQL/CI run.
 
 - `includes/dashboard.php` — centralized read-only model
 - `admin/ajax/dashboard-data.php` — authenticated GET-only JSON endpoint
@@ -78,6 +87,9 @@ Source/static verification confirms the v5.6.0 implementation exists and preserv
 - five-minute device-recency reporting with v2 fallback/aggregation
 - dashboard contract and DB integration tests
 - CI/tagged-release DB-gate wiring
+- v5.6.1 FK-safe Dashboard DB fixture cleanup
+- v5.6.1 top-level source-separated `recent_activity` contract parity
+- v5.6.1 API v2 `Ready` requires a matching private/public signing key pair
 
 ---
 

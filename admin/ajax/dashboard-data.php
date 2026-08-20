@@ -47,6 +47,7 @@ try {
             'devices' => $snapshot['devices'],
             'api_keys' => $snapshot['api_keys'],
             'api_activity' => $snapshot['api_activity'],
+            'recent_activity' => $snapshot['recent_activity'],
             'expiration' => $snapshot['expiration'],
             'health' => $snapshot['health'],
         ],

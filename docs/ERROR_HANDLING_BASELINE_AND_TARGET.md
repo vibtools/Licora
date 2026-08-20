@@ -2,7 +2,7 @@
 
 ## Authority
 
-This matrix records **actual v5.5.1 source behavior** first, then planned additions for the Dashboard production update.
+This matrix preserves the original v5.5.1 baseline inventory and records the implemented Phase 1 backend error contract through the v5.6.1 corrective candidate; Phase 2 client-side refresh handling remains planned.
 
 Status meanings:
 
@@ -224,9 +224,9 @@ Email notification is not implemented.
 
 ---
 
-# 10. New Dashboard AJAX Error Contract — `REQUIRED`
+# 10. Dashboard AJAX Error Contract — `IMPLEMENTED`
 
-Planned `admin/ajax/dashboard-data.php` must return JSON only.
+`admin/ajax/dashboard-data.php` is implemented as a JSON-only authenticated read endpoint.
 
 ## Success
 

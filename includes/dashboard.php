@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/v2/V2KeyManager.php';
 
 final class DashboardReadModel
 {
@@ -17,12 +18,18 @@ final class DashboardReadModel
 
     public function snapshot(): array
     {
+        $apiActivity = $this->apiActivity();
+
         return [
             'generated_at' => date(DATE_ATOM),
             'licenses' => $this->licenseSummary(),
             'devices' => $this->deviceSummary(),
             'api_keys' => $this->apiKeySummary(),
-            'api_activity' => $this->apiActivity(),
+            'api_activity' => $apiActivity,
+            'recent_activity' => [
+                'v1_tracked' => $apiActivity['v1_tracked']['recent_calls'],
+                'v2_tracked' => $apiActivity['v2_tracked']['recent_events'],
+            ],
             'expiration' => $this->expirationTimeline(),
             'health' => $this->healthFacts(),
         ];
@@ -219,9 +226,21 @@ final class DashboardReadModel
             }
         }
 
-        $v2PublicKeyPath = defined('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH') && (string)LICENSE_V2_SIGNING_PUBLIC_KEY_PATH !== ''
-            ? (string)LICENSE_V2_SIGNING_PUBLIC_KEY_PATH
-            : __DIR__ . '/.licora-v2-signing-public.pem';
+        $v2PublicKeyReady = false;
+        $v2KeyPairReady = false;
+        try {
+            $keys = new V2KeyManager();
+            if (is_file($keys->publicPath()) && is_readable($keys->publicPath())) {
+                $keys->requirePublicKey();
+                $v2PublicKeyReady = true;
+            }
+            if ($v2PublicKeyReady && is_file($keys->privatePath()) && is_readable($keys->privatePath())) {
+                $keys->assertPairMatches();
+                $v2KeyPairReady = true;
+            }
+        } catch (Throwable $e) {
+            error_log('Dashboard API v2 key readiness check failed: ' . $e->getMessage());
+        }
 
         return [
             'database' => ['ok' => $dbOk, 'label' => $dbOk ? 'Connected' : 'Unavailable'],
@@ -238,7 +257,8 @@ final class DashboardReadModel
             ],
             'api_v2' => [
                 'schema_ready' => $v2SchemaReady,
-                'public_key_ready' => is_file($v2PublicKeyPath) && is_readable($v2PublicKeyPath),
+                'public_key_ready' => $v2PublicKeyReady,
+                'key_pair_ready' => $v2KeyPairReady,
             ],
         ];
     }

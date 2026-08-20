@@ -2,17 +2,18 @@
 
 ## Authority
 
-এই documentation set **Licora v5.5.1 Baseline Freeze** থেকে তৈরি।
+এই documentation program v5.5.1 থেকে শুরু হয়েছিল; বর্তমান corrective source authority হলো uploaded **Licora v5.6.0 Official Baseline Freeze**।
 
-- Baseline ZIP SHA-256: `c443b95ad28b8996526d190c5408671c2c405beeff7ff9b8ba7b4ef42b1161d7f`
-- Git commit: `2f48ef569e6c532ab0de974a418c644e4ea8423f`
-- Git tree: `c9986ba8b22f3d32c3b3d746dc24c7754d6d0132`
-- Version: `5.5.1`
-- Development implementation status: **PHASE 1 IMPLEMENTED — LOCAL VERIFIER PASS; MANDATORY DB/CI GATE PENDING**
+- Current baseline ZIP SHA-256: `ba99c6e4fd74c2b59d392c3010b3aefe493390b3b0b0c94bd3c211218f14d597`
+- Current baseline Git commit: `5c685636e955422bc70e3bf07694f55d9c7fb1dc`
+- Current baseline Git tree: `848801c1785ebba0b2523a34afcf6af3ee05d5d6`
+- Current baseline version: `5.6.0`
+- Original Phase-program baseline: `v5.5.1 / 2f48ef569e6c532ab0de974a418c644e4ea8423f`
+- Development implementation status: **v5.6.1 corrective source locally verified — remote MySQL/CI re-run pending**
 - Planned update phases: **2**
-- Target release/version number: **v5.6.0 — Phase 1**
+- Current corrective target: **v5.6.1 — Phase 1 verification fix**
 
-এই delta **documentation-only**। কোনো PHP, JavaScript, CSS, SQL, API contract, database schema, cron behavior, updater behavior বা runtime feature পরিবর্তন করে না।
+এই document set Phase 1 runtime implementation এবং v5.6.1 corrective verification state record করে। v5.6.1 কোনো database migration, external API contract change, license/device enforcement change, Cron mutation change, updater protocol change বা Phase 2 polling/UI feature যোগ করে না।
 
 ## Document Map
 
@@ -23,7 +24,7 @@
 | `docs/DASHBOARD_UPDATE_PHASE_LOG.md` | Phase completion ledger and continuation point |
 | `docs/ERROR_HANDLING_BASELINE_AND_TARGET.md` | Existing error handling + required additions |
 | `docs/ACTUAL_IMPLEMENTATION_LEDGER.md` | What actually works now, what becomes working after each phase, what remains |
-| `docs/DASHBOARD_DATA_CONTRACT.md` | Exact read-only dashboard data semantics and proposed AJAX response contract |
+| `docs/DASHBOARD_DATA_CONTRACT.md` | Exact implemented read-only dashboard data semantics and AJAX response contract |
 | `docs/DASHBOARD_PRODUCTION_VALIDATION_GATES.md` | Automated/manual acceptance gates before phase completion/release |
 | `docs/DASHBOARD_CHANGE_CONTROL.md` | Freeze rules, decision rules, no-scope-creep rules, rollback discipline |
 | `audit/DASHBOARD_PRODUCTION_DOCS_DELTA_MANIFEST.md` | Documentation delta contents and extraction instructions |
@@ -44,5 +45,5 @@
 
 ## Continuation Rule
 
-যে phase `COMPLETE + VERIFIED` নয় সেটিকে completed ধরা যাবে না।  
+যে phase `COMPLETE + VERIFIED` নয় সেটিকে completed ধরা যাবে না।
 যে feature source/tests দিয়ে verify হয়নি সেটিকে `ACTUAL WORKING` লেখা যাবে না।

@@ -7,11 +7,15 @@
 - Completed phases: `0`
 - Remaining phases: `2`
 - Runtime implementation: `PHASE 1 IMPLEMENTED — LOCAL PASS; DB/CI GATE PENDING`
-- Target version: `v5.6.0`
+- Current Phase 1 corrective target: `v5.6.1`
 
 No phase may be marked complete until its acceptance gates pass.
 
 ---
+
+### v5.6.1 corrective verification note
+
+PR #8 Actions run `32420291770` proved the Phase 1 source reached the MySQL gate but exposed a fixture-cleanup FK-order failure. The v5.6.1 corrective scope fixes that test isolation, restores exact top-level `recent_activity` contract parity, and makes API v2 readiness require a valid matching signing key pair. Phase 2 remains untouched.
 
 # Phase 1 — Data Truth, Backend Read Model & Error Contract
 

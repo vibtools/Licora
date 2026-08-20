@@ -1,10 +1,10 @@
-# Licora Dashboard Data Contract — Pre-Implementation Specification
+# Licora Dashboard Data Contract — Implemented Contract
 
 ## Purpose
 
 এই document implementation-এর আগে metric meaning freeze করে, যাতে UI label এবং backend query পরে একে অপরের সঙ্গে conflict না করে।
 
-This contract is **implemented in Licora v5.6.0 Phase 1**. Phase 2 will consume it for reload-free browser refresh.
+This contract is implemented by the Phase 1 read model and corrected in **Licora v5.6.1**. Phase 2 will consume it for reload-free browser refresh.
 
 ## Endpoint
 
@@ -31,8 +31,11 @@ Implemented:
     "licenses": {},
     "devices": {},
     "api_activity": {},
+    "recent_activity": {
+      "v1_tracked": [],
+      "v2_tracked": []
+    },
     "expiration": {},
-    "recent_activity": [],
     "health": {}
   }
 }
@@ -146,6 +149,17 @@ Example:
 ]
 ```
 
+The implemented top-level `recent_activity` object preserves source separation:
+
+```json
+{
+  "v1_tracked": [],
+  "v2_tracked": []
+}
+```
+
+`api_activity.v1_tracked.recent_calls` and `api_activity.v2_tracked.recent_events` remain available for source-specific consumers; the top-level field is a contract-aligned convenience view over the same already-read data.
+
 If v1 and v2 are combined, normalize only display-safe fields.
 
 Never expose:
@@ -177,6 +191,11 @@ Recommended structure:
   },
   "cron_scripts": {
     "available": true
+  },
+  "api_v2": {
+    "schema_ready": true,
+    "public_key_ready": true,
+    "key_pair_ready": true
   }
 }
 ```
@@ -184,6 +203,8 @@ Recommended structure:
 Do not return `cron_running=true` without heartbeat evidence.
 
 Do not return `api_running=true` merely because a PHP file exists.
+
+`api_v2.key_pair_ready=true` is allowed only when the configured private and public signing keys both exist, are readable, parse successfully, and cryptographically match. The endpoint exposes only readiness booleans; it never returns private-key content or filesystem paths.
 
 ## Time Contract
 

@@ -19,8 +19,23 @@ function dashboard_db_ok($value, string $message): void
     if (!$value) { fwrite(STDERR, "FAIL: {$message}\n"); exit(1); }
 }
 
-foreach (['v2_audit_logs', 'v2_device_credentials', 'api_logs', 'api_keys', 'devices', 'licenses'] as $table) {
-    $db->exec('DROP TABLE IF EXISTS `' . $table . '`');
+$db->exec('SET FOREIGN_KEY_CHECKS=0');
+try {
+    foreach ([
+        'v2_used_nonces',
+        'v2_refresh_tokens',
+        'v2_audit_logs',
+        'v2_device_credentials',
+        'v2_client_apps',
+        'api_logs',
+        'api_keys',
+        'devices',
+        'licenses',
+    ] as $table) {
+        $db->exec('DROP TABLE IF EXISTS `' . $table . '`');
+    }
+} finally {
+    $db->exec('SET FOREIGN_KEY_CHECKS=1');
 }
 
 $db->exec("CREATE TABLE licenses (
@@ -60,6 +75,23 @@ $db->exec("CREATE TABLE v2_device_credentials (
     last_seen_at DATETIME NOT NULL,
     KEY idx_v2_identity (license_id, device_hash)
 ) ENGINE=InnoDB");
+$db->exec("CREATE TABLE v2_client_apps (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    app_id VARCHAR(120) NOT NULL UNIQUE,
+    display_name VARCHAR(160) NOT NULL
+) ENGINE=InnoDB");
+$db->exec("CREATE TABLE v2_refresh_tokens (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    device_credential_id BIGINT UNSIGNED NOT NULL,
+    token_hash CHAR(64) NOT NULL UNIQUE,
+    CONSTRAINT fk_v2_refresh_device FOREIGN KEY (device_credential_id) REFERENCES v2_device_credentials (id) ON DELETE CASCADE
+) ENGINE=InnoDB");
+$db->exec("CREATE TABLE v2_used_nonces (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    device_credential_id BIGINT UNSIGNED NOT NULL,
+    nonce_hash CHAR(64) NOT NULL,
+    CONSTRAINT fk_v2_nonce_device FOREIGN KEY (device_credential_id) REFERENCES v2_device_credentials (id) ON DELETE CASCADE
+) ENGINE=InnoDB");
 $db->exec("CREATE TABLE v2_audit_logs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     event_type VARCHAR(80) NOT NULL,
@@ -98,7 +130,7 @@ require_once dirname(__DIR__) . '/includes/dashboard.php';
 $model = new DashboardReadModel($db);
 
 $before = [];
-foreach (['licenses','devices','api_keys','api_logs','v2_device_credentials','v2_audit_logs'] as $table) {
+foreach (['licenses','devices','api_keys','api_logs','v2_client_apps','v2_device_credentials','v2_refresh_tokens','v2_used_nonces','v2_audit_logs'] as $table) {
     $before[$table] = (int)$db->query('SELECT COUNT(*) FROM `' . $table . '`')->fetchColumn();
 }
 
@@ -128,6 +160,14 @@ dashboard_db_ok($api['v1_tracked']['total_last_14_days'] === 3, 'v1 tracked acti
 dashboard_db_ok($api['v2_tracked']['source'] === 'v2_audit_logs' && $api['v2_tracked']['available'] === true, 'v2 source identity');
 dashboard_db_ok($api['v2_tracked']['total_last_14_days'] === 3, 'v2 tracked audit activity count');
 dashboard_db_ok(($api['v1_tracked']['top_licenses'][0]['license_key'] ?? '') === 'AAAA1111-BBBB2222-CCCC3333-DDDD4444', 'top license uses v1 verify source');
+
+$recent = $snapshot['recent_activity'];
+dashboard_db_ok(count($recent['v1_tracked']) === 3, 'top-level recent activity exposes v1 tracked calls');
+dashboard_db_ok(count($recent['v2_tracked']) === 3, 'top-level recent activity exposes v2 tracked events');
+
+$health = $snapshot['health'];
+dashboard_db_ok($health['api_v2']['schema_ready'] === true, 'API v2 health requires the complete five-table schema');
+dashboard_db_ok(array_key_exists('key_pair_ready', $health['api_v2']), 'API v2 health exposes signing key-pair readiness');
 
 $expiration = $snapshot['expiration'];
 $expiredCount = array_sum(array_column($expiration['expired_last_30_days'], 'count'));

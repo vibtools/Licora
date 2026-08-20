@@ -8,7 +8,19 @@ All notable public-release changes are recorded here. Historical project notes r
 
 - Continue the reviewed Dashboard production program with Phase 2: compact UI and reload-free refresh.
 
-## [5.6.0] - 2026-08-20
+## [5.6.1] - 2026-08-20
+
+### Fixed
+- Corrected the Dashboard MySQL integration test cleanup so prior API v2 foreign-key tables are removed safely before the dashboard fixture is created.
+- Aligned the implemented Dashboard JSON response with the declared top-level `recent_activity` contract while preserving separate API v1 and API v2 tracked sources.
+- Tightened Dashboard API v2 readiness so `Ready` now requires the complete v2 schema and a readable, cryptographically matching private/public signing key pair; only readiness booleans are exposed to the browser.
+- Added a runtime source guard confirming Licora does not require or download Google Chrome; Licora remains browser-agnostic server software.
+
+### Compatibility
+- No database migration, deleted files, external API contract change, license/device enforcement change, Cron mutation change, updater protocol change, or Phase 2 polling/UI implementation.
+- Signed update compatibility accepts both the official v5.5.1 source and an already-applied v5.6.0 baseline.
+
+## [5.6.0] - 2026-08-20 (unreleased source baseline; superseded by 5.6.1)
 
 ### Added
 - Added a centralized read-only Dashboard data model and authenticated `GET /admin/ajax/dashboard-data.php` JSON endpoint.
