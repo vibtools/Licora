@@ -27,6 +27,29 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
+## v5.6.1 release candidate
+
+- **Intended tag:** `v5.6.1`
+- **Publication status:** pending corrected PR #8 CI, merge, and tag publication
+- **Title:** `Licora v5.6.1 — Dashboard Phase 1 Verification Fix`
+- **Release notes:** `RELEASE_NOTES_v5.6.1.md`
+- **Primary assets:** `Licora-5.6.1.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
+- **Database migration:** none
+- **Delete list:** empty
+- **Supported update sources:** `v5.5.1`, `v5.6.0`
+
+Licora v5.6.1 corrects the Phase 1 DB integration fixture, restores exact Dashboard JSON/data-contract parity, and makes API v2 Dashboard readiness require a valid matching signing key pair. Phase 2 remains pending.
+
+## v5.6.0 source baseline (not published)
+
+- **Tag status:** `v5.6.0` was not published on GitHub; this source baseline is superseded by the v5.6.1 corrective candidate
+- **Title:** `Licora v5.6.0 — Dashboard Data Truth & Read Model`
+- **Release notes:** `RELEASE_NOTES_v5.6.0.md`
+- **Primary assets:** `Licora-5.6.0.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
+- **Database:** no migration; signed direct update from `v5.5.1`.
+
+The applied v5.6.0 source baseline centralizes Dashboard reads, adds an authenticated read-only data endpoint, makes API/device/expiration/health metrics truthful to their actual sources, and adds dedicated Dashboard validation while preserving external APIs, license/device enforcement, Cron mutation behavior and updater contracts. Phase 2 will replace the still-preserved 30-second full-page Dashboard reload.
+
 ## v5.5.1 release
 
 - **Tag:** `v5.5.1`

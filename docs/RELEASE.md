@@ -2,7 +2,7 @@
 
 ## Current release contract
 
-Licora uses semantic version tags. The current release is `5.5.1`; runtime, installer, verifier, release notes, update release specification and GitHub workflow markers must agree before a tag can publish.
+Licora uses semantic version tags. The current release candidate is `5.6.1`; runtime, installer, verifier, release notes, update release specification and GitHub workflow markers must agree and required CI must pass before a tag can publish.
 
 Every v5.3.0+ official release intended for the in-app updater consists of four updater-facing assets:
 
@@ -14,6 +14,50 @@ licora-update-manifest.sig
 ```
 
 The ZIP/checksum are generated from the exact Git ref by `scripts/package-release.sh`. `scripts/build-update-manifest.py` inventories the exact ZIP, records per-file SHA-256 values, package hash/size, commit identity, migration metadata, protected deletion intent and compatibility requirements. GitHub Actions signs the exact manifest bytes with the dedicated repository secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY`; the matching public key is tracked at `includes/updater/update-signing-public.pem`.
+
+## v5.6.1 release specification
+
+v5.6.1 is a no-migration corrective release for the Dashboard Phase 1 verification scope:
+
+```json
+{
+  "version": "5.6.1",
+  "minimum_updater": "5.3.0",
+  "upgrade_from": ["5.5.1", "5.6.0"],
+  "delete_files": [],
+  "migrations": []
+}
+```
+
+Build the release candidate from the exact tag with:
+
+```bash
+bash scripts/package-release.sh v5.6.1 v5.6.1
+```
+
+Publication commands are recorded in `RELEASE_COMMANDS_v5.6.1.md`. The mandatory MySQL gate runs the API v2, Admin v2, updater and corrected Dashboard DB integration tests in sequence.
+
+## v5.6.0 superseded source specification
+
+v5.6.0 was applied as the Phase 1 source baseline but was not published as a GitHub tag/release. Its no-migration specification from the official v5.5.1 baseline was:
+
+```json
+{
+  "version": "5.6.0",
+  "minimum_updater": "5.3.0",
+  "upgrade_from": ["5.5.1"],
+  "delete_files": [],
+  "migrations": []
+}
+```
+
+Build the release candidate from the exact tag with:
+
+```bash
+bash scripts/package-release.sh v5.6.0 v5.6.0
+```
+
+Historical publication commands are recorded in `RELEASE_COMMANDS_v5.6.0.md`, but v5.6.0 must not now be published: PR #8 exposed a required MySQL fixture failure and v5.6.1 supersedes this source. The corrected release candidate is v5.6.1.
 
 ## v5.5.1 release specification
 
@@ -190,4 +234,4 @@ Release archives must exclude deployment-private/runtime material including `con
 
 Every future release intended for one-click installation must update `update/release-spec.json`, declare the exact direct source versions it supports in signed `upgrade_from`, ship every migration required for those supported direct paths, keep `minimum_updater` compatible, and publish the four assets above. A latest release that does not list the installed version in `upgrade_from` is deliberately blocked rather than silently skipping an intermediate migration. Never modify a published manifest/ZIP in place; create a new semantic version.
 
-See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model, [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) for the v5.4.0 presentation contract, and `RELEASE_COMMANDS_v5.5.1.md` for the current Windows-friendly command sequence.
+See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model, [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) for the v5.4.0 presentation contract, and `RELEASE_COMMANDS_v5.6.1.md` for the current Windows-friendly command sequence.

@@ -1,6 +1,6 @@
 # Installation
 
-Licora v5.5.1 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
+Licora v5.6.1 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
 
 ## Requirements
 
@@ -145,3 +145,7 @@ Fresh v5.5.1 installs include updater persistence in `database.sql`. Existing v5
 ## v5.5.1 product identity
 
 The first-run UI presents the fixed product name **Licora** and uses the tracked Licora branding assets. The installer still writes the same private configuration/runtime data and does not introduce a database migration. `APP_NAME` remains a compatibility configuration value, but the product UI is not a tenant/site-name customization surface.
+
+## v5.6.1 Dashboard Phase 1 corrected foundation
+
+v5.6.1 adds no installation-time table, column, trigger or migration. Fresh installations receive the corrected Dashboard read model and authenticated Dashboard data endpoint from source. The signed source-compatibility contract accepts v5.5.1 and an already-applied v5.6.0 baseline without schema changes.

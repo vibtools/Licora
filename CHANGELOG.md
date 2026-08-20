@@ -6,7 +6,32 @@ All notable public-release changes are recorded here. Historical project notes r
 
 ### Planned
 
-- Continue reviewed Zero Freedom development after the v5.1.0 installer release.
+- Continue the reviewed Dashboard production program with Phase 2: compact UI and reload-free refresh.
+
+## [5.6.1] - 2026-08-20
+
+### Fixed
+- Corrected the Dashboard MySQL integration test cleanup so prior API v2 foreign-key tables are removed safely before the dashboard fixture is created.
+- Aligned the implemented Dashboard JSON response with the declared top-level `recent_activity` contract while preserving separate API v1 and API v2 tracked sources.
+- Tightened Dashboard API v2 readiness so `Ready` now requires the complete v2 schema and a readable, cryptographically matching private/public signing key pair; only readiness booleans are exposed to the browser.
+- Added a runtime source guard confirming Licora does not require or download Google Chrome; Licora remains browser-agnostic server software.
+
+### Compatibility
+- No database migration, deleted files, external API contract change, license/device enforcement change, Cron mutation change, updater protocol change, or Phase 2 polling/UI implementation.
+- Signed update compatibility accepts both the official v5.5.1 source and an already-applied v5.6.0 baseline.
+
+## [5.6.0] - 2026-08-20 (unreleased source baseline; superseded by 5.6.1)
+
+### Added
+- Added a centralized read-only Dashboard data model and authenticated `GET /admin/ajax/dashboard-data.php` JSON endpoint.
+- Added explicit license, device, API v1/API v2, expiration and measured health/config reporting semantics.
+- Added Dashboard contract/MySQL integration tests and made the Dashboard DB test mandatory in CI/tagged-release MySQL gates.
+
+### Fixed
+- Replaced misleading Dashboard health labels with measured facts, separated API v1 and Secure API v2 tracked activity, split past/future expiration data, and changed device reporting from an active flag to explicit recently-seen semantics.
+
+### Compatibility
+- No database migration or deleted files. Signed direct source is `v5.5.1`; external API contracts, license/device enforcement, authentication/roles, Cron mutation behavior and updater protocol/state machine remain unchanged. The existing 30-second full-page Dashboard reload remains intentionally in Phase 1 for Phase 2 replacement.
 
 ## [5.5.1] - 2026-08-18
 
