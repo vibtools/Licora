@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -152,6 +152,19 @@ v5.4.1 introduces **no database migration** and preserves the v5.4.0 sidebar/com
 5. Verify sidebar/UI, API v1/v2, Licenses, Devices, Client Apps/V2 Devices and cron regressions.
 
 The signed v5.4.1 release accepts reviewed direct source versions `5.3.0` and `5.4.0`, with an empty migration list. A pre-existing active job still targets the version recorded when that job was created and must be resumed/finalized before a later release can start.
+
+
+## v5.5.1 to v5.6.0 Dashboard data foundation
+
+v5.6.0 is a signed **no-migration** direct update from `v5.5.1`. It centralizes Dashboard reads, adds an authenticated read-only Dashboard JSON endpoint, corrects API/device/expiration/health semantics and adds Dashboard DB validation.
+
+1. Preserve normal deployment backups and private configuration/key material.
+2. Open **Admin → Updates** on v5.5.1 after the official signed v5.6.0 release is published and run preflight.
+3. Install v5.6.0.
+4. Verify Dashboard values/labels, API v1/v2 tracked activity separation, expiration timeline, measured health facts and the existing 30-second full-page refresh.
+5. Verify API v1/v2, licensing, device enforcement, Cron and updater regressions.
+
+No file is deleted and no migration is executed. Reload-free Dashboard polling remains Phase 2.
 
 ## v5.5.0 to v5.5.1 Settings/About UI hotfix
 

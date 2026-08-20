@@ -124,7 +124,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.5.1` |
+| Application version | `APP_VERSION` | `5.6.0` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -155,6 +155,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Secure in-app updater](docs/UPDATER.md)
 - [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.6.0 release notes](RELEASE_NOTES_v5.6.0.md)
 - [v5.5.1 release notes](RELEASE_NOTES_v5.5.1.md)
 - [v5.5.0 release notes](RELEASE_NOTES_v5.5.0.md)
 - [v5.4.1 release notes](RELEASE_NOTES_v5.4.1.md)
@@ -170,6 +171,10 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Privacy validation](audit/PRIVACY_VALIDATION_REPORT.md)
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
+
+## Dashboard data truth and read model (v5.6.0)
+
+Licora v5.6.0 completes Phase 1 of the Dashboard production program without changing external API, license/device enforcement, database schema, Cron mutation or updater contracts. Dashboard initial rendering now uses a centralized read-only data model; an authenticated GET-only JSON endpoint exposes the same safe snapshot for the Phase 2 reload-free controller. API v1 `api_logs` and Secure API v2 `v2_audit_logs` are reported as distinct tracked sources, expiration data separates past from upcoming expirations, device reporting distinguishes active flags from five-minute recently-seen activity, and hardcoded operational-health claims are replaced by measured facts. The existing 30-second full-page Dashboard reload is intentionally retained until Phase 2.
 
 ## Settings and About UI finishing (v5.5.1)
 

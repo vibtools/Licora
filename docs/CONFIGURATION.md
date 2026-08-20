@@ -22,7 +22,7 @@ Environment variables are preferred in managed hosting and containers. On shared
 | `DB_PASS` | `LICENSE_DB_PASS`, fallback `DB_PASS` | empty | Required when the database account has a password. |
 | `APP_NAME` | `APP_NAME` | `Licora` | Application label. |
 | `APP_URL` | `APP_URL` | `http://localhost` | Public application root, without a query string or fragment. |
-| `APP_VERSION` | `APP_VERSION` | `5.5.1` | Source release identity returned by the verification API. |
+| `APP_VERSION` | `APP_VERSION` | `5.6.0` | Source release identity returned by the verification API. |
 | `APP_TIMEZONE` | `APP_TIMEZONE` | `Asia/Dhaka` | PHP runtime timezone. |
 | `APP_LOCALE` | `APP_LOCALE` | `en` | Application locale metadata. |
 | `MAIL_FROM_NAME` | `MAIL_FROM_NAME` | `APP_NAME` | Mail display name. CR/LF characters are rejected by the installer. |
@@ -59,7 +59,7 @@ LICENSE_ALLOWED_ORIGIN=https://app.example.com
 
 ## Installer-generated private configuration
 
-A fresh v5.5.1 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
+A fresh v5.6.0 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
 
 Never commit or publish:
 
@@ -110,3 +110,7 @@ Set `LICENSE_TRUST_PROXY_HEADERS=1` only when Licora is behind a trusted reverse
 The updater has no arbitrary URL field. Release metadata is obtained only from the pinned official `vibtools/Licora` GitHub repository and every install requires a valid dedicated updater signature. `LICORA_GITHUB_TOKEN` is optional and should be a least-privilege token used only when API rate limits require it. Do not place the private update signing key on a production Licora deployment; it belongs only in the repository release automation secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY`.
 
 The database `settings` table stores `updater_auto_check`, `updater_check_interval_seconds`, `updater_channel`, cached release metadata and updater history pointers. `updater_auto_check=0` disables automatic outbound GitHub checks but does not disable the explicit Super Admin **Check for Updates** action. In updater protocol v1, `updater_channel` is reserved and fixed to `stable`; it is not a selectable beta/dev channel. Automatic checking is notification-only; installation always requires a Super Admin action.
+
+## Dashboard reporting configuration (v5.6.0)
+
+The Phase 1 Dashboard read model adds no deployment secret or database setting. Device `recently_seen` reporting uses a fixed five-minute (`300` second) read-only window. Dashboard AJAX data is authenticated, non-cacheable and contains no private signing keys, API credentials or database credentials. Cron status is limited to script availability because v5.6.0 does not add a scheduler heartbeat.

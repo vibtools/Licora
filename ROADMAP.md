@@ -1,5 +1,11 @@
 # Roadmap
 
+## Dashboard production program (v5.6.x)
+
+- **Phase 1 — Data Truth, Backend Read Model & Error Contract:** implemented in v5.6.0; final verification evidence is recorded in the Phase 1 audit/log.
+- **Phase 2 — Compact UI, Reload-Free Refresh & Production Gate:** pending; no Phase 2 polling/UI implementation is included in v5.6.0.
+
+
 Roadmap items are proposals and must be implemented through reviewed, backward-compatible changes.
 
 ## Security hardening

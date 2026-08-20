@@ -6,7 +6,20 @@ All notable public-release changes are recorded here. Historical project notes r
 
 ### Planned
 
-- Continue reviewed Zero Freedom development after the v5.1.0 installer release.
+- Continue the reviewed Dashboard production program with Phase 2: compact UI and reload-free refresh.
+
+## [5.6.0] - 2026-08-20
+
+### Added
+- Added a centralized read-only Dashboard data model and authenticated `GET /admin/ajax/dashboard-data.php` JSON endpoint.
+- Added explicit license, device, API v1/API v2, expiration and measured health/config reporting semantics.
+- Added Dashboard contract/MySQL integration tests and made the Dashboard DB test mandatory in CI/tagged-release MySQL gates.
+
+### Fixed
+- Replaced misleading Dashboard health labels with measured facts, separated API v1 and Secure API v2 tracked activity, split past/future expiration data, and changed device reporting from an active flag to explicit recently-seen semantics.
+
+### Compatibility
+- No database migration or deleted files. Signed direct source is `v5.5.1`; external API contracts, license/device enforcement, authentication/roles, Cron mutation behavior and updater protocol/state machine remain unchanged. The existing 30-second full-page Dashboard reload remains intentionally in Phase 1 for Phase 2 replacement.
 
 ## [5.5.1] - 2026-08-18
 

@@ -15,7 +15,7 @@
 | Global IP rate limit | Implemented | `API_RATE_LIMIT`; one-hour window. |
 | Per-API-key rate limit | Stored only | `rate_limit_per_hour` is not applied. |
 | Admin roles | Implemented | `super_admin`, `manager`, `viewer`. |
-| Session inactivity timeout | Defined, not enforced | `checkSessionValidity()` is not called by admin pages. |
+| Session inactivity timeout | Implemented | `Auth::isAdminLoggedIn()` enforces the existing 30-minute inactivity timeout on protected admin pages. |
 | CSRF protection | Mostly implemented | Admin mutations use tokens; installer has none; some actions use GET query tokens. |
 | Password hashing | Implemented | Bcrypt cost 12 with legacy MD5/SHA-1 migration support. |
 | Two-factor authentication | Schema only / not implemented | Database columns/legacy setting may exist, but v5.5.0 does not present a working toggle because no challenge flow exists. |
@@ -31,4 +31,7 @@
 | Licora product branding | Implemented in v5.5.0 | Supplied Licora logos/icons/favicons are tracked and used across shell/login/root/installer/About; visible product identity is fixed to Licora. |
 | Settings/About UI finishing | Implemented in v5.5.1 | Equal-width Settings shortcuts, non-stretching Cron/Signing composition, collapsible Settings submenu and complete About Licora product/company presentation. |
 | VibTools Compact Light UI | Implemented in v5.5.0 | Compact tables/forms/toolbars/action menus/scrollbars and responsive License/Device recomposition refine the existing v5.4 component shell without changing backend contracts. |
+| Dashboard centralized read model | Implemented in v5.6.0 | `DashboardReadModel` supplies the initial Dashboard and authenticated Dashboard JSON endpoint through read-only queries. |
+| Dashboard data truth | Implemented in v5.6.0 Phase 1 | License/device/API/expiration labels are tied to explicit sources; v1/v2 tracked activity is separated and fake operational health claims are removed. |
+| Dashboard reload-free refresh | Phase 2 pending | v5.6.0 intentionally retains the existing 30-second full-page reload; AJAX polling/manual refresh/stale-state UX are not yet implemented. |
 | Frontend offline mode | Not implemented | UI depends on external CDNs. |

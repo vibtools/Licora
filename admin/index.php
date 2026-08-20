@@ -3,6 +3,7 @@ require_once '../includes/auth.php';
 require_once '../includes/functions.php';
 require_once '../includes/security.php';
 require_once '../includes/database.php';
+require_once '../includes/dashboard.php';
 
 $auth = new Auth();
 if (!$auth->isAdminLoggedIn()) {
@@ -10,34 +11,50 @@ if (!$auth->isAdminLoggedIn()) {
     exit();
 }
 
-$system = new LicenseSystem();
-$stats = $system->getStats();
+$dashboard = new DashboardReadModel();
+$dashboardSnapshot = $dashboard->snapshot();
+$licenseStats = $dashboardSnapshot['licenses'];
+$deviceStats = $dashboardSnapshot['devices'];
+$apiStats = $dashboardSnapshot['api_keys'];
+$apiActivity = $dashboardSnapshot['api_activity'];
+$expiration = $dashboardSnapshot['expiration'];
+$health = $dashboardSnapshot['health'];
 
-// API keys stats
-$db = Database::getInstance();
-$apiStats = $db->query("
-    SELECT 
-        COUNT(*) as total,
-        SUM(is_active = 1) as active,
-        SUM(is_active = 0) as inactive,
-        SUM(request_count) as total_requests
-    FROM api_keys
-")->fetch();
+$chartV1 = $apiActivity['v1_tracked']['last_14_days'];
+$chartV2 = $apiActivity['v2_tracked']['last_14_days'];
+$topLicenses = $apiActivity['v1_tracked']['top_licenses'];
+$recentCalls = $apiActivity['v1_tracked']['recent_calls'];
 
-// Recent API calls
-$chartDaily = $db->query("SELECT DATE(created_at) d, COUNT(*) c FROM api_logs WHERE created_at >= DATE_SUB(NOW(), INTERVAL 14 DAY) GROUP BY DATE(created_at) ORDER BY d ASC")->fetchAll();
-$chartExpired = $db->query("SELECT DATE(expires_at) d, COUNT(*) c FROM licenses WHERE expires_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) AND expires_at <= DATE_ADD(NOW(), INTERVAL 30 DAY) GROUP BY DATE(expires_at) ORDER BY d ASC")->fetchAll();
-$topLicenses = $db->query("SELECT l.license_key, COUNT(al.id) c FROM api_logs al LEFT JOIN licenses l ON al.license_key = l.license_key GROUP BY al.license_key, l.license_key ORDER BY c DESC LIMIT 5")->fetchAll();
+$apiDates = [];
+foreach (array_merge($chartV1, $chartV2) as $point) {
+    if (!empty($point['date'])) {
+        $apiDates[(string)$point['date']] = true;
+    }
+}
+$apiLabels = array_keys($apiDates);
+sort($apiLabels);
+$seriesByDate = static function (array $series, array $labels): array {
+    $indexed = [];
+    foreach ($series as $point) {
+        $indexed[(string)($point['date'] ?? '')] = (int)($point['count'] ?? 0);
+    }
+    return array_map(static fn(string $date): int => (int)($indexed[$date] ?? 0), $labels);
+};
+$apiV1Data = $seriesByDate($chartV1, $apiLabels);
+$apiV2Data = $seriesByDate($chartV2, $apiLabels);
 
-$recentCalls = $db->query("
-    SELECT l.license_key, a.name as api_key_name, 
-           al.endpoint, al.response_code, al.created_at
-    FROM api_logs al
-    LEFT JOIN api_keys a ON al.api_key_id = a.id
-    LEFT JOIN licenses l ON al.license_key = l.license_key
-    ORDER BY al.created_at DESC 
-    LIMIT 10
-")->fetchAll();
+$expiredSeries = $expiration['expired_last_30_days'];
+$expiringSeries = $expiration['expiring_next_30_days'];
+$expirationDates = [];
+foreach (array_merge($expiredSeries, $expiringSeries) as $point) {
+    if (!empty($point['date'])) {
+        $expirationDates[(string)$point['date']] = true;
+    }
+}
+$expirationLabels = array_keys($expirationDates);
+sort($expirationLabels);
+$expiredData = $seriesByDate($expiredSeries, $expirationLabels);
+$expiringData = $seriesByDate($expiringSeries, $expirationLabels);
 ?>
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
@@ -67,8 +84,8 @@ $recentCalls = $db->query("
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="card-title">Total Licenses</h6>
-                                <h2 class="stat-number"><?php echo $stats['total_licenses']; ?></h2>
-                                <small>Active: <?php echo $stats['active_licenses']; ?></small>
+                                <h2 class="stat-number"><?php echo $licenseStats['total']; ?></h2>
+                                <small>Active: <?php echo $licenseStats['active']; ?></small>
                             </div>
                             <i class="bi bi-key stat-icon"></i>
                         </div>
@@ -81,9 +98,9 @@ $recentCalls = $db->query("
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h6 class="card-title">Active Devices</h6>
-                                <h2 class="stat-number"><?php echo $stats['active_devices']; ?></h2>
-                                <small>Total: <?php echo $stats['total_devices']; ?></small>
+                                <h6 class="card-title">Recently Seen Devices</h6>
+                                <h2 class="stat-number"><?php echo $deviceStats['recently_seen']; ?></h2>
+                                <small>Active flagged: <?php echo $deviceStats['active_flagged']; ?> · Total: <?php echo $deviceStats['total_records']; ?></small>
                             </div>
                             <i class="bi bi-devices stat-icon"></i>
                         </div>
@@ -98,8 +115,8 @@ $recentCalls = $db->query("
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="card-title">Expired Licenses</h6>
-                                <h2 class="stat-number"><?php echo $stats['expired_licenses']; ?></h2>
-                                <small>Suspended: <?php echo $stats['suspended_licenses']; ?></small>
+                                <h2 class="stat-number"><?php echo $licenseStats['expired']; ?></h2>
+                                <small>Suspended: <?php echo $licenseStats['suspended']; ?></small>
                             </div>
                             <i class="bi bi-calendar-x stat-icon"></i>
                         </div>
@@ -113,7 +130,7 @@ $recentCalls = $db->query("
                             <div>
                                 <h6 class="card-title">API Keys</h6>
                                 <h2 class="stat-number"><?php echo $apiStats['active']; ?></h2>
-                                <small>Requests: <?php echo number_format($apiStats['total_requests']); ?></small>
+                                <small>Tracked v1 requests: <?php echo number_format($apiStats['tracked_v1_requests']); ?></small>
                             </div>
                             <i class="bi bi-key stat-icon"></i>
                         </div>
@@ -126,8 +143,8 @@ $recentCalls = $db->query("
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h6 class="card-title">System Status</h6>
-                                <h2 class="stat-number"><?php echo ENVIRONMENT === 'production' ? 'Live' : 'Dev'; ?></h2>
+                                <h6 class="card-title">Environment</h6>
+                                <h2 class="stat-number"><?php echo Security::escape(ucfirst((string)$health['environment']['value'])); ?></h2>
                                 <small>Version: <?php echo APP_VERSION; ?></small>
                             </div>
                             <i class="bi bi-shield-check stat-icon"></i>
@@ -139,9 +156,9 @@ $recentCalls = $db->query("
         
 
         <div class="row g-3 mb-4">
-            <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Daily API Requests</h5></div><div class="card-body"><canvas id="dailyApiChart" height="180"></canvas></div></div></div>
-            <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Expired Trend</h5></div><div class="card-body"><canvas id="expiredTrendChart" height="180"></canvas></div></div></div>
-            <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Top Used Licenses</h5></div><div class="card-body"><ul class="list-group list-group-flush"><?php foreach ($topLicenses as $tl): ?><li class="list-group-item d-flex justify-content-between"><span><code><?php echo Security::escape(substr($tl['license_key'] ?? 'Unknown',0,18)); ?></code></span><span class="badge bg-primary"><?php echo (int)$tl['c']; ?></span></li><?php endforeach; ?></ul></div></div></div>
+            <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Tracked API Activity</h5></div><div class="card-body"><canvas id="dailyApiChart" height="180"></canvas></div></div></div>
+            <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Expiration Timeline</h5></div><div class="card-body"><canvas id="expiredTrendChart" height="180"></canvas></div></div></div>
+            <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Top Licenses — API v1 Verify</h5></div><div class="card-body"><ul class="list-group list-group-flush"><?php foreach ($topLicenses as $tl): ?><li class="list-group-item d-flex justify-content-between"><span><code><?php echo Security::escape(substr($tl['license_key'] ?? 'Unknown',0,18)); ?></code></span><span class="badge bg-primary"><?php echo (int)$tl['count']; ?></span></li><?php endforeach; ?></ul></div></div></div>
         </div>
 
         <!-- Quick Actions & Recent Activity -->
@@ -203,7 +220,7 @@ $recentCalls = $db->query("
             <div class="col-lg-6 mb-4">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="bi bi-activity"></i> Recent API Calls</h5>
+                        <h5 class="mb-0"><i class="bi bi-activity"></i> Recent API v1 Verify Calls</h5>
                         <a href="logs.php" class="btn btn-sm btn-outline-primary">View All</a>
                     </div>
                     <div class="card-body">
@@ -245,9 +262,6 @@ $recentCalls = $db->query("
                                 </tbody>
                             </table>
                         </div>
-                        <?php if (!empty($recentCalls)): ?>
-                        <nav class="mt-2" aria-label="Recent API calls pagination"><ul class="pagination pagination-sm justify-content-end mb-0" data-ui-pager-for="recent-calls-table"></ul></nav>
-                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -264,54 +278,27 @@ $recentCalls = $db->query("
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center mb-3">
-                                    <div class="me-3">
-                                        <div class="p-2 bg-success rounded-circle">
-                                            <i class="bi bi-database text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0">Database</h6>
-                                        <small class="text-muted">Connected</small>
-                                    </div>
+                                    <div class="me-3"><div class="p-2 bg-<?php echo $health['database']['ok'] ? 'success' : 'danger'; ?> rounded-circle"><i class="bi bi-database text-white"></i></div></div>
+                                    <div><h6 class="mb-0">Database</h6><small class="text-muted"><?php echo Security::escape($health['database']['label']); ?></small></div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center mb-3">
-                                    <div class="me-3">
-                                        <div class="p-2 bg-success rounded-circle">
-                                            <i class="bi bi-shield-check text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0">Security</h6>
-                                        <small class="text-muted">Active</small>
-                                    </div>
+                                    <div class="me-3"><div class="p-2 bg-<?php echo $health['php']['ok'] ? 'success' : 'danger'; ?> rounded-circle"><i class="bi bi-code-slash text-white"></i></div></div>
+                                    <div><h6 class="mb-0">PHP Runtime</h6><small class="text-muted"><?php echo Security::escape($health['php']['version']); ?></small></div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center mb-3">
-                                    <div class="me-3">
-                                        <div class="p-2 bg-info rounded-circle">
-                                            <i class="bi bi-clock-history text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0">API Server</h6>
-                                        <small class="text-muted">Running</small>
-                                    </div>
+                                    <div class="me-3"><div class="p-2 bg-<?php echo $health['cron_scripts']['available'] ? 'success' : 'danger'; ?> rounded-circle"><i class="bi bi-clock-history text-white"></i></div></div>
+                                    <div><h6 class="mb-0">Cron Scripts</h6><small class="text-muted"><?php echo $health['cron_scripts']['available'] ? 'Available' : 'Missing'; ?></small></div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center mb-3">
-                                    <div class="me-3">
-                                        <div class="p-2 bg-warning rounded-circle">
-                                            <i class="bi bi-gear text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0">Environment</h6>
-                                        <small class="text-muted"><?php echo ENVIRONMENT; ?></small>
-                                    </div>
+                                    <?php $v2Ready = !empty($health['api_v2']['schema_ready']) && !empty($health['api_v2']['public_key_ready']); ?>
+                                    <div class="me-3"><div class="p-2 bg-<?php echo $v2Ready ? 'success' : 'warning'; ?> rounded-circle"><i class="bi bi-shield-check text-white"></i></div></div>
+                                    <div><h6 class="mb-0">API v2</h6><small class="text-muted"><?php echo $v2Ready ? 'Ready' : 'Needs setup'; ?></small></div>
                                 </div>
                             </div>
                         </div>
@@ -331,10 +318,14 @@ $recentCalls = $db->query("
         }, 30000);
     </script>
 <script>
-const dailyLabels=<?php echo json_encode(array_column($chartDaily,'d')); ?>; const dailyData=<?php echo json_encode(array_map('intval', array_column($chartDaily,'c'))); ?>;
-const expLabels=<?php echo json_encode(array_column($chartExpired,'d')); ?>; const expData=<?php echo json_encode(array_map('intval', array_column($chartExpired,'c'))); ?>;
-if(document.getElementById('dailyApiChart')) new Chart(document.getElementById('dailyApiChart'),{type:'line',data:{labels:dailyLabels,datasets:[{label:'Requests',data:dailyData}]},options:{responsive:true,plugins:{legend:{display:false}}}});
-if(document.getElementById('expiredTrendChart')) new Chart(document.getElementById('expiredTrendChart'),{type:'bar',data:{labels:expLabels,datasets:[{label:'Expired',data:expData}]},options:{responsive:true,plugins:{legend:{display:false}}}});
+const apiLabels=<?php echo json_encode($apiLabels); ?>;
+const apiV1Data=<?php echo json_encode($apiV1Data); ?>;
+const apiV2Data=<?php echo json_encode($apiV2Data); ?>;
+const expirationLabels=<?php echo json_encode($expirationLabels); ?>;
+const expiredData=<?php echo json_encode($expiredData); ?>;
+const expiringData=<?php echo json_encode($expiringData); ?>;
+if(document.getElementById('dailyApiChart')) new Chart(document.getElementById('dailyApiChart'),{type:'line',data:{labels:apiLabels,datasets:[{label:'API v1 Verify',data:apiV1Data},{label:'API v2 Audit Events',data:apiV2Data}]},options:{responsive:true}});
+if(document.getElementById('expiredTrendChart')) new Chart(document.getElementById('expiredTrendChart'),{type:'bar',data:{labels:expirationLabels,datasets:[{label:'Expired — Last 30 Days',data:expiredData},{label:'Expiring — Next 30 Days',data:expiringData}]},options:{responsive:true}});
 </script>
 </body>
 </html>

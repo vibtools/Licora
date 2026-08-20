@@ -67,6 +67,25 @@ Licenses use `active`, `expired`, and `suspended` states. Devices use `is_active
 
 Migrations are additive. The code includes fallbacks for older schemas, and repository changes should preserve existing endpoints and database columns unless a versioned migration and rollback are supplied.
 
+
+## Dashboard read model (v5.6.0)
+
+Dashboard data is centralized in `includes/dashboard.php`. Both the server-rendered `admin/index.php` and the authenticated read-only `admin/ajax/dashboard-data.php` endpoint use `DashboardReadModel`, preventing the initial page and future AJAX consumer from drifting to different metric definitions.
+
+```text
+Admin Dashboard / dashboard-data.php
+              ↓
+       DashboardReadModel
+              ↓
+       PDO / MySQL-MariaDB
+       ↙              ↘
+core v1 tables      optional v2 tables
+```
+
+The model performs reads only. It does not expire licenses, touch devices, write logs, run cleanup, migrate schema or advance updater jobs. API v1 tracked activity remains sourced from `api_logs`; Secure API v2 tracked activity remains sourced from `v2_audit_logs`. Device presence reporting can read `v2_device_credentials.last_seen_at` where the additive v2 schema exists while falling back safely to the base `devices.last_active` data.
+
+Phase 1 intentionally keeps the existing 30-second full-page Dashboard reload; the JSON endpoint is the backend foundation for the separately-scoped Phase 2 browser refresh controller.
+
 ## Secure API v2 architecture
 
 API v2 is additive to the existing server-rendered application and API v1. `/api/v2/*` handlers use the existing PDO connection, license/device/blacklist/rate-limit data and a separate v2 service layer under `includes/v2/`.

@@ -61,7 +61,7 @@ jobs:
       - name: Full source verification
         run: python3 scripts/verify-local.py
 
-      - name: API v2 and updater database integration
+      - name: API v2, updater and dashboard database integration
         env:
           LICORA_V2_TEST_ALLOW_SCHEMA_RESET: '1'
           LICORA_TEST_DB_DSN: mysql:host=127.0.0.1;port=3306;dbname=licora_test;charset=utf8mb4
@@ -76,6 +76,7 @@ jobs:
           php tests/api_v2_db_integration.php
           php tests/admin_v2_ui_db_integration.php
           php tests/updater_db_integration.php
+          php tests/dashboard_db_integration.php
 
       - name: Build exact-tag release ZIP and checksum
         shell: bash

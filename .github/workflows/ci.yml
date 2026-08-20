@@ -43,7 +43,7 @@ jobs:
         run: python3 scripts/verify-local.py
 
   mysql-integration:
-    name: API v2 + updater MySQL integration
+    name: API v2 + updater + dashboard MySQL integration
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -84,6 +84,7 @@ jobs:
           php tests/api_v2_db_integration.php
           php tests/admin_v2_ui_db_integration.php
           php tests/updater_db_integration.php
+          php tests/dashboard_db_integration.php
 
   windows-python-contract:
     name: Windows Python builder portability
@@ -133,18 +134,18 @@ jobs:
         run: |
           short_sha="${GITHUB_SHA:0:12}"
           mkdir -p release
-          bash scripts/package-release.sh v5.5.1 "$GITHUB_SHA" "release/Licora-5.5.1-ci-${short_sha}.zip"
-          cp "release/Licora-5.5.1-ci-${short_sha}.zip" "release/Licora-5.5.1.zip"
-          python3 scripts/build-update-manifest.py --version 5.5.1 --ref "$GITHUB_SHA" --package "release/Licora-5.5.1.zip" --output release/licora-update-manifest.json
-          rm "release/Licora-5.5.1.zip"
+          bash scripts/package-release.sh v5.6.0 "$GITHUB_SHA" "release/Licora-5.6.0-ci-${short_sha}.zip"
+          cp "release/Licora-5.6.0-ci-${short_sha}.zip" "release/Licora-5.6.0.zip"
+          python3 scripts/build-update-manifest.py --version 5.6.0 --ref "$GITHUB_SHA" --package "release/Licora-5.6.0.zip" --output release/licora-update-manifest.json
+          rm "release/Licora-5.6.0.zip"
 
       - name: Upload CI release-candidate artifact
         uses: actions/upload-artifact@v6
         with:
-          name: Licora-5.5.1-${{ github.sha }}
+          name: Licora-5.6.0-${{ github.sha }}
           path: |
-            release/Licora-5.5.1-ci-*.zip
-            release/Licora-5.5.1-ci-*.zip.sha256
+            release/Licora-5.6.0-ci-*.zip
+            release/Licora-5.6.0-ci-*.zip.sha256
             release/licora-update-manifest.json
           if-no-files-found: error
           retention-days: 14
