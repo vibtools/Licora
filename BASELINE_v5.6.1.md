@@ -3,7 +3,7 @@
 ## Freeze Status
 
 - Version: `5.6.1`
-- Freeze type: **Source baseline freeze / corrective candidate**
+- Freeze type: **Verified source baseline freeze — Phase 1 COMPLETE + VERIFIED**
 - Parent Official Baseline Freeze: `Licora_v5.6.0_Baseline.zip`
 - Parent ZIP SHA-256: `ba99c6e4fd74c2b59d392c3010b3aefe493390b3b0b0c94bd3c211218f14d597`
 - Parent Git commit: `5c685636e955422bc70e3bf07694f55d9c7fb1dc`
@@ -27,10 +27,10 @@ This source freeze contains only the verified Phase 1 corrective scope:
 
 `python3 scripts/verify-local.py` passed after the corrective runtime/test changes. The targeted release-readiness check also passed after final publication-status documentation correction. Final `git diff --check` and delta extraction/hash parity are recorded in the v5.6.1 delta manifest.
 
-Environment-dependent DB tests could not run locally because a dedicated MySQL/MariaDB test engine and `pdo_mysql` are unavailable. The corrected PR #8 MySQL/CI run is therefore the mandatory remote acceptance gate.
+Environment-dependent DB tests were skipped locally where the dedicated test database was unavailable. The mandatory remote acceptance gate was then satisfied by PR #8 Actions run `32423210356`: MySQL integration, PHP 8.0–8.4, Windows Python portability, and verified source artifact jobs all passed.
 
 ## GitHub/Release Status
 
-The source is frozen as v5.6.1 for the next commit. The final commit SHA does not exist until the user commits this exact delta. `v5.6.0` was not published as a GitHub tag/release. Do not merge/tag v5.6.1 until corrected PR #8 CI is green.
+The verified v5.6.1 Phase 1 implementation commit is `ab085ae1738ef49be506cb10ae2353799108a969`. PR #8 Actions run `32423210356` completed successfully. `v5.6.0` was not published as a GitHub tag/release.
 
-Phase 1 remains `IMPLEMENTED / REMOTE DB GATE PENDING` until that evidence exists.
+Phase 1 is `COMPLETE + VERIFIED`. Phase 2 is `NOT STARTED`. This documentation-completion delta records the passed remote gate; after it is committed/pushed and the resulting PR CI remains green, PR #8 can be merged into `main`, followed by the v5.6.1 tag/release flow.

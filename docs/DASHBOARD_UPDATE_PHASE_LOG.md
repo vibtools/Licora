@@ -7,17 +7,17 @@
 | Baseline | `v5.6.0 / 5c68563` (current corrective baseline; phase program originated at v5.5.1) |
 | Target version | `v5.6.1` |
 | Total phases | `2` |
-| Completed phases | `0` |
-| Remaining phases | `2` |
-| Current phase | `Phase 1 — v5.6.1 CORRECTIVE SOURCE PREPARED; REMOTE DB/CI RE-RUN PENDING` |
-| Runtime code changes | `Phase 1 source implemented` |
-| Last confirmed action | PR #8 run 32420291770 root-caused; v5.6.1 corrective source prepared from uploaded v5.6.0 baseline |
+| Completed phases | `1` |
+| Remaining phases | `1` |
+| Current phase | `Phase 2 — NOT STARTED` |
+| Runtime code changes | `Phase 1 complete and verified; Phase 2 unchanged/not started` |
+| Last confirmed action | PR #8 Actions run `32423210356` passed all 8 required checks at head `ab085ae1738ef49be506cb10ae2353799108a969` |
 
 ---
 
 # Phase 1 Log — Data Truth, Backend Read Model & Error Contract
 
-**Status:** `IMPLEMENTED — INCOMPLETE UNTIL DB/CI GATE PASSES`
+**Status:** `COMPLETE + VERIFIED`
 
 ## Planned Features / Changes
 
@@ -31,25 +31,34 @@
 
 ## Completion Record
 
-Fill only after implementation and verification.
-
-- Started at:
-- Completed at:
-- Commit:
-- Branch:
-- Files changed:
-- Migration added: `YES/NO`
-- Automated tests:
-- DB tests:
-- Manual checks:
-- Known deviations:
-- Remaining known issues:
+- Completed at: `2026-08-20`
+- Verified commit: `ab085ae1738ef49be506cb10ae2353799108a969`
+- Branch: `feature/v5.6.0-dashboard-phase1`
+- Pull request: `#8`
+- Verification run: `32423210356`
+- Migration added: `NO`
+- Deleted files: `NONE`
+- Automated tests: `PASS`
+- DB tests: `PASS` in GitHub MySQL 8.4 integration
+- PHP matrix: `8.0–8.4 PASS`
+- Windows Python portability: `PASS`
+- Verified source artifact: `PASS`
+- Known deviations: `NONE within Phase 1 scope`
+- Remaining known Phase 1 issues: `NONE`
 
 ## Verification Evidence
 
 - PR #8 Actions run `32420291770`: **FAILED at Dashboard DB integration fixture cleanup**; PHP 8.0–8.4 validation and Windows portability passed.
 - Root cause: MySQL FK `fk_v2_refresh_device` prevented dropping `v2_device_credentials` before dependent v2 tables.
-- v5.6.1 corrective source: foreign-key-safe fixture isolation + contract/readiness fixes; corrected remote CI re-run pending.
+- v5.6.1 corrective source: foreign-key-safe fixture isolation + contract/readiness fixes.
+- PR #8 Actions run `32423210356`: **PASS** at head `ab085ae1738ef49be506cb10ae2353799108a969`.
+- API v2 DB integration: **PASS**.
+- API v2 Admin UI DB integration: **PASS**.
+- Updater DB integration: **PASS**.
+- Dashboard DB integration: **PASS**.
+- PHP 8.0–8.4 validation: **PASS**.
+- Windows Python builder portability: **PASS**.
+- Build verified source artifact: **PASS**.
 
 - `python3 scripts/verify-local.py`: **PASS**
 - PHP syntax: **PASS**
@@ -69,11 +78,11 @@ Fill only after implementation and verification.
 - CI/release Dashboard DB gate wiring
 - v5.6.0 Phase 1 identity/documentation plus v5.6.1 corrective identity/documentation
 
-DB-backed correctness remains pending the mandatory MySQL gate.
+DB-backed correctness is verified by PR #8 Actions run `32423210356`; no Phase 1 gate remains pending.
 
 ## Phase 1 Exit Decision
 
-`INCOMPLETE — IMPLEMENTATION DONE; REQUIRED DB/CI INTEGRATION GATE PENDING`
+`COMPLETE + VERIFIED — REQUIRED LOCAL + REMOTE CI/DB GATES PASSED`
 
 ---
 
@@ -139,13 +148,12 @@ DO NOT REPEAT:
 ## Current Pointer
 
 ```text
-LAST VERIFIED BASELINE/COMMIT: v5.6.0 / 5c685636e955422bc70e3bf07694f55d9c7fb1dc
-TARGET SOURCE: v5.6.1 Phase 1 corrective candidate
-COMPLETED PHASES: 0/2
-CURRENT PHASE: Phase 1 — IMPLEMENTED; v5.6.1 CORRECTIVE SOURCE PREPARED; REMOTE DB/CI RE-RUN PENDING
-LAST COMPLETED STEP: v5.6.0 PR #8 CI failure root-caused; v5.6.1 corrective implementation prepared
-CURRENT WORKTREE STATE: Phase 1 scoped changes only; not committed/pushed
-KNOWN FAILURES: PR #8 run 32420291770 failed because dashboard_db_integration dropped v2_device_credentials before dependent v2_refresh_tokens; v5.6.1 corrects this. Remote corrected MySQL gate has not run yet.
-NEXT EXACT STEP: apply/push the v5.6.1 corrective delta to PR #8, run GitHub CI once, and only if all required checks pass mark Phase 1 COMPLETE + VERIFIED
-DO NOT REPEAT: Phase 1 implementation or completed v5.5.1 work unless a concrete failing test requires a targeted fix
+LAST VERIFIED BASELINE/COMMIT: v5.6.1 / ab085ae1738ef49be506cb10ae2353799108a969
+COMPLETED PHASES: 1/2
+CURRENT PHASE: Phase 2 — NOT STARTED
+LAST COMPLETED STEP: PR #8 Actions run 32423210356 passed all 8 required checks, including MySQL integration and verified source artifact
+CURRENT WORKTREE STATE: Phase 1 verified on remote feature branch; completion documentation update pending commit
+KNOWN FAILURES: NONE remaining in Phase 1. Historical run 32420291770 failure is retained above as root-cause evidence.
+NEXT EXACT STEP: commit/push this completion-documentation delta, confirm the resulting PR CI is green, then merge PR #8 into main
+DO NOT REPEAT: Phase 1 implementation or already-passed verification unless a new concrete failure/code change requires it
 ```

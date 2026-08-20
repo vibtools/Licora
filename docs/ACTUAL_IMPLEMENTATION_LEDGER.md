@@ -1,6 +1,6 @@
 # Licora Actual Implementation Ledger
 
-This ledger preserves the original v5.5.1 state and tracks the current uploaded v5.6.0 baseline plus the v5.6.1 corrective candidate.
+This ledger preserves the original v5.5.1 state, the uploaded v5.6.0 corrective baseline, and the verified v5.6.1 Phase 1 state.
 
 Never mark a feature `ACTUAL WORKING` from roadmap text alone.
 
@@ -8,7 +8,6 @@ Status:
 - `ACTUAL WORKING`
 - `PARTIAL`
 - `NOT IMPLEMENTED`
-- `IMPLEMENTED / DB GATE PENDING`
 - `PLANNED P1`
 - `PLANNED P2`
 - `DEFERRED`
@@ -60,24 +59,24 @@ Status:
 - v5.6.1 corrective candidate fixes the DB fixture, declared top-level `recent_activity` response parity, and API v2 signing-key-pair readiness.
 - Phase 2 remains not implemented.
 
-# B. After Phase 1 — Expected Verified Working State
+# B. Phase 1 — Verified Working State
 
-Do not move items here to `ACTUAL WORKING` until tests pass.
+PR #8 Actions run `32423210356` passed all required checks at head `ab085ae1738ef49be506cb10ae2353799108a969`, including the MySQL integration gate.
 
 | Feature | Current | Target after P1 |
 |---|---|---|
-| Central dashboard read model | NOT IMPLEMENTED | IMPLEMENTED / DB GATE PENDING |
-| Read-only Dashboard AJAX endpoint | NOT IMPLEMENTED | IMPLEMENTED / DB GATE PENDING |
-| Structured dashboard JSON errors | NOT IMPLEMENTED | IMPLEMENTED / DB GATE PENDING |
-| Truthful expiration datasets | PARTIAL | IMPLEMENTED / DB GATE PENDING |
-| API v1/v2 analytics distinction | NOT IMPLEMENTED | IMPLEMENTED / DB GATE PENDING |
-| Truthful device recency metric | PARTIAL | IMPLEMENTED / DB GATE PENDING |
-| Measured health/config facts | PARTIAL | IMPLEMENTED / DB GATE PENDING |
-| Dashboard DB integration test | NOT IMPLEMENTED | IMPLEMENTED; local execution pending dedicated MySQL |
+| Central dashboard read model | ACTUAL WORKING | VERIFIED |
+| Read-only Dashboard AJAX endpoint | ACTUAL WORKING | VERIFIED |
+| Structured dashboard JSON errors | ACTUAL WORKING | VERIFIED |
+| Truthful expiration datasets | ACTUAL WORKING | VERIFIED |
+| API v1/v2 analytics distinction | ACTUAL WORKING | VERIFIED |
+| Truthful device recency metric | ACTUAL WORKING | VERIFIED |
+| Measured health/config facts | ACTUAL WORKING | VERIFIED |
+| Dashboard DB integration test | ACTUAL WORKING | PASS in GitHub MySQL 8.4 integration |
 
 ### Phase 1 actual additions
 
-Source/static verification confirms the Phase 1 implementation exists. PR #8 run `32420291770` reached the mandatory disposable-MySQL gate and exposed a test-fixture FK cleanup defect. v5.6.1 corrects that defect plus the top-level `recent_activity` and API v2 key-pair readiness mismatches. Final promotion to `ACTUAL WORKING` remains pending a green corrected remote MySQL/CI run.
+Source/static verification and corrected remote CI confirm the Phase 1 implementation is working. Historical PR #8 run `32420291770` exposed the fixture FK cleanup defect; v5.6.1 corrected it together with the top-level `recent_activity` and API v2 key-pair readiness mismatches. PR #8 run `32423210356` then passed all 8 required checks, including API v2/Admin v2/Updater/Dashboard MySQL integration, PHP 8.0–8.4, Windows Python portability, and verified source artifact build.
 
 - `includes/dashboard.php` — centralized read-only model
 - `admin/ajax/dashboard-data.php` — authenticated GET-only JSON endpoint
