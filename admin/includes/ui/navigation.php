@@ -8,7 +8,7 @@ if (!function_exists('licora_ui_navigation_groups')) {
             ],
             'License Management' => [
                 ['file' => 'license.php', 'label' => 'Licenses', 'icon' => 'bi-key'],
-                ['file' => 'device.php', 'label' => 'Devices', 'icon' => 'bi-devices'],
+                ['file' => 'device.php', 'label' => 'Devices', 'icon' => 'bi-laptop'],
             ],
             'API & Clients' => [
                 ['file' => 'api_keys.php', 'label' => 'API Keys', 'icon' => 'bi-key-fill'],

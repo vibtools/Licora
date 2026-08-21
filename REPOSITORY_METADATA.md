@@ -27,10 +27,23 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
-## v5.8.1 Developer Integration Guide verification candidate
+## v5.8.2 global device icon compatibility hotfix candidate
 
-- **Intended tag:** `v5.8.1`
+- **Intended tag:** `v5.8.2`
 - **Publication status:** source candidate; GitHub publication requires separate authorization
+- **Title:** `Licora v5.8.2 — Global Device Icon Compatibility Hotfix`
+- **Release notes:** `RELEASE_NOTES_v5.8.2.md`
+- **Database migration:** none
+- **Delete list:** empty
+- **Supported update source:** published `v5.8.1`
+
+Licora v5.8.2 changes only the remaining unsupported Admin device icon class from `bi-devices` to Bootstrap Icons 1.8.1-compatible `bi-laptop`, adds a regression gate for the unsupported class, and aligns release identity. Runtime API, database, licensing/device enforcement, Dashboard, Developer Guide, authentication, Cron and updater semantics remain unchanged.
+
+## v5.8.1 published Developer Integration Guide corrective release
+
+- **Tag:** `v5.8.1`
+- **Commit:** `f7b7fc2275a33a2aa29db5f464c2ffd0a6172045`
+- **Publication status:** published and release-verified
 - **Title:** `Licora v5.8.1 — Developer Integration Guide Verification Fix`
 - **Release notes:** `RELEASE_NOTES_v5.8.1.md`
 - **Database migration:** none

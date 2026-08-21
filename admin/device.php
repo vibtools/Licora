@@ -93,7 +93,7 @@ $devices = $stmt->fetchAll();
 <?php include 'includes/navbar.php'; ?>
 <div class="container-fluid admin-shell">
     <div class="page-hero">
-        <h2><i class="bi bi-devices"></i> Device Management</h2>
+        <h2><i class="bi bi-laptop"></i> Device Management</h2>
         <div class="d-flex gap-2"><a href="license.php" class="btn btn-outline-secondary"><i class="bi bi-key"></i> Licenses</a><button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#clearDevicesModal"><i class="bi bi-trash3"></i> Clear Old Devices</button></div>
     </div>
     <?php if ($success): ?><div class="alert alert-success alert-dismissible fade show"><?php echo Security::escape($success); ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div><?php endif; ?>
@@ -109,7 +109,7 @@ $devices = $stmt->fetchAll();
             </div>
         </div>
         <?php if (empty($devices)): ?>
-            <div class="empty-state"><div class="empty-icon mx-auto"><i class="bi bi-devices"></i></div><h5 class="mt-2 mb-0">No devices found</h5></div>
+            <div class="empty-state"><div class="empty-icon mx-auto"><i class="bi bi-laptop"></i></div><h5 class="mt-2 mb-0">No devices found</h5></div>
         <?php else: ?>
         <div class="table-responsive">
             <table class="table table-hover align-middle" id="devices-table" data-ui-paginate="true" data-ui-page-size="10">

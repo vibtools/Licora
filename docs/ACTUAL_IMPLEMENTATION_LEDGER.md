@@ -189,3 +189,11 @@ After every phase:
 - Added targeted release/Dashboard regression assertions and extended the Chrome-dependency source guard to the new guide surface.
 - No Chrome launcher/downloader is part of the Licora repository; the reported external Chrome download failure remains outside this PHP source unless its launcher/wrapper source is supplied.
 - No database migration/delete, API v1/v2 behavior change, license/device enforcement change, authentication change, Cron mutation or updater runtime/protocol change.
+
+## v5.8.2 global device icon compatibility hotfix
+
+- Published parent baseline: v5.8.1 (`f7b7fc2275a33a2aa29db5f464c2ffd0a6172045`).
+- Replaced seven remaining Admin runtime `bi-devices` usages with Bootstrap Icons 1.8.1-compatible `bi-laptop`.
+- Affected runtime surfaces: shared sidebar, Settings Devices shortcut, Device Management header and empty state, License View Devices action, Backup Devices CSV action, About Device Control card.
+- Added a recursive Admin PHP/JS/HTML regression gate in `tests/ui_component_contract.php` to reject the unsupported class.
+- No API, database, license/device enforcement, Dashboard data/AJAX, Developer Guide behavior, authentication, Cron or updater runtime/protocol changes.

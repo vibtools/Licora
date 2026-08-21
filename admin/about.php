@@ -57,7 +57,7 @@ if (!$auth->isAdminLoggedIn()) {
                 <div><h4>License Control</h4><p>Create licenses with expiration periods, device limits, notes, application scopes and optional API-key binding.</p></div>
             </article>
             <article class="ui-feature-card">
-                <span class="ui-feature-icon"><i class="bi bi-devices"></i></span>
+                <span class="ui-feature-icon"><i class="bi bi-laptop"></i></span>
                 <div><h4>Device Control</h4><p>Track registered devices, activity, revocation, blacklist state and license-bound device limits.</p></div>
             </article>
             <article class="ui-feature-card">

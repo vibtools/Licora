@@ -75,7 +75,7 @@ $v2Keys = licora_ui_v2_key_status();
 
     <nav class="ui-shortcuts ui-shortcut-grid mb-2" aria-label="Management shortcuts">
         <a href="license.php" class="btn btn-outline-secondary"><i class="bi bi-key"></i> Licenses</a>
-        <a href="device.php" class="btn btn-outline-secondary"><i class="bi bi-devices"></i> Devices</a>
+        <a href="device.php" class="btn btn-outline-secondary"><i class="bi bi-laptop"></i> Devices</a>
         <a href="api_keys.php" class="btn btn-outline-secondary"><i class="bi bi-key-fill"></i> API Keys</a>
         <a href="logs.php" class="btn btn-outline-secondary"><i class="bi bi-clock-history"></i> Logs</a>
         <a href="audit.php" class="btn btn-outline-secondary"><i class="bi bi-journal-text"></i> Audit</a>

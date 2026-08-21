@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1 -> v5.7.0 -> v5.7.1 -> v5.8.0 -> v5.8.1
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1 -> v5.7.0 -> v5.7.1 -> v5.8.0 -> v5.8.1 -> v5.8.2
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -233,3 +233,14 @@ v5.8.1 is a signed **no-migration** corrective target that accepts both the publ
 2. Use only an official signed v5.8.1 release after remote CI/release gates pass.
 3. Verify **API & Clients → Developer Guide**, example downloads, the PowerShell test tool, and the two Dashboard device icons.
 4. Confirm API v1/v2, license/device, Dashboard, authentication, Cron and updater regression gates remain green.
+
+## v5.8.1 to v5.8.2 global device icon compatibility hotfix
+
+v5.8.2 is a signed **no-migration** UI compatibility hotfix over the published v5.8.1 release. It replaces all remaining Admin `bi-devices` classes with the Bootstrap Icons 1.8.1-compatible `bi-laptop` glyph and adds a regression gate preventing recurrence.
+
+1. Preserve deployment-private configuration, encryption/install markers, API v2 signing keys and updater runtime data.
+2. Install only the official signed v5.8.2 release after remote CI/release gates pass.
+3. Verify the Devices icon in the sidebar, Settings shortcut, Device Management header/empty state, License View Devices action, Backup Devices CSV action and About Device Control card.
+4. Confirm API v1/v2, licensing/device behavior, Dashboard, Developer Guide, authentication, Cron and updater regression gates remain green.
+
+No file deletion or database migration is required.
