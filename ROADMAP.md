@@ -3,7 +3,7 @@
 ## Dashboard production program (v5.6.1 → v5.7.1)
 
 - **Phase 1 — Data Truth, Backend Read Model & Error Contract:** COMPLETE + VERIFIED in the published v5.6.1 baseline.
-- **Phase 2 — Compact UI, Reload-Free Refresh & Production Gate:** implemented in the v5.7.0 source baseline and corrected in the v5.7.1 candidate with server-rendered fallback, 30-second authenticated AJAX polling, manual refresh, in-place KPI/chart/activity updates, overlap protection and stale/auth UX. v5.7.1 additionally verifies stale/auth/transport/render lifecycle correctness; remote CI and live production smoke remain release gates.
+- **Phase 2 — Compact UI, Reload-Free Refresh & Production Gate:** implemented in the v5.7.0 source baseline and corrected/published in v5.7.1 with server-rendered fallback, 30-second authenticated AJAX polling, manual refresh, in-place KPI/chart/activity updates, overlap protection and stale/auth UX. The v5.7.1 release workflow and live 5.6.1 → 5.7.1 updater smoke are complete.
 
 
 Roadmap items are proposals and must be implemented through reviewed, backward-compatible changes.
@@ -39,3 +39,10 @@ Roadmap items are proposals and must be implemented through reviewed, backward-c
 - v5.4.1: updater recovery and v5.3/v5.4 scope-integrity hotfix with browser DOM contract coverage and release/rollback hardening.
 - v5.5.0: VibTools compact light UI refinement, truthful runtime-backed Settings, tracked Licora branding, About page and Windows builder-test portability; no database/API/updater protocol change.
 - v5.5.1: Settings layout, collapsible Settings submenu, and professional About Licora UI hotfix; no database/API/updater behavior change.
+
+## Developer onboarding program (v5.8.0 → v5.8.1)
+
+- **Developer Integration Guide:** IMPLEMENTED in the v5.8.0 source candidate and re-audited/corrected in the v5.8.1 verification candidate.
+- **v5.8.1 corrective gate:** CI package/manifest version coherence fixed; Dashboard device glyph compatibility fixed; no API/DB/runtime protocol expansion.
+- Scope is limited to the authenticated guide route, API & Clients sidebar link, exact Secure API v2 protocol documentation, downloadable examples for the ten approved language/runtime targets, PowerShell test tool, tests/docs/version/release identity.
+- API v1/v2 behavior, database schema, licensing/device enforcement, Dashboard, authentication/roles, Cron and updater runtime/protocol remain frozen.

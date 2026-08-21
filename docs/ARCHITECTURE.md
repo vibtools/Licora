@@ -162,3 +162,7 @@ v5.5.1 keeps the v5.4/v5.5 shared component architecture and changes only presen
 ## Dashboard refresh lifecycle correction (v5.7.1)
 
 v5.7.1 keeps the v5.7.0 Dashboard architecture unchanged and tightens only controller state transitions: request transport calls are entered through the Promise chain so synchronous throws are caught, `lastSuccessAt` advances only after successful render completion, stale `Retry` survives loading cleanup, and an auth-required state remains locked/disabled after `finally`.
+
+## Developer Guide architecture (v5.8.1; introduced in v5.8.0 source candidate)
+
+`admin/developer_guide.php` is an authenticated, read-only documentation surface inside the existing shared sidebar/topbar shell. The route reads static reference files from `admin/assets/examples/licora-v2/` for display and direct download, uses `admin/assets/js/developer-guide.js` only for language tabs/copy interactions, and uses scoped `.developer-guide-page` styles in the existing `admin-ui.css` compatibility entrypoint. It does not call licensing mutations, change API v2 server behavior or expose private server credentials. The existing authenticated Super-Admin public signing-key download remains the trusted key-distribution path.

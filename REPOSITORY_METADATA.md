@@ -27,10 +27,34 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
-## v5.7.1 corrective release candidate
+## v5.8.1 Developer Integration Guide verification candidate
 
-- **Intended tag:** `v5.7.1`
-- **Publication status:** source candidate only; GitHub write/release not yet authorized
+- **Intended tag:** `v5.8.1`
+- **Publication status:** source candidate; GitHub publication requires separate authorization
+- **Title:** `Licora v5.8.1 — Developer Integration Guide Verification Fix`
+- **Release notes:** `RELEASE_NOTES_v5.8.1.md`
+- **Database migration:** none
+- **Delete list:** empty
+- **Supported update sources:** published `v5.7.1`, already-applied `v5.8.0`
+
+Licora v5.8.1 preserves the v5.8.0 Developer Guide and ten approved API v2 examples, corrects CI package/manifest version coherence and restores the two Dashboard device glyphs with an icon available in the pinned Bootstrap Icons 1.8.1 set. It does not alter API, license/device, authentication, Dashboard data, Cron or updater runtime semantics.
+
+## v5.8.0 Developer Integration Guide source baseline
+
+- **Intended tag:** `v5.8.0`
+- **Publication status:** uploaded source baseline; superseded by the v5.8.1 verification candidate
+- **Title:** `Licora v5.8.0 — Developer Integration Guide`
+- **Release notes:** `RELEASE_NOTES_v5.8.0.md`
+- **Database migration:** none
+- **Delete list:** empty
+- **Supported update source:** `v5.7.1`
+
+Licora v5.8.0 adds an authenticated Developer Guide and downloadable multi-language Secure API v2 lifecycle references without changing the existing API v2 protocol, licensing/device semantics, Dashboard, authentication, Cron or updater runtime.
+
+## v5.7.1 published corrective release
+
+- **Tag:** `v5.7.1`
+- **Publication status:** published and release-verified
 - **Title:** `Licora v5.7.1 — Dashboard Phase 2 Verification Fix`
 - **Release notes:** `RELEASE_NOTES_v5.7.1.md`
 - **Primary assets:** `Licora-5.7.1.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`

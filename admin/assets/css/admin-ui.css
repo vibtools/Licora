@@ -78,3 +78,83 @@
   .dashboard-page .dashboard-chart-body { min-height: 220px; }
   .dashboard-page .dashboard-chart-body canvas { height: 200px!important; }
 }
+
+/* Licora v5.8.0 Developer Guide — scoped integration documentation surface. */
+.developer-guide-page .developer-guide-hero { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.developer-guide-page .developer-guide-hero p { margin:3px 0 0; color:var(--text-secondary); font-size:11px; }
+.developer-guide-page .developer-guide-hero-actions { display:flex; gap:7px; flex-wrap:wrap; }
+.developer-guide-page .developer-guide-banner { display:grid; grid-template-columns:42px minmax(0,1fr) auto; gap:12px; align-items:center; margin-bottom:12px; padding:13px 14px; border:1px solid var(--state-success-border); border-radius:var(--radius-lg); background:var(--state-success-bg); }
+.developer-guide-page .developer-guide-banner-icon { width:42px; height:42px; display:grid; place-items:center; border-radius:var(--radius-md); background:var(--bg-surface-card); color:var(--status-success); font-size:21px; }
+.developer-guide-page .developer-guide-banner h3 { margin:1px 0 2px; font-size:15px; }
+.developer-guide-page .developer-guide-banner p { margin:0; color:var(--text-secondary); font-size:10.5px; line-height:1.45; }
+.developer-guide-page .developer-guide-eyebrow { color:var(--text-muted); font-size:9px; font-weight:var(--font-weight-bold); letter-spacing:.06em; text-transform:uppercase; }
+.developer-guide-page .developer-guide-grid { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr); gap:10px; margin-bottom:10px; }
+.developer-guide-page .developer-guide-grid-top { grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr); }
+.developer-guide-page .developer-guide-card { min-width:0; margin-bottom:10px; }
+.developer-guide-page .developer-guide-card .card-header h3 { margin:0; font-size:12px; }
+.developer-guide-page .developer-guide-card .card-header small { display:block; margin-top:2px; color:var(--text-muted); font-size:9.5px; }
+.developer-guide-page .developer-guide-steps { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin:0; padding:0; list-style:none; }
+.developer-guide-page .developer-guide-steps li { display:grid; grid-template-columns:25px minmax(0,1fr); gap:8px; align-items:start; padding:7px; border:1px solid var(--border-subtle); border-radius:var(--radius-md); background:var(--bg-surface-soft); }
+.developer-guide-page .developer-guide-steps li>span { width:25px; height:25px; display:grid; place-items:center; border-radius:999px; background:var(--component-active-bg); color:var(--licora-primary); font-size:10px; font-weight:var(--font-weight-bold); }
+.developer-guide-page .developer-guide-steps strong { display:block; color:var(--text-primary); font-size:10.5px; }
+.developer-guide-page .developer-guide-steps small { display:block; margin-top:1px; color:var(--text-muted); font-size:9.2px; line-height:1.35; }
+.developer-guide-page .developer-guide-endpoints { display:grid; gap:6px; }
+.developer-guide-page .developer-guide-endpoint-row { display:grid; grid-template-columns:105px minmax(0,1fr) 31px; gap:7px; align-items:center; }
+.developer-guide-page .developer-guide-endpoint-row>span { color:var(--text-secondary); font-size:9.5px; }
+.developer-guide-page .developer-guide-endpoint-row code { min-width:0; overflow:hidden; padding:6px 7px; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); background:var(--bg-surface-soft); color:var(--text-content); font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
+.developer-guide-page .developer-guide-note { display:flex; gap:7px; margin-top:8px; padding:8px; border:1px solid var(--border-subtle); border-radius:var(--radius-md); background:var(--component-feedback-bg); color:var(--text-secondary); font-size:9.5px; line-height:1.4; }
+.developer-guide-page .developer-guide-note i { flex:0 0 auto; color:var(--licora-primary); }
+.developer-guide-page .developer-guide-proof-grid { display:grid; grid-template-columns:minmax(260px,.55fr) minmax(0,1.45fr); gap:12px; }
+.developer-guide-page pre { margin:5px 0 6px; padding:9px 10px; overflow:auto; border:1px solid var(--border-subtle); border-radius:var(--radius-md); background:var(--bg-surface-soft); color:var(--text-content); font-size:9.5px; line-height:1.5; white-space:pre; }
+.developer-guide-page pre code { color:inherit; font-size:inherit; }
+.developer-guide-page .developer-guide-proof-rules { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+.developer-guide-page .developer-guide-proof-rules>div { padding:8px; border:1px solid var(--border-subtle); border-radius:var(--radius-md); }
+.developer-guide-page .developer-guide-proof-rules strong { display:block; margin-bottom:2px; color:var(--text-primary); font-size:9.5px; }
+.developer-guide-page .developer-guide-proof-rules span,.developer-guide-page .developer-guide-proof-rules code { color:var(--text-secondary); font-size:9.2px; line-height:1.4; }
+.developer-guide-page .developer-guide-tabs { display:flex; gap:4px; padding:8px 10px; overflow-x:auto; border-bottom:1px solid var(--border-subtle); scrollbar-width:thin; }
+.developer-guide-page .developer-guide-tab { display:inline-flex; align-items:center; gap:5px; flex:0 0 auto; min-height:29px; padding:5px 8px; border:1px solid transparent; border-radius:var(--radius-md); background:transparent; color:var(--text-secondary); font-size:9.5px; font-weight:var(--font-weight-medium); }
+.developer-guide-page .developer-guide-tab:hover { background:var(--component-hover-bg); color:var(--text-primary); }
+.developer-guide-page .developer-guide-tab.active { border-color:var(--component-active-border); background:var(--component-active-bg); color:var(--licora-primary); }
+.developer-guide-page .developer-guide-language-panel { padding:11px; }
+.developer-guide-page .developer-guide-language-panel[hidden] { display:none!important; }
+.developer-guide-page .developer-guide-language-summary { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+.developer-guide-page .developer-guide-language-summary h4 { margin:0; color:var(--text-primary); font-size:13px; }
+.developer-guide-page .developer-guide-language-summary p { margin:2px 0 0; color:var(--text-muted); font-size:9.5px; }
+.developer-guide-page .developer-guide-command-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:8px; }
+.developer-guide-page .developer-guide-command-grid>div { min-width:0; }
+.developer-guide-page .developer-guide-command-grid>div>span { color:var(--text-secondary); font-size:9.2px; font-weight:var(--font-weight-bold); }
+.developer-guide-page .developer-guide-command-grid pre { min-height:56px; max-height:105px; white-space:pre-wrap; word-break:break-word; }
+.developer-guide-page .developer-guide-source { border:1px solid var(--border-subtle); border-radius:var(--radius-md); background:var(--bg-surface-card); }
+.developer-guide-page .developer-guide-source summary { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 9px; cursor:pointer; color:var(--text-primary); font-size:9.5px; font-weight:var(--font-weight-medium); }
+.developer-guide-page .developer-guide-source summary span:first-child { display:flex; align-items:center; gap:6px; }
+.developer-guide-page .developer-guide-source summary span:last-child { color:var(--text-muted); font-weight:var(--font-weight-normal); }
+.developer-guide-page .developer-guide-source-toolbar { display:flex; justify-content:flex-end; padding:7px 8px 0; border-top:1px solid var(--border-subtle); }
+.developer-guide-page .developer-guide-source pre { max-height:520px; margin:7px 8px 8px; background:var(--bg-surface-soft); }
+.developer-guide-page .developer-guide-security-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.developer-guide-page .developer-guide-security-block { padding:9px; border:1px solid var(--border-subtle); border-radius:var(--radius-md); background:var(--bg-surface-soft); }
+.developer-guide-page .developer-guide-security-block.is-good { border-color:var(--state-success-border); background:var(--state-success-bg); }
+.developer-guide-page .developer-guide-security-block.is-bad { border-color:var(--state-danger-border); background:var(--state-danger-bg); }
+.developer-guide-page .developer-guide-security-block strong { display:block; margin-bottom:5px; font-size:10.5px; }
+.developer-guide-page .developer-guide-security-block ul { margin:0; padding-left:17px; color:var(--text-secondary); font-size:9.3px; line-height:1.5; }
+.developer-guide-page .developer-guide-errors { display:flex; flex-wrap:wrap; gap:5px; }
+.developer-guide-page .developer-guide-errors code { padding:4px 6px; border:1px solid var(--border-subtle); border-radius:999px; background:var(--bg-surface-soft); color:var(--text-secondary); font-size:8.8px; }
+.developer-guide-page .developer-guide-legacy p { margin:0; color:var(--text-secondary); font-size:10px; line-height:1.5; }
+.developer-guide-page .developer-guide-links { display:flex; gap:7px; flex-wrap:wrap; margin-top:8px; }
+.developer-guide-page .developer-guide-links a { display:inline-flex; align-items:center; gap:5px; padding:5px 7px; border:1px solid var(--border-subtle); border-radius:var(--radius-md); color:var(--text-secondary); font-size:9.5px; text-decoration:none; }
+.developer-guide-page .developer-guide-links a:hover { background:var(--component-hover-bg); color:var(--licora-primary); }
+@media (max-width:1099.98px) {
+  .developer-guide-page .developer-guide-grid,.developer-guide-page .developer-guide-grid-top { grid-template-columns:1fr; }
+}
+@media (max-width:767.98px) {
+  .developer-guide-page .developer-guide-hero { align-items:flex-start; flex-direction:column; }
+  .developer-guide-page .developer-guide-banner { grid-template-columns:38px minmax(0,1fr); }
+  .developer-guide-page .developer-guide-banner>.ui-status { grid-column:2; justify-self:start; }
+  .developer-guide-page .developer-guide-steps,.developer-guide-page .developer-guide-command-grid,.developer-guide-page .developer-guide-security-grid,.developer-guide-page .developer-guide-proof-rules { grid-template-columns:1fr; }
+  .developer-guide-page .developer-guide-proof-grid { grid-template-columns:1fr; }
+  .developer-guide-page .developer-guide-endpoint-row { grid-template-columns:90px minmax(0,1fr) 31px; }
+}
+@media (max-width:479.98px) {
+  .developer-guide-page .developer-guide-endpoint-row { grid-template-columns:1fr 31px; }
+  .developer-guide-page .developer-guide-endpoint-row>span { grid-column:1/-1; }
+  .developer-guide-page .developer-guide-language-summary { align-items:flex-start; flex-direction:column; }
+}

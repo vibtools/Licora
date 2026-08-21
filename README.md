@@ -125,7 +125,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.7.1` |
+| Application version | `APP_VERSION` | `5.8.1` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -156,6 +156,8 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Secure in-app updater](docs/UPDATER.md)
 - [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.8.1 release notes](RELEASE_NOTES_v5.8.1.md)
+- [v5.8.0 source-candidate notes](RELEASE_NOTES_v5.8.0.md)
 - [v5.7.1 release notes](RELEASE_NOTES_v5.7.1.md)
 - [v5.7.0 release notes](RELEASE_NOTES_v5.7.0.md)
 - [v5.6.1 release notes](RELEASE_NOTES_v5.6.1.md)
@@ -176,7 +178,12 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
 
-## Dashboard Phase 2 verification corrective candidate (v5.7.1)
+
+## Developer Integration Guide (v5.8.1; introduced in v5.8.0 source candidate)
+
+The verified v5.8.1 authenticated **API & Clients → Developer Guide** provides a compact Secure API v2 Quick Start, the exact P-256 device-proof canonical contract, detected endpoint URLs, stable error codes and downloadable lifecycle references for Python, PowerShell/CMD, C, C++, C#/.NET, Java, Flutter, React Native, PHP and Node.js. Public-client examples never embed an API v1 shared/master key. Production clients must keep the P-256 private key and rotated refresh credential in platform-secure storage and verify pinned `LICORA-V2`/`RS256` access-token signatures before trusting claims locally.
+
+## Dashboard Phase 2 published corrective release (v5.7.1)
 
 Licora v5.7.1 corrects the client-side refresh lifecycle found during forensic review of the v5.7.0 Phase 2 source baseline: stale refresh keeps `Retry`, `401 AUTH_REQUIRED` keeps refresh paused/disabled, synchronous transport errors are captured without leaving the request lock stuck, and the last-success timestamp advances only after a successful render. Phase 2 layout/data semantics, backend contracts, database schema, APIs, licensing/device enforcement, authentication, Cron behavior, updater protocol and shared shell remain unchanged.
 

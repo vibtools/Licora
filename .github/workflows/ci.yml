@@ -134,18 +134,18 @@ jobs:
         run: |
           short_sha="${GITHUB_SHA:0:12}"
           mkdir -p release
-          bash scripts/package-release.sh v5.7.1 "$GITHUB_SHA" "release/Licora-5.7.1-ci-${short_sha}.zip"
-          cp "release/Licora-5.7.1-ci-${short_sha}.zip" "release/Licora-5.7.1.zip"
-          python3 scripts/build-update-manifest.py --version 5.7.1 --ref "$GITHUB_SHA" --package "release/Licora-5.7.1.zip" --output release/licora-update-manifest.json
-          rm "release/Licora-5.7.1.zip"
+          bash scripts/package-release.sh v5.8.1 "$GITHUB_SHA" "release/Licora-5.8.1-ci-${short_sha}.zip"
+          cp "release/Licora-5.8.1-ci-${short_sha}.zip" "release/Licora-5.8.1.zip"
+          python3 scripts/build-update-manifest.py --version 5.8.1 --ref "$GITHUB_SHA" --package "release/Licora-5.8.1.zip" --output release/licora-update-manifest.json
+          rm "release/Licora-5.8.1.zip"
 
       - name: Upload CI release-candidate artifact
         uses: actions/upload-artifact@v6
         with:
-          name: Licora-5.7.1-${{ github.sha }}
+          name: Licora-5.8.1-${{ github.sha }}
           path: |
-            release/Licora-5.7.1-ci-*.zip
-            release/Licora-5.7.1-ci-*.zip.sha256
+            release/Licora-5.8.1-ci-*.zip
+            release/Licora-5.8.1-ci-*.zip.sha256
             release/licora-update-manifest.json
           if-no-files-found: error
           retention-days: 14

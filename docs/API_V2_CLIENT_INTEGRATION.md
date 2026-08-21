@@ -50,3 +50,7 @@ On success, discard the old refresh token and persist the newly returned one. Re
 - Never send the device private key.
 - Do not parse human `message` text for program logic; use the stable `code` field.
 - Use HTTPS and verify the server certificate.
+
+## In-app Developer Guide
+
+Licora v5.8.1 verifies the **Admin → API & Clients → Developer Guide** introduced by the v5.8.0 source candidate, which presents this same contract in a compact UI and ships downloadable lifecycle references for the approved Python, PowerShell/CMD, C, C++, C#/.NET, Java, Flutter, React Native, PHP and Node.js targets. The examples sign the exact JSON bytes sent to the API and do not embed a shared API v1 credential.

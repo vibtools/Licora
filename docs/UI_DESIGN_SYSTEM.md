@@ -210,3 +210,7 @@ The Dashboard keeps the shared Licora light shell and uses page-scoped `.dashboa
 ## v5.7.1 Dashboard feedback-state correction
 
 The v5.7.0 compact Dashboard composition is unchanged. v5.7.1 only corrects refresh-control state persistence so `Retry` remains visible after a failed refresh and `Refresh paused` remains disabled after session expiry. No global theme, component, sidebar, topbar or non-Dashboard UI style is changed.
+
+## Developer Guide surface (v5.8.1; introduced in v5.8.0 source candidate)
+
+The Developer Guide stays inside the existing light admin shell and uses a scoped compact documentation composition: recommendation banner, Quick Start cards, detected endpoint rows, proof-contract panel, horizontally scrollable language tabs, collapsible source blocks, security/error cards and responsive single-column fallbacks. No global theme, sidebar architecture or other admin-page presentation contract is changed.

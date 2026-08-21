@@ -2,7 +2,7 @@
 
 ## Secure API v2 for desktop/public clients
 
-New desktop/public integrations should use the Secure API v2 endpoints documented in `API_V2.md`. API v2 does not use the shared API v1 `X-API-Key` credential. Existing API v1 integrations remain supported and unchanged.
+New desktop/public integrations should use the Secure API v2 endpoints documented in `API_V2.md`. API v2 does not use the shared API v1 `X-API-Key` credential. Existing API v1 integrations remain supported and unchanged. Licora v5.8.1 (introduced in the v5.8.0 source candidate) exposes an authenticated **Developer Guide** under API & Clients with downloadable Secure API v2 lifecycle references for supported developer runtimes.
 
 ## Full verification endpoint
 

@@ -19,13 +19,14 @@ $read = static function (string $path) use ($root): string {
 $config = $read('includes/config.php');
 $installer = $read('install.php');
 $installation = $read('includes/installation.php');
-$releaseNotes = $read('RELEASE_NOTES_v5.7.1.md');
+$releaseNotes = $read('RELEASE_NOTES_v5.8.1.md');
 $changelog = $read('CHANGELOG.md');
 $configuration = $read('docs/CONFIGURATION.md');
 $releaseGuide = $read('docs/RELEASE.md');
 $packager = $read('scripts/package-release.sh');
+$ci = $read('.github/workflows/ci.yml');
 
-$versionDefinition = "if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.7.1'));";
+$versionDefinition = "if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.8.1'));";
 $localConfigRequire = 'require_once $localConfig;';
 $versionPosition = strpos($config, $versionDefinition);
 $localConfigPosition = strpos($config, $localConfigRequire);
@@ -36,7 +37,7 @@ $assert(
     'runtime version resolves before preserved private configuration'
 );
 $assert(strpos($config, "env_value('APP_NAME', 'Licora')") !== false, 'default application name is Licora');
-$assert(strpos($installation, "'APP_VERSION' => '5.7.1'") !== false, 'generated installer configuration targets v5.7.1');
+$assert(strpos($installation, "'APP_VERSION' => '5.8.1'") !== false, 'generated installer configuration targets v5.8.1');
 $assert(strpos($installer, 'First-Run Installer') !== false, 'installer uses the compact Licora first-run branding');
 $assert(strpos($installer, 'assets/brand/logos/logo-md.png') !== false, 'installer uses the supplied Licora logo asset');
 $assert(strpos($installer, 'name="app_name" value="Licora"') !== false, 'installer fixes the visible product identity to Licora');
@@ -106,6 +107,12 @@ $assert(
 );
 
 foreach ([
+    'RELEASE_NOTES_v5.8.1.md',
+    'RELEASE_COMMANDS_v5.8.1.md',
+    'BASELINE_v5.8.1.md',
+    'RELEASE_NOTES_v5.8.0.md',
+    'RELEASE_COMMANDS_v5.8.0.md',
+    'BASELINE_v5.8.0.md',
     'RELEASE_NOTES_v5.7.1.md',
     'RELEASE_COMMANDS_v5.7.1.md',
     'BASELINE_v5.7.1.md',
@@ -133,10 +140,10 @@ foreach ([
     $assert(is_file($root . '/' . $path), 'release documentation exists: ' . $path);
 }
 
-$assert(strpos($releaseNotes, 'Licora v5.7.1') !== false, 'release notes identify v5.7.1');
-$assert(strpos($changelog, '## [5.7.1] - 2026-08-20') !== false, 'changelog contains the v5.7.1 release date');
-$assert(strpos($configuration, '`APP_VERSION` | `APP_VERSION` | `5.7.1`') !== false, 'configuration reference matches v5.7.1 runtime version');
-$assert(strpos($releaseGuide, 'scripts/package-release.sh v5.7.1 v5.7.1') !== false, 'release guide uses the v5.7.1 packager command');
+$assert(strpos($releaseNotes, 'Licora v5.8.1') !== false, 'release notes identify v5.8.1');
+$assert(strpos($changelog, '## [5.8.1] - 2026-08-20') !== false, 'changelog contains the v5.8.1 release date');
+$assert(strpos($configuration, '`APP_VERSION` | `APP_VERSION` | `5.8.1`') !== false, 'configuration reference matches v5.8.1 runtime version');
+$assert(strpos($releaseGuide, 'scripts/package-release.sh v5.8.1 v5.8.1') !== false, 'release guide uses the v5.8.1 packager command');
 $assert(strpos($packager, 'git archive --format=zip') !== false, 'release package is created from a Git ref');
 $assert(strpos($packager, 'git diff --quiet') !== false, 'release packager rejects tracked working-tree changes');
 
@@ -145,11 +152,16 @@ foreach ([
     'includes/installation.php',
     'install.php',
     'config.sample.php',
-    'RELEASE_NOTES_v5.7.1.md',
+    'RELEASE_NOTES_v5.8.1.md',
 ] as $path) {
     $content = $read($path);
-    $assert(strpos($content, '5.7.2') === false, 'v5.7.1 release file does not contain future version marker: ' . $path);
+    $assert(strpos($content, '5.8.2') === false, 'v5.8.1 release file does not contain future version marker: ' . $path);
 }
+
+$assert(strpos($ci, 'package-release.sh v5.8.1') !== false, 'CI candidate packager targets v5.8.1');
+$assert(strpos($ci, 'Licora-5.8.1.zip') !== false, 'CI candidate canonical ZIP targets v5.8.1');
+$assert(strpos($ci, '--version 5.8.1') !== false, 'CI updater-manifest builder targets v5.8.1');
+$assert(strpos($ci, '--version 5.7.1') === false, 'CI candidate manifest does not use stale v5.7.1 version');
 
 if ($failures !== []) {
     fwrite(STDERR, "Release readiness test failed:\n- " . implode("\n- ", $failures) . "\n");

@@ -152,7 +152,7 @@ $initialPayload = [
                 </div>
             </article>
             <article class="dashboard-kpi-card">
-                <div class="dashboard-kpi-icon"><i class="bi bi-devices" aria-hidden="true"></i></div>
+                <div class="dashboard-kpi-icon"><i class="bi bi-laptop" aria-hidden="true"></i></div>
                 <div class="dashboard-kpi-copy">
                     <span class="dashboard-kpi-label">Recently Seen Devices</span>
                     <strong class="dashboard-kpi-value" data-dashboard-kpi="recent_devices"><?php echo (int)$deviceStats['recently_seen']; ?></strong>
@@ -244,7 +244,7 @@ $initialPayload = [
                 </div>
                 <div class="card-body dashboard-quick-actions">
                     <a href="license.php?action=create" class="dashboard-action-link"><i class="bi bi-plus-circle" aria-hidden="true"></i><span><strong>Create License</strong><small>Issue a new license</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
-                    <a href="device.php" class="dashboard-action-link"><i class="bi bi-devices" aria-hidden="true"></i><span><strong>Manage Devices</strong><small>Review device records</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a href="device.php" class="dashboard-action-link"><i class="bi bi-laptop" aria-hidden="true"></i><span><strong>Manage Devices</strong><small>Review device records</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                     <a href="api_keys.php" class="dashboard-action-link"><i class="bi bi-key" aria-hidden="true"></i><span><strong>API Keys</strong><small>Manage API v1 keys</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                     <a href="client_apps.php" class="dashboard-action-link"><i class="bi bi-boxes" aria-hidden="true"></i><span><strong>Client Apps</strong><small>Manage API v2 apps</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                     <a href="health.php" class="dashboard-action-link"><i class="bi bi-heart-pulse" aria-hidden="true"></i><span><strong>System Health</strong><small>Open health diagnostics</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>

@@ -14,6 +14,7 @@ if (!function_exists('licora_ui_navigation_groups')) {
                 ['file' => 'api_keys.php', 'label' => 'API Keys', 'icon' => 'bi-key-fill'],
                 ['file' => 'client_apps.php', 'label' => 'Client Apps', 'icon' => 'bi-boxes'],
                 ['file' => 'v2_devices.php', 'label' => 'V2 Devices', 'icon' => 'bi-shield-check'],
+                ['file' => 'developer_guide.php', 'label' => 'Developer Guide', 'icon' => 'bi-code-slash'],
             ],
             'Operations' => [
                 ['file' => 'logs.php', 'label' => 'Logs', 'icon' => 'bi-clock-history'],
