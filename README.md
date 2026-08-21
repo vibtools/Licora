@@ -29,6 +29,7 @@ Licora is maintained by **Vib Tools**. Vib Tools is a professional tools and dig
 - Device registration, activity tracking, revocation, blacklist handling, and risk indicators.
 - Role-aware admin panel for super administrators, managers, and viewers.
 - Audit trail, operational logs, CSV exports, SQL backup generation, and health checks.
+- Reload-free operational Dashboard with truthful license/device/API/expiration metrics, manual refresh, stale-data feedback, and source-separated API activity.
 - CSRF tokens for admin mutations, prepared SQL statements, password hashing, rate limiting, and session hardening.
 - Scheduled cleanup and expiring-license reporting through CLI cron scripts.
 - Super-Admin-only Secure Update Center with signed GitHub release manifests, preflight, staged installation, persistent live logs, migration tracking, and rollback protection.
@@ -124,7 +125,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.6.1` |
+| Application version | `APP_VERSION` | `5.7.1` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -155,6 +156,8 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Secure in-app updater](docs/UPDATER.md)
 - [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.7.1 release notes](RELEASE_NOTES_v5.7.1.md)
+- [v5.7.0 release notes](RELEASE_NOTES_v5.7.0.md)
 - [v5.6.1 release notes](RELEASE_NOTES_v5.6.1.md)
 - [v5.6.0 release notes](RELEASE_NOTES_v5.6.0.md)
 - [v5.5.1 release notes](RELEASE_NOTES_v5.5.1.md)
@@ -173,9 +176,17 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
 
+## Dashboard Phase 2 verification corrective candidate (v5.7.1)
+
+Licora v5.7.1 corrects the client-side refresh lifecycle found during forensic review of the v5.7.0 Phase 2 source baseline: stale refresh keeps `Retry`, `401 AUTH_REQUIRED` keeps refresh paused/disabled, synchronous transport errors are captured without leaving the request lock stuck, and the last-success timestamp advances only after a successful render. Phase 2 layout/data semantics, backend contracts, database schema, APIs, licensing/device enforcement, authentication, Cron behavior, updater protocol and shared shell remain unchanged.
+
+## Dashboard Phase 2 source baseline (v5.7.0)
+
+Licora v5.7.0 builds on the frozen/published v5.6.1 Phase 1 baseline. The Dashboard keeps its server-rendered initial snapshot but replaces the former full-page 30-second reload with authenticated 30-second AJAX refresh, manual Refresh, last-updated/stale/session feedback, request-overlap protection and in-place chart/KPI/activity updates. Phase 1 backend data semantics, database schema, APIs, license/device enforcement, authentication/roles, Cron mutation behavior and updater protocol remain unchanged.
+
 ## Phase 1 verification corrective update (v5.6.1)
 
-Licora v5.6.1 is a no-migration corrective update over the applied v5.6.0 Phase 1 source baseline; v5.6.0 was not published as a GitHub tag/release and is superseded by v5.6.1. It fixes the MySQL integration-test foreign-key cleanup exposed by PR #8 CI, aligns the authenticated Dashboard JSON envelope with its documented top-level `recent_activity` field, and makes the Dashboard API v2 `Ready` status depend on a verified matching server signing key pair rather than the public key alone. Licora remains a browser-based PHP application and contains no Google Chrome installer/downloader dependency. Phase 2 reload-free polling/UI work remains unimplemented.
+Licora v5.6.1 is a no-migration corrective update over the applied v5.6.0 Phase 1 source baseline; v5.6.0 was not published as a GitHub tag/release and is superseded by v5.6.1. It fixes the MySQL integration-test foreign-key cleanup exposed by PR #8 CI, aligns the authenticated Dashboard JSON envelope with its documented top-level `recent_activity` field, and makes the Dashboard API v2 `Ready` status depend on a verified matching server signing key pair rather than the public key alone. Licora remains a browser-based PHP application and contains no Google Chrome installer/downloader dependency. At the v5.6.1 baseline, Phase 2 had not yet been implemented; the separately scoped v5.7.0 source baseline added that browser refresh layer without changing the Phase 1 backend contract.
 
 ## Dashboard data truth and read model (v5.6.0)
 

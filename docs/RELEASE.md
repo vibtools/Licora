@@ -2,7 +2,7 @@
 
 ## Current release contract
 
-Licora uses semantic version tags. The current release candidate is `5.6.1`; runtime, installer, verifier, release notes, update release specification and GitHub workflow markers must agree and required CI must pass before a tag can publish.
+Licora uses semantic version tags. The current release candidate is `5.7.1`; runtime, installer, verifier, release notes, update release specification and GitHub workflow markers must agree and required CI must pass before a tag can publish.
 
 Every v5.3.0+ official release intended for the in-app updater consists of four updater-facing assets:
 
@@ -14,6 +14,36 @@ licora-update-manifest.sig
 ```
 
 The ZIP/checksum are generated from the exact Git ref by `scripts/package-release.sh`. `scripts/build-update-manifest.py` inventories the exact ZIP, records per-file SHA-256 values, package hash/size, commit identity, migration metadata, protected deletion intent and compatibility requirements. GitHub Actions signs the exact manifest bytes with the dedicated repository secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY`; the matching public key is tracked at `includes/updater/update-signing-public.pem`.
+
+## v5.7.1 release specification
+
+v5.7.1 is a no-migration Dashboard Phase 2 corrective release candidate over the uploaded v5.7.0 source baseline. It also accepts the published v5.6.1 source so live installations can move directly to the corrected Phase 2 release without requiring an unpublished v5.7.0 tag.
+
+```json
+{
+  "protocol_version": 1,
+  "application": "Licora",
+  "version": "5.7.1",
+  "channel": "stable",
+  "minimum_updater": "5.3.0",
+  "minimum_php": "8.0",
+  "upgrade_from": ["5.6.1", "5.7.0"],
+  "delete_files": [],
+  "migrations": []
+}
+```
+
+The reviewed packager command is:
+
+```bash
+bash scripts/package-release.sh v5.7.1 v5.7.1
+```
+
+Publication commands are recorded in `RELEASE_COMMANDS_v5.7.1.md`. The release keeps the existing API v2/Admin v2/updater/Dashboard MySQL gate and Phase 2 Dashboard source/runtime verification.
+
+### v5.7.0 source baseline
+
+The v5.7.0 Phase 2 source baseline remains historical evidence. It was not published as a GitHub tag during this audit and is superseded by the v5.7.1 corrective candidate.
 
 ## v5.6.1 release specification
 
@@ -234,4 +264,4 @@ Release archives must exclude deployment-private/runtime material including `con
 
 Every future release intended for one-click installation must update `update/release-spec.json`, declare the exact direct source versions it supports in signed `upgrade_from`, ship every migration required for those supported direct paths, keep `minimum_updater` compatible, and publish the four assets above. A latest release that does not list the installed version in `upgrade_from` is deliberately blocked rather than silently skipping an intermediate migration. Never modify a published manifest/ZIP in place; create a new semantic version.
 
-See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model, [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) for the v5.4.0 presentation contract, and `RELEASE_COMMANDS_v5.6.1.md` for the current Windows-friendly command sequence.
+See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model, [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) for the v5.4.0 presentation contract, and `RELEASE_COMMANDS_v5.7.1.md` for the current Windows-friendly command sequence.

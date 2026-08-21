@@ -92,26 +92,40 @@ Source/static verification and corrected remote CI confirm the Phase 1 implement
 
 ---
 
-# C. After Phase 2 — Expected Verified Working State
+# C. Phase 2 — v5.7.1 Corrective Candidate (from v5.7.0 Source Baseline)
 
 | Feature | Current | Target after P2 |
 |---|---|---|
-| Compact dashboard hierarchy | PARTIAL | PLANNED P2 |
-| Compact Quick Actions | NOT IMPLEMENTED | PLANNED P2 |
-| Reload-free Dashboard polling | NOT IMPLEMENTED | PLANNED P2 |
-| In-place KPI updates | NOT IMPLEMENTED | PLANNED P2 |
-| In-place Chart.js updates | NOT IMPLEMENTED | PLANNED P2 |
-| Recent activity partial refresh | NOT IMPLEMENTED | PLANNED P2 |
-| Last updated indicator | NOT IMPLEMENTED | PLANNED P2 |
-| Manual Refresh | NOT IMPLEMENTED | PLANNED P2 |
-| Stale data indicator | NOT IMPLEMENTED | PLANNED P2 |
-| Retry/backoff | NOT IMPLEMENTED | PLANNED P2 |
-| No request overlap | NOT IMPLEMENTED | PLANNED P2 |
-| Dashboard browser runtime tests | NOT IMPLEMENTED | PLANNED P2 |
+| Compact dashboard hierarchy | IMPLEMENTED / ACCEPTANCE PENDING | Compact operations layout implemented |
+| Compact Quick Actions | IMPLEMENTED / ACCEPTANCE PENDING | Existing routes only |
+| Reload-free Dashboard polling | IMPLEMENTED / ACCEPTANCE PENDING | Authenticated 30-second GET polling |
+| In-place KPI updates | IMPLEMENTED / ACCEPTANCE PENDING | Phase 1 snapshot values only |
+| In-place Chart.js updates | IMPLEMENTED / ACCEPTANCE PENDING | Existing chart instances reused |
+| Recent activity partial refresh | IMPLEMENTED / ACCEPTANCE PENDING | Source-labelled v1/v2 rows |
+| Last updated indicator | IMPLEMENTED / ACCEPTANCE PENDING | Uses successful snapshot timestamp |
+| Manual Refresh | IMPLEMENTED / ACCEPTANCE PENDING | No navigation/reload |
+| Stale data indicator | IMPLEMENTED / ACCEPTANCE PENDING | Preserves last successful snapshot |
+| Retry/error UX | IMPLEMENTED / ACCEPTANCE PENDING | Manual Retry; fixed 30-second cadence retained |
+| No request overlap | IMPLEMENTED / ACCEPTANCE PENDING | In-flight lock enforced |
+| Dashboard browser runtime tests | TARGETED PASS | Full verifier/remote CI pending |
 
 ### Phase 2 actual additions
 
-`[EMPTY — fill after verified implementation]`
+### v5.7.1 corrective lifecycle fixes
+
+- stale refresh keeps the `Retry` action after loading cleanup
+- `401 AUTH_REQUIRED` keeps refresh disabled and labelled `Refresh paused`
+- synchronous transport exceptions enter the normal stale/error path and release the in-flight lock
+- `lastSuccessAt` changes only after render completes successfully
+- browser/runtime regression tests cover each corrective behavior
+
+
+- `admin/index.php` compact Dashboard composition with server-rendered fallback
+- `admin/assets/js/dashboard.js` AJAX/manual refresh controller
+- scoped Dashboard CSS appended to `admin/assets/css/admin-ui.css`
+- `tests/dashboard_phase2_contract.php` and `tests/dashboard_browser_runtime.js`
+
+Do not promote these Phase 2 rows to `ACTUAL WORKING` until the v5.7.1 full local verifier, remote CI and the required manual live smoke are accepted.
 
 ---
 

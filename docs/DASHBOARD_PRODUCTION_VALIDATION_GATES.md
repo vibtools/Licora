@@ -231,3 +231,27 @@ Any skipped critical test keeps the phase `INCOMPLETE` unless explicitly accepte
 PR #8 workflow run `32420291770` passed PHP 8.0–8.4 validation and Windows Python portability but failed the MySQL integration job in `tests/dashboard_db_integration.php` with MySQL error 3730: `v2_device_credentials` could not be dropped while `v2_refresh_tokens.fk_v2_refresh_device` referenced it.
 
 v5.6.1 fixes the fixture cleanup using foreign-key-safe isolation. The corrected MySQL job must run green once after the v5.6.1 commit is pushed; an unchanged failing run must not be repeatedly retried.
+
+
+## v5.7.0 Phase 2 Candidate Evidence
+
+Current source-level evidence before full acceptance:
+
+- `tests/dashboard_phase2_contract.php`: **PASS** (targeted)
+- `tests/dashboard_browser_runtime.js`: **PASS** (targeted)
+- full `scripts/verify-local.py`: **PASS**
+- remote PHP 8.0–8.4 / MySQL / Windows builder CI: **PENDING — no push yet**
+- manual desktop/tablet/mobile/live smoke: **PENDING**
+
+Phase 2 must not be marked `COMPLETE + VERIFIED` until the remaining gates pass.
+
+## v5.7.1 Corrective Candidate Evidence
+
+The v5.7.1 corrective browser-runtime gate must additionally prove:
+
+- a failed refresh preserves the `Retry` action after loading cleanup;
+- `401 AUTH_REQUIRED` preserves the paused/disabled refresh state after loading cleanup;
+- a synchronous request transport throw enters stale handling and releases the in-flight lock;
+- a render failure does not advance the last-success timestamp.
+
+The targeted Dashboard browser/runtime test and the full v5.7.1 source verifier pass for these cases. The remote MySQL/CI matrix and manual desktop/tablet/mobile live or staging smoke remain the final acceptance sequence.

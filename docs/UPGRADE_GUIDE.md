@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1 -> v5.7.0 -> v5.7.1
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -154,6 +154,31 @@ v5.4.1 introduces **no database migration** and preserves the v5.4.0 sidebar/com
 The signed v5.4.1 release accepts reviewed direct source versions `5.3.0` and `5.4.0`, with an empty migration list. A pre-existing active job still targets the version recorded when that job was created and must be resumed/finalized before a later release can start.
 
 
+## v5.6.1 / v5.7.0 to v5.7.1 Dashboard Phase 2 corrective
+
+v5.7.1 is a signed **no-migration** corrective candidate for the Phase 2 Dashboard browser lifecycle. The release specification accepts both the published `v5.6.1` source and an already-applied `v5.7.0` source baseline. It preserves the v5.7.0 layout, 30-second AJAX cadence, backend data contract and application behavior while correcting Retry/auth-lock/synchronous-transport/last-success state handling.
+
+1. Back up application files and the database using the existing procedure.
+2. Run the v5.7.1 preflight only after an official signed release is published.
+3. Install v5.7.1.
+4. Confirm the Dashboard loads from the server-rendered snapshot, refreshes without full-page reload, preserves Retry on failure, and pauses refresh on session expiry.
+
+## v5.6.1 to v5.7.0 Dashboard Phase 2 source baseline
+
+v5.7.0 is a signed **no-migration** Dashboard interaction/UI update from the frozen `v5.6.1` baseline. It keeps the Phase 1 read model and authenticated JSON contract unchanged, replaces the 30-second full-page refresh with 30-second authenticated AJAX polling, and adds manual refresh, last-updated/stale/auth feedback, overlap protection and in-place KPI/chart/activity updates.
+
+1. Preserve normal deployment backups and private configuration/key material.
+2. Run the v5.7.0 preflight only after an official signed release is published.
+3. Install v5.7.0.
+4. Verify initial server-rendered Dashboard content still appears before/without JavaScript refresh.
+5. Verify manual Refresh updates data without a full-page reload.
+6. Verify the automatic 30-second refresh updates Dashboard data in place and does not overlap a request already in flight.
+7. Verify API v1/v2 tracked activity, expiration timeline, recently-seen devices and health facts remain truthful to Phase 1 semantics.
+8. Simulate a refresh failure/session expiry in a safe environment and verify the last successful snapshot remains visible with stale/auth feedback.
+9. Verify desktop/tablet/mobile layout and existing sidebar/topbar/other admin pages remain unchanged.
+
+No file is deleted and no database migration is executed.
+
 ## v5.5.1/v5.6.0 to v5.6.1 Phase 1 verification corrective
 
 v5.6.1 is a signed **no-migration** corrective update. It accepts the official `v5.5.1` source as well as an already-applied `v5.6.0` source, fixes the Dashboard DB integration fixture, aligns the internal Dashboard JSON contract, and makes API v2 readiness require a valid matching signing key pair.
@@ -171,7 +196,7 @@ No file is deleted and no migration is executed.
 
 v5.6.0 was the no-migration Phase 1 source baseline, but it was **not published as a GitHub tag/release**. PR #8 CI exposed a Dashboard DB-test fixture defect before release acceptance, and v5.6.1 supersedes it.
 
-Do not wait for or publish a v5.6.0 updater release. Deployments on official v5.5.1 should use the eventual signed v5.6.1 release after its corrected CI/merge/tag gates pass. Deployments where the v5.6.0 source delta was already applied are also accepted by the v5.6.1 release specification.
+Do not wait for or publish a v5.6.0 updater release. Deployments on official v5.5.1 should use the published signed v5.6.1 release before the v5.7.0 Phase 2 update. Deployments where the v5.6.0 source delta was already applied are also accepted by the v5.6.1 release specification.
 
 No file deletion or database migration is required for either source path. Reload-free Dashboard polling remains Phase 2.
 

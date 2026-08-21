@@ -138,3 +138,22 @@ Stop implementation and record state if:
 - tests expose an undocumented existing defect
 
 Do not hide the conflict by changing unrelated architecture.
+
+
+### Decision D-002 — v5.7.0 Phase 2 Implementation
+
+- Approved baseline: published/frozen `v5.6.1` release, commit `4b430b77ccc303aebeadc2852bebd3f11f67452a`
+- Approved target: `v5.7.0`
+- Scope: compact Dashboard-only composition, dedicated browser controller, authenticated reload-free 30-second polling, manual refresh, last-updated/stale/auth feedback, in-place chart/activity/KPI updates, overlap protection, responsive/accessibility behavior, tests/docs/release candidate delta
+- Backend data contract: frozen; no field/semantics change required
+- Database/API/license/device/auth/Cron/updater protocol/shared shell: frozen
+- GitHub writes: not authorized by implementation approval
+- Phase 2 completion: requires full local verifier, remote CI and manual live smoke evidence
+
+### Decision D-003 — v5.7.1 Phase 2 Verification Corrective
+
+- Approved source authority: uploaded `Licora_v5.7.0_Baseline.zip`
+- Approved target: `v5.7.1`
+- Scope: only verified Phase 2 browser lifecycle defects plus regression coverage/version/release/documentation alignment
+- Backend/data-contract/schema/API/license/device/auth/Cron/updater/shared-shell scope: frozen
+- Browser downloader/launcher implementation: prohibited; no such Licora runtime exists in the audited baseline

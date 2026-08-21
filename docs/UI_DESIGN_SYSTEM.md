@@ -201,3 +201,12 @@ Editable Settings controls must map to a current runtime consumer. Stored-only l
 - Tall/short Settings content must not share a stretching grid row when it creates blank card space; related compact cards may be stacked in a dedicated secondary column.
 - Sidebar child navigation is collapsed by default, uses a dedicated button with `aria-expanded`/`aria-controls`, and automatically expands when a child route is active.
 - Product/About pages use shared hero, feature-grid, company and metadata components. Page-specific CSS remains prohibited.
+
+
+## v5.7.0 Dashboard compact operations view
+
+The Dashboard keeps the shared Licora light shell and uses page-scoped `.dashboard-page` selectors only. The approved hierarchy is: compact header/refresh status → measured health strip → four KPI cards → API/expiration charts → recent activity + Quick Actions → top API v1 licenses. Dashboard-specific CSS must not restyle the shared sidebar/topbar or other admin pages. Status meaning must not rely on color alone, refresh/error feedback uses an ARIA live region, and reduced-motion preference disables the refresh-icon animation.
+
+## v5.7.1 Dashboard feedback-state correction
+
+The v5.7.0 compact Dashboard composition is unchanged. v5.7.1 only corrects refresh-control state persistence so `Retry` remains visible after a failed refresh and `Refresh paused` remains disabled after session expiry. No global theme, component, sidebar, topbar or non-Dashboard UI style is changed.

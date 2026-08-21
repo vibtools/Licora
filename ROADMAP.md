@@ -1,9 +1,9 @@
 # Roadmap
 
-## Dashboard production program (v5.6.x)
+## Dashboard production program (v5.6.1 → v5.7.1)
 
-- **Phase 1 — Data Truth, Backend Read Model & Error Contract:** implemented in v5.6.0 and corrected in v5.6.1 after PR #8 exposed a MySQL fixture FK-order failure and contract/readiness mismatches; final remote DB/CI verification remains the release gate.
-- **Phase 2 — Compact UI, Reload-Free Refresh & Production Gate:** pending; no Phase 2 polling/UI implementation is included in v5.6.1.
+- **Phase 1 — Data Truth, Backend Read Model & Error Contract:** COMPLETE + VERIFIED in the published v5.6.1 baseline.
+- **Phase 2 — Compact UI, Reload-Free Refresh & Production Gate:** implemented in the v5.7.0 source baseline and corrected in the v5.7.1 candidate with server-rendered fallback, 30-second authenticated AJAX polling, manual refresh, in-place KPI/chart/activity updates, overlap protection and stale/auth UX. v5.7.1 additionally verifies stale/auth/transport/render lifecycle correctness; remote CI and live production smoke remain release gates.
 
 
 Roadmap items are proposals and must be implemented through reviewed, backward-compatible changes.

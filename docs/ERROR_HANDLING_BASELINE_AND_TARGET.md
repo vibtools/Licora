@@ -2,7 +2,7 @@
 
 ## Authority
 
-This matrix preserves the original v5.5.1 baseline inventory and records the implemented Phase 1 backend error contract through the v5.6.1 corrective candidate; Phase 2 client-side refresh handling remains planned.
+This matrix preserves the original v5.5.1 baseline inventory and records the verified Phase 1 backend error contract through v5.6.1 and the v5.7.0 Phase 2 client-side refresh handling implementation.
 
 Status meanings:
 
@@ -291,14 +291,14 @@ Never return:
 
 ---
 
-# 11. Dashboard Client-Side Error Handling — `REQUIRED`
+# 11. Dashboard Client-Side Error Handling — `IMPLEMENTED IN v5.7.0 SOURCE CANDIDATE`
 
 The JS controller must handle:
 
 - HTTP 401 → session-expired state / login path
 - HTTP 405/4xx → stop inappropriate retry loop
 - HTTP 500 → keep last good data + mark stale
-- network timeout/failure → stale indicator + backoff
+- network/server failure → preserve the last successful snapshot, show stale feedback, keep the reviewed 30-second cadence, and expose manual Retry
 - invalid JSON/schema → treat as refresh failure
 - aborted request → not reported as an application error
 - duplicate/in-flight refresh → skip/abort safely
@@ -323,7 +323,7 @@ For Dashboard AJAX:
 - include a request/error reference where useful
 - do not log secrets
 - do not log complete license/API credentials
-- avoid logging successful 15-second polling requests unless diagnostics justify it
+- avoid logging successful 30-second polling requests unless diagnostics justify it
 
 ---
 
@@ -357,3 +357,14 @@ Not automatically included in the Dashboard two-phase update:
 - legacy compatibility endpoint redesign
 
 These require separate explicit approval if they would enlarge scope.
+
+# 12. Dashboard Client-Side Corrective Handling — `v5.7.1`
+
+The v5.7.1 corrective candidate preserves the v5.7.0 stale/auth contract while fixing cleanup ordering:
+
+- stale state owns the `Retry` action until a new request starts or a successful refresh restores `Refresh`;
+- auth-required state owns `Refresh paused` and keeps the refresh control disabled;
+- synchronous request transport exceptions are normalized into the same stale path as rejected/failed requests;
+- failed rendering does not advance the last-success timestamp.
+
+No server error envelope or backend exception behavior changes.

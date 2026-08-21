@@ -22,7 +22,7 @@ Environment variables are preferred in managed hosting and containers. On shared
 | `DB_PASS` | `LICENSE_DB_PASS`, fallback `DB_PASS` | empty | Required when the database account has a password. |
 | `APP_NAME` | `APP_NAME` | `Licora` | Application label. |
 | `APP_URL` | `APP_URL` | `http://localhost` | Public application root, without a query string or fragment. |
-| `APP_VERSION` | `APP_VERSION` | `5.6.1` | Source release identity returned by the verification API. |
+| `APP_VERSION` | `APP_VERSION` | `5.7.1` | Source release identity returned by the verification API. |
 | `APP_TIMEZONE` | `APP_TIMEZONE` | `Asia/Dhaka` | PHP runtime timezone. |
 | `APP_LOCALE` | `APP_LOCALE` | `en` | Application locale metadata. |
 | `MAIL_FROM_NAME` | `MAIL_FROM_NAME` | `APP_NAME` | Mail display name. CR/LF characters are rejected by the installer. |
@@ -59,7 +59,7 @@ LICENSE_ALLOWED_ORIGIN=https://app.example.com
 
 ## Installer-generated private configuration
 
-A fresh v5.6.1 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
+A fresh v5.7.1 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
 
 Never commit or publish:
 
@@ -111,6 +111,6 @@ The updater has no arbitrary URL field. Release metadata is obtained only from t
 
 The database `settings` table stores `updater_auto_check`, `updater_check_interval_seconds`, `updater_channel`, cached release metadata and updater history pointers. `updater_auto_check=0` disables automatic outbound GitHub checks but does not disable the explicit Super Admin **Check for Updates** action. In updater protocol v1, `updater_channel` is reserved and fixed to `stable`; it is not a selectable beta/dev channel. Automatic checking is notification-only; installation always requires a Super Admin action.
 
-## Dashboard reporting configuration (v5.6.1)
+## Dashboard reporting configuration (v5.7.1)
 
-The Phase 1 Dashboard read model adds no deployment secret or database setting. Device `recently_seen` reporting uses a fixed five-minute (`300` second) read-only window. Dashboard AJAX data is authenticated, non-cacheable and contains no private signing keys, API credentials or database credentials. API v2 readiness is a boolean-only check that requires both the full v2 schema and a readable matching private/public signing key pair; key contents and paths are never returned. Cron status is limited to script availability because v5.6.1 does not add a scheduler heartbeat.
+The Phase 1 Dashboard read model adds no deployment secret or database setting. Device `recently_seen` reporting uses a fixed five-minute (`300` second) read-only window. Dashboard AJAX data is authenticated, non-cacheable and contains no private signing keys, API credentials or database credentials. API v2 readiness is a boolean-only check that requires both the full v2 schema and a readable matching private/public signing key pair; key contents and paths are never returned. Cron status is limited to script availability because v5.7.1 does not add a scheduler heartbeat. Phase 2 adds no deployment setting or secret; the browser controller consumes the same authenticated read-only snapshot every 30 seconds and on manual refresh.

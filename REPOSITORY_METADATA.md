@@ -27,22 +27,47 @@
 
 Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execution, secure administrator and secret generation, atomic private configuration, installation locking, optional demo data, database-port support, safe installer diagnostics, and expanded regression validation. The release preserves the existing license engine, API contracts, database schema, routes, admin UI, cron entry points, and encrypted-data compatibility.
 
-## v5.6.1 release candidate
+## v5.7.1 corrective release candidate
 
-- **Intended tag:** `v5.6.1`
-- **Publication status:** pending corrected PR #8 CI, merge, and tag publication
+- **Intended tag:** `v5.7.1`
+- **Publication status:** source candidate only; GitHub write/release not yet authorized
+- **Title:** `Licora v5.7.1 — Dashboard Phase 2 Verification Fix`
+- **Release notes:** `RELEASE_NOTES_v5.7.1.md`
+- **Primary assets:** `Licora-5.7.1.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
+- **Database migration:** none
+- **Delete list:** empty
+- **Supported update sources:** `v5.6.1`, applied `v5.7.0`
+
+Licora v5.7.1 preserves the v5.7.0 compact/reload-free Dashboard scope and corrects four refresh-lifecycle defects: stale Retry label persistence, 401 refresh-lock persistence, synchronous transport-error capture, and last-success timestamp advancement only after successful render.
+
+## v5.7.0 source baseline
+
+- **Intended tag:** `v5.7.0`
+- **Publication status:** not published as a GitHub tag; uploaded source baseline is superseded by the v5.7.1 corrective candidate
+- **Title:** `Licora v5.7.0 — Compact Dashboard & Reload-Free Refresh`
+- **Release notes:** `RELEASE_NOTES_v5.7.0.md`
+- **Primary assets:** `Licora-5.7.0.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
+- **Database migration:** none
+- **Delete list:** empty
+- **Supported update source:** `v5.6.1`
+
+Licora v5.7.0 implements Dashboard Phase 2 over the frozen v5.6.1 release: compact operational composition, authenticated reload-free polling, manual refresh, last-updated/stale/auth feedback, in-place chart/activity updates and request-overlap protection. Backend data truth, APIs, licensing/device enforcement, schema, Cron mutation behavior and updater protocol remain unchanged.
+
+## v5.6.1 published baseline
+
+- **Tag:** `v5.6.1`
+- **Commit:** `4b430b77ccc303aebeadc2852bebd3f11f67452a`
+- **Publication status:** published and frozen as the official Phase 2 parent baseline
 - **Title:** `Licora v5.6.1 — Dashboard Phase 1 Verification Fix`
 - **Release notes:** `RELEASE_NOTES_v5.6.1.md`
 - **Primary assets:** `Licora-5.6.1.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`
 - **Database migration:** none
-- **Delete list:** empty
-- **Supported update sources:** `v5.5.1`, `v5.6.0`
 
-Licora v5.6.1 corrects the Phase 1 DB integration fixture, restores exact Dashboard JSON/data-contract parity, and makes API v2 Dashboard readiness require a valid matching signing key pair. Phase 2 remains pending.
+Licora v5.6.1 is the verified Phase 1 baseline. Its release ZIP SHA-256 is `0ca0ad76b5c0091912aa441fcac4c033a54bac630d6c1a7255ac5b2b75db5493`.
 
 ## v5.6.0 source baseline (not published)
 
-- **Tag status:** `v5.6.0` was not published on GitHub; this source baseline is superseded by the v5.6.1 corrective candidate
+- **Tag status:** `v5.6.0` was not published on GitHub; this source baseline is superseded by the published v5.6.1 corrective release
 - **Title:** `Licora v5.6.0 — Dashboard Data Truth & Read Model`
 - **Release notes:** `RELEASE_NOTES_v5.6.0.md`
 - **Primary assets:** `Licora-5.6.0.zip`, `.zip.sha256`, `licora-update-manifest.json`, `licora-update-manifest.sig`

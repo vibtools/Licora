@@ -68,9 +68,9 @@ Licenses use `active`, `expired`, and `suspended` states. Devices use `is_active
 Migrations are additive. The code includes fallbacks for older schemas, and repository changes should preserve existing endpoints and database columns unless a versioned migration and rollback are supplied.
 
 
-## Dashboard read model (v5.6.1 current; introduced in v5.6.0)
+## Dashboard read model and browser controller (v5.7.0)
 
-Dashboard data is centralized in `includes/dashboard.php`. Both the server-rendered `admin/index.php` and the authenticated read-only `admin/ajax/dashboard-data.php` endpoint use `DashboardReadModel`, preventing the initial page and future AJAX consumer from drifting to different metric definitions.
+Dashboard data is centralized in `includes/dashboard.php`. Both the server-rendered `admin/index.php` and the authenticated read-only `admin/ajax/dashboard-data.php` endpoint use `DashboardReadModel`, preventing the initial page and browser refresh controller from drifting to different metric definitions.
 
 ```text
 Admin Dashboard / dashboard-data.php
@@ -84,9 +84,9 @@ core v1 tables      optional v2 tables
 
 The model performs reads only. It does not expire licenses, touch devices, write logs, run cleanup, migrate schema or advance updater jobs. API v1 tracked activity remains sourced from `api_logs`; Secure API v2 tracked activity remains sourced from `v2_audit_logs`. Device presence reporting can read `v2_device_credentials.last_seen_at` where the additive v2 schema exists while falling back safely to the base `devices.last_active` data.
 
-Phase 1 intentionally keeps the existing 30-second full-page Dashboard reload; the JSON endpoint is the backend foundation for the separately-scoped Phase 2 browser refresh controller.
+v5.7.0 Phase 2 adds `admin/assets/js/dashboard.js`. The server-rendered snapshot remains the progressive-enhancement fallback; the browser controller polls the authenticated endpoint every 30 seconds, supports manual refresh, updates KPIs/charts/activity in place, prevents overlapping requests, and preserves the last successful snapshot on refresh errors. A 401 pauses polling and surfaces the existing sign-in path.
 
-v5.6.1 corrects Phase 1 verification/runtime truthfulness without changing that boundary: the snapshot now exposes the documented top-level source-separated `recent_activity` view, API v2 `Ready` requires the complete v2 schema plus a cryptographically matching server signing key pair, and the MySQL integration fixture performs foreign-key-safe isolation.
+v5.6.1 established the frozen backend truthfulness contract: the snapshot now exposes the documented top-level source-separated `recent_activity` view, API v2 `Ready` requires the complete v2 schema plus a cryptographically matching server signing key pair, and the MySQL integration fixture performs foreign-key-safe isolation.
 
 ## Secure API v2 architecture
 
@@ -158,3 +158,7 @@ Supplied assets under `admin/assets/brand/` are presentation resources only and 
 ## Settings and About presentation boundary (v5.5.1)
 
 v5.5.1 keeps the v5.4/v5.5 shared component architecture and changes only presentation composition: Settings uses a summary grid plus an API/secondary-stack detail grid, nested Settings navigation is controlled by the shared sidebar component, and About uses reusable product/feature/company metadata components. API, license/device, cron, authentication and updater execution paths are unchanged.
+
+## Dashboard refresh lifecycle correction (v5.7.1)
+
+v5.7.1 keeps the v5.7.0 Dashboard architecture unchanged and tightens only controller state transitions: request transport calls are entered through the Promise chain so synchronous throws are caught, `lastSuccessAt` advances only after successful render completion, stale `Retry` survives loading cleanup, and an auth-required state remains locked/disabled after `finally`.
