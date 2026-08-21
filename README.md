@@ -125,7 +125,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.8.1` |
+| Application version | `APP_VERSION` | `5.8.2` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -156,6 +156,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Secure in-app updater](docs/UPDATER.md)
 - [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.8.2 release notes](RELEASE_NOTES_v5.8.2.md)
 - [v5.8.1 release notes](RELEASE_NOTES_v5.8.1.md)
 - [v5.8.0 source-candidate notes](RELEASE_NOTES_v5.8.0.md)
 - [v5.7.1 release notes](RELEASE_NOTES_v5.7.1.md)
@@ -178,6 +179,10 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
 
+
+## Device icon compatibility hotfix (v5.8.2)
+
+Licora v5.8.2 replaces every remaining Admin runtime `bi-devices` glyph with the Bootstrap Icons 1.8.1-compatible `bi-laptop` glyph. The fix covers the shared sidebar and all remaining device-related UI surfaces without changing navigation, Dashboard behavior, APIs, licensing/device enforcement or updater runtime. A shared UI regression gate rejects future reintroduction of the unsupported class.
 
 ## Developer Integration Guide (v5.8.1; introduced in v5.8.0 source candidate)
 

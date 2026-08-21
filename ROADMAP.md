@@ -40,9 +40,10 @@ Roadmap items are proposals and must be implemented through reviewed, backward-c
 - v5.5.0: VibTools compact light UI refinement, truthful runtime-backed Settings, tracked Licora branding, About page and Windows builder-test portability; no database/API/updater protocol change.
 - v5.5.1: Settings layout, collapsible Settings submenu, and professional About Licora UI hotfix; no database/API/updater behavior change.
 
-## Developer onboarding program (v5.8.0 → v5.8.1)
+## Developer onboarding program (v5.8.0 → v5.8.2)
 
 - **Developer Integration Guide:** IMPLEMENTED in the v5.8.0 source candidate and re-audited/corrected in the v5.8.1 verification candidate.
-- **v5.8.1 corrective gate:** CI package/manifest version coherence fixed; Dashboard device glyph compatibility fixed; no API/DB/runtime protocol expansion.
+- **v5.8.1 corrective gate:** CI package/manifest version coherence fixed and Dashboard device glyph compatibility fixed.
+- **v5.8.2 UI compatibility hotfix:** all remaining Admin `bi-devices` glyphs are replaced with Bootstrap Icons 1.8.1-compatible `bi-laptop`, with a shared regression gate; no API/DB/runtime protocol expansion.
 - Scope is limited to the authenticated guide route, API & Clients sidebar link, exact Secure API v2 protocol documentation, downloadable examples for the ten approved language/runtime targets, PowerShell test tool, tests/docs/version/release identity.
 - API v1/v2 behavior, database schema, licensing/device enforcement, Dashboard, authentication/roles, Cron and updater runtime/protocol remain frozen.

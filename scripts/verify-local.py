@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local source verifier for Licora v5.8.1.
+"""Local source verifier for Licora v5.8.2.
 
 This verifier validates source and tests only. It never creates a Git tag, release,
 or GitHub artifact. Release packaging is intentionally owned by GitHub Actions and
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "5.8.1"
+VERSION = "5.8.2"
 
 V1_GIT_BLOBS = {
     "api/verify.php": "4dc549c2afea0772d3f2ffa8b330fd24b8b13ec2",
@@ -28,6 +28,7 @@ V1_GIT_BLOBS = {
 
 REQUIRED = [
     "README.md", "CHANGELOG.md", "SECURITY.md", "REPOSITORY_METADATA.md",
+    "RELEASE_NOTES_v5.8.2.md", "RELEASE_COMMANDS_v5.8.2.md", "BASELINE_v5.8.2.md",
     "RELEASE_NOTES_v5.8.1.md", "RELEASE_COMMANDS_v5.8.1.md", "BASELINE_v5.8.1.md",
     "RELEASE_NOTES_v5.8.0.md", "RELEASE_COMMANDS_v5.8.0.md", "BASELINE_v5.8.0.md",
     "RELEASE_NOTES_v5.7.1.md", "RELEASE_COMMANDS_v5.7.1.md", "BASELINE_v5.7.1.md",
@@ -157,10 +158,10 @@ for rel, expected in V1_GIT_BLOBS.items():
 print("[3/12] Release/version consistency")
 config = read("includes/config.php")
 if f"env_value('APP_VERSION', '{VERSION}')" not in config:
-    fail("runtime APP_VERSION is not 5.8.1")
-for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.8.1.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
+    fail("runtime APP_VERSION is not 5.8.2")
+for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.8.2.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
     if VERSION not in read(rel):
-        fail(f"5.8.1 release marker missing from {rel}")
+        fail(f"5.8.2 release marker missing from {rel}")
 
 print("[4/12] API v2 protocol/security contract")
 v2_endpoint_text = "\n".join(read(f"api/v2/{name}.php") for name in ("activate", "refresh", "status", "deactivate"))
@@ -214,17 +215,17 @@ for table in ["update_jobs", "update_events", "app_migrations"]:
 if "-- Licora v5.3.0 Secure In-App Updater additive migration." not in read("database.sql"):
     fail("fresh-install database.sql does not contain updater additive schema")
 release_spec = read("update/release-spec.json")
-for marker in ['\"protocol_version\": 1', '\"version\": \"5.8.1\"', '\"minimum_updater\": \"5.3.0\"', '\"upgrade_from\"']:
+for marker in ['\"protocol_version\": 1', '\"version\": \"5.8.2\"', '\"minimum_updater\": \"5.3.0\"', '\"upgrade_from\"']:
     if marker not in release_spec:
         fail(f"updater release-spec marker missing: {marker}")
 if 'migration-v5.3.0-updater.sql' in release_spec:
-    fail('v5.8.1 Developer Guide verification release spec must not replay the v5.3.0 updater migration')
+    fail('v5.8.2 device icon hotfix release spec must not replay the v5.3.0 updater migration')
 import json as _json
 _release_spec_data = _json.loads(release_spec)
-if _release_spec_data.get("upgrade_from") != ["5.7.1", "5.8.0"]:
-    fail("v5.8.1 release spec must accept published v5.7.1 and applied v5.8.0 baselines")
+if _release_spec_data.get("upgrade_from") != ["5.8.1"]:
+    fail("v5.8.2 release spec must accept published v5.8.1 baseline")
 if _release_spec_data.get("migrations") != []:
-    fail("v5.8.1 Developer Guide verification release must not declare a database migration")
+    fail("v5.8.2 device icon hotfix must not declare a database migration")
 
 print("[6/12] Signing-key and secret hygiene")
 for rel in [
@@ -408,4 +409,4 @@ for marker in ["git archive", "scripts/verify-local.py", "sha256", ".licora-v2-s
     if marker not in packager:
         fail(f"release packaging marker missing: {marker}")
 
-print("Licora v5.8.1 local verification passed.")
+print("Licora v5.8.2 local verification passed.")

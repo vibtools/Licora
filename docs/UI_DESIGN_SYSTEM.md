@@ -214,3 +214,7 @@ The v5.7.0 compact Dashboard composition is unchanged. v5.7.1 only corrects refr
 ## Developer Guide surface (v5.8.1; introduced in v5.8.0 source candidate)
 
 The Developer Guide stays inside the existing light admin shell and uses a scoped compact documentation composition: recommendation banner, Quick Start cards, detected endpoint rows, proof-contract panel, horizontally scrollable language tabs, collapsible source blocks, security/error cards and responsive single-column fallbacks. No global theme, sidebar architecture or other admin-page presentation contract is changed.
+
+## Device icon compatibility (v5.8.2)
+
+The Admin UI remains pinned to Bootstrap Icons 1.8.1. Device-related runtime surfaces must use `bi-laptop`; the unsupported `bi-devices` class is forbidden by the shared UI component regression contract. This rule changes glyph compatibility only and does not alter navigation structure, semantics or behavior.

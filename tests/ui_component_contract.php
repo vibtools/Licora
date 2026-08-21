@@ -23,6 +23,9 @@ $shell=(string)file_get_contents($root.'/admin/assets/css/licora/layout/app-shel
 foreach(['.ui-sidebar','.ui-topbar','.admin-shell','@media (max-width: 899.98px)'] as $marker){uc_ok(strpos($shell,$marker)!==false,'shared app-shell marker missing '.$marker);}
 $pages=glob($root.'/admin/*.php')?:[];
 foreach($pages as $path){if(basename($path)==='logout.php')continue;$text=(string)file_get_contents($path);uc_ok(stripos($text,'<style')===false,'page-level style block forbidden: '.basename($path));uc_ok(strpos($text,'cdn.tailwindcss.com')===false,'Tailwind runtime dependency forbidden in migrated admin page: '.basename($path));if(basename($path)!=='login.php'){uc_ok(strpos($text,'includes/navbar.php')!==false,'admin shell include missing: '.basename($path));}}
+$unsupportedDeviceIcon='bi-'.'devices';
+$runtimeUi=new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root.'/admin',FilesystemIterator::SKIP_DOTS));
+foreach($runtimeUi as $file){if(!$file->isFile()||!in_array(strtolower($file->getExtension()),['php','js','html'],true))continue;$text=(string)file_get_contents($file->getPathname());uc_ok(strpos($text,$unsupportedDeviceIcon)===false,'unsupported Bootstrap Icons 1.8.1 device glyph remains: '.str_replace($root.'/','',$file->getPathname()));}
 $install=(string)file_get_contents($root.'/install.php');uc_ok(stripos($install,'<style')===false,'installer page-level style block forbidden');
 $topLevelCss=array_map('basename',glob($root.'/admin/assets/css/*.css')?:[]);sort($topLevelCss);uc_ok($topLevelCss===['admin-ui.css','licora-updater.css'],'top-level admin CSS must remain compatibility entrypoints only');
 $adminJs=(string)file_get_contents($root.'/admin/assets/js/admin-ui.js');uc_ok(strpos($adminJs,"setAttribute('data-theme', 'light')")!==false,'light-theme runtime lock missing');uc_ok(strpos($adminJs,'uiThemeToggle')===false,'dark-theme toggle must not be applied in the v5.4.0 light migration');

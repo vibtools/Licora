@@ -6,7 +6,18 @@ All notable public-release changes are recorded here. Historical project notes r
 
 ### Planned
 
-- No additional feature scope is approved beyond the verified v5.8.1 Developer Integration Guide correction.
+- No additional feature scope is approved beyond the v5.8.2 global device-icon compatibility hotfix.
+
+## [5.8.2] - 2026-08-20
+
+### Fixed
+- Replaced all seven remaining Admin runtime `bi-devices` usages with the Bootstrap Icons 1.8.1-compatible `bi-laptop` glyph.
+- Restored visible device icons in the shared sidebar, Settings shortcut, Device Management header/empty state, License View Devices action, Backup Devices CSV action and About Device Control card.
+- Added a recursive Admin runtime UI regression check preventing `bi-devices` from returning in PHP, JavaScript or HTML UI sources.
+
+### Compatibility
+- Signed update compatibility accepts the published `v5.8.1` baseline.
+- No database migration, file deletion, API v1/v2 change, license/device behavior change, Dashboard data/AJAX change, Developer Guide behavior change, authentication/role change, Cron change or updater runtime/protocol change.
 
 ## [5.8.1] - 2026-08-20
 
