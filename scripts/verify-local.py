@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local source verifier for Licora v5.6.1.
+"""Local source verifier for Licora v5.7.1.
 
 This verifier validates source and tests only. It never creates a Git tag, release,
 or GitHub artifact. Release packaging is intentionally owned by GitHub Actions and
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "5.6.1"
+VERSION = "5.7.1"
 
 V1_GIT_BLOBS = {
     "api/verify.php": "4dc549c2afea0772d3f2ffa8b330fd24b8b13ec2",
@@ -28,6 +28,8 @@ V1_GIT_BLOBS = {
 
 REQUIRED = [
     "README.md", "CHANGELOG.md", "SECURITY.md", "REPOSITORY_METADATA.md",
+    "RELEASE_NOTES_v5.7.1.md", "RELEASE_COMMANDS_v5.7.1.md", "BASELINE_v5.7.1.md",
+    "RELEASE_NOTES_v5.7.0.md", "RELEASE_COMMANDS_v5.7.0.md", "BASELINE_v5.7.0.md",
     "RELEASE_NOTES_v5.6.1.md", "RELEASE_COMMANDS_v5.6.1.md",
     "RELEASE_NOTES_v5.6.0.md", "RELEASE_COMMANDS_v5.6.0.md",
     "RELEASE_NOTES_v5.5.1.md", "RELEASE_COMMANDS_v5.5.1.md",
@@ -40,13 +42,15 @@ REQUIRED = [
     "audit/V5.2.1_PHASE02_STEP001_FORENSIC_AUDIT.md", "audit/V5.2.1_DELTA_PATCH_MANIFEST.txt", "audit/V5.2.1_DELTA_FILE_SHA256SUMS.txt",
     "audit/V5.4.0_UI_MIGRATION_AUDIT.md",
     "audit/V5.4.1_SCOPE_INTEGRITY_AUDIT.md", "audit/V5.4.1_ROOT_CAUSE_MATRIX.md",
+    "audit/V5.7.1_DASHBOARD_PHASE2_VERIFICATION_AUDIT.md",
+    "audit/V5.7.0_DASHBOARD_PHASE2_AUDIT.md",
     "audit/V5.6.1_PHASE1_VERIFICATION_AUDIT.md",
     "audit/V5.6.0_DASHBOARD_PHASE1_AUDIT.md",
     "audit/V5.5.1_UI_HOTFIX_AUDIT.md",
     "audit/V5.5.0_UI_FORENSIC_AUDIT.md", "audit/V5.5.0_SCOPE_VERIFICATION.md",
     "migration-v5.2.0-api-v2.sql", "migration-v5.3.0-updater.sql", "database.sql", "includes/.htaccess",
     "api/verify.php", "api/check_license.php",
-    "includes/dashboard.php", "admin/ajax/dashboard-data.php",
+    "includes/dashboard.php", "admin/ajax/dashboard-data.php", "admin/assets/js/dashboard.js",
     "api/v2/activate.php", "api/v2/refresh.php", "api/v2/status.php", "api/v2/deactivate.php",
     "includes/v2/V2Exception.php", "includes/v2/V2KeyManager.php", "includes/v2/V2TokenService.php",
     "includes/v2/V2DeviceProof.php", "includes/v2/ApiV2.php", "includes/v2/V2Repository.php", "includes/v2/V2Provisioner.php", "includes/v2/bootstrap.php",
@@ -57,7 +61,7 @@ REQUIRED = [
     "tests/api_v1_freeze.php", "tests/api_v2_crypto.php", "tests/api_v2_static.php", "tests/api_v2_db_integration.php", "tests/admin_v2_ui_db_integration.php",
     "tests/updater_static.php", "tests/updater_manifest.php", "tests/updater_state_machine.php", "tests/updater_failure_recovery.php", "tests/updater_ui_contract.php", "tests/updater_db_integration.php", "tests/updater_dom_contract.php", "tests/updater_builder_contract.py", "tests/updater_browser_runtime.js", "tests/sidebar_submenu_runtime.js",
     "tests/ui_route_contract.php", "tests/ui_form_contract.php", "tests/ui_component_contract.php", "tests/ui_updater_contract.php", "tests/ui_v550_contract.php", "tests/ui_v551_contract.php",
-    "tests/dashboard_data_contract.php", "tests/dashboard_db_integration.php",
+    "tests/dashboard_data_contract.php", "tests/dashboard_phase2_contract.php", "tests/dashboard_db_integration.php", "tests/dashboard_browser_runtime.js",
     "docs/API_V2.md", "docs/API_V2_SECURITY.md", "docs/API_V2_CLIENT_INTEGRATION.md", "docs/API_V2_MIGRATION.md",
     "docs/CONFIGURATION.md", "docs/ARCHITECTURE.md", "docs/RELEASE.md", "docs/INSTALLATION.md", "docs/UPGRADE_GUIDE.md", "docs/FEATURE_MATRIX.md", "docs/UPDATER.md", "docs/UI_DESIGN_SYSTEM.md",
     "DASHBOARD_PRODUCTION_UPDATE_INDEX.md", "docs/DASHBOARD_PRODUCTION_ROADMAP_2_PHASE.md", "docs/DASHBOARD_UPDATE_PHASE_LOG.md", "docs/ERROR_HANDLING_BASELINE_AND_TARGET.md", "docs/ACTUAL_IMPLEMENTATION_LEDGER.md", "docs/DASHBOARD_DATA_CONTRACT.md", "docs/DASHBOARD_PRODUCTION_VALIDATION_GATES.md", "docs/DASHBOARD_CHANGE_CONTROL.md", "audit/V5.5.1_DASHBOARD_PRODUCTION_READINESS_FORENSIC_REPORT.md",
@@ -88,6 +92,7 @@ TESTS = [
     "tests/ui_v550_contract.php",
     "tests/ui_v551_contract.php",
     "tests/dashboard_data_contract.php",
+    "tests/dashboard_phase2_contract.php",
     "tests/dashboard_db_integration.php",
 ]
 
@@ -148,10 +153,10 @@ for rel, expected in V1_GIT_BLOBS.items():
 print("[3/12] Release/version consistency")
 config = read("includes/config.php")
 if f"env_value('APP_VERSION', '{VERSION}')" not in config:
-    fail("runtime APP_VERSION is not 5.6.1")
-for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.6.1.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
+    fail("runtime APP_VERSION is not 5.7.1")
+for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.7.1.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
     if VERSION not in read(rel):
-        fail(f"5.6.1 release marker missing from {rel}")
+        fail(f"5.7.1 release marker missing from {rel}")
 
 print("[4/12] API v2 protocol/security contract")
 v2_endpoint_text = "\n".join(read(f"api/v2/{name}.php") for name in ("activate", "refresh", "status", "deactivate"))
@@ -205,17 +210,17 @@ for table in ["update_jobs", "update_events", "app_migrations"]:
 if "-- Licora v5.3.0 Secure In-App Updater additive migration." not in read("database.sql"):
     fail("fresh-install database.sql does not contain updater additive schema")
 release_spec = read("update/release-spec.json")
-for marker in ['\"protocol_version\": 1', '\"version\": \"5.6.1\"', '\"minimum_updater\": \"5.3.0\"', '\"upgrade_from\"']:
+for marker in ['\"protocol_version\": 1', '\"version\": \"5.7.1\"', '\"minimum_updater\": \"5.3.0\"', '\"upgrade_from\"']:
     if marker not in release_spec:
         fail(f"updater release-spec marker missing: {marker}")
 if 'migration-v5.3.0-updater.sql' in release_spec:
-    fail('v5.6.1 dashboard corrective release spec must not replay the v5.3.0 updater migration')
+    fail('v5.7.1 Dashboard Phase 2 corrective release spec must not replay the v5.3.0 updater migration')
 import json as _json
 _release_spec_data = _json.loads(release_spec)
-if _release_spec_data.get("upgrade_from") != ["5.5.1", "5.6.0"]:
-    fail("v5.6.1 release spec must accept the official v5.5.1 source and applied v5.6.0 baseline")
+if _release_spec_data.get("upgrade_from") != ["5.6.1", "5.7.0"]:
+    fail("v5.7.1 release spec must accept both the published v5.6.1 source and the applied v5.7.0 source baseline")
 if _release_spec_data.get("migrations") != []:
-    fail("v5.6.1 dashboard Phase 1 corrective release must not declare a database migration")
+    fail("v5.7.1 Dashboard Phase 2 corrective release must not declare a database migration")
 
 print("[6/12] Signing-key and secret hygiene")
 for rel in [
@@ -325,6 +330,7 @@ _browser_dependency_text = "\n".join(
     read(rel) for rel in [
         "admin/index.php",
         "admin/assets/js/admin-ui.js",
+        "admin/assets/js/dashboard.js",
         "admin/assets/js/licora-updater.js",
         "admin/assets/js/update-notifier.js",
         "index.php",
@@ -375,12 +381,13 @@ run([sys.executable, "tests/updater_builder_contract.py"])
 
 print("[11/12] JavaScript syntax/runtime")
 node = shutil.which("node")
-js_files = [ROOT / "admin/assets/js/admin-ui.js", ROOT / "admin/assets/js/components/sidebar.js", ROOT / "admin/assets/js/licora-updater.js", ROOT / "admin/assets/js/update-notifier.js"]
+js_files = [ROOT / "admin/assets/js/admin-ui.js", ROOT / "admin/assets/js/dashboard.js", ROOT / "admin/assets/js/components/sidebar.js", ROOT / "admin/assets/js/licora-updater.js", ROOT / "admin/assets/js/update-notifier.js"]
 if node and all(js.is_file() for js in js_files):
     for js in js_files:
         run([node, "--check", str(js)])
     run([node, "tests/updater_browser_runtime.js"])
     run([node, "tests/sidebar_submenu_runtime.js"])
+    run([node, "tests/dashboard_browser_runtime.js"])
 else:
     print("Node.js not installed; JavaScript syntax/runtime check skipped locally.")
 
@@ -394,4 +401,4 @@ for marker in ["git archive", "scripts/verify-local.py", "sha256", ".licora-v2-s
     if marker not in packager:
         fail(f"release packaging marker missing: {marker}")
 
-print("Licora v5.6.1 local verification passed.")
+print("Licora v5.7.1 local verification passed.")

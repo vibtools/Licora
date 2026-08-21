@@ -89,7 +89,7 @@ $data = [
     ],
 ];
 $config = licora_installer_build_config($data);
-$assert(strpos($config, "define('APP_VERSION', '5.6.1')") !== false, 'generated configuration targets v5.6.1');
+$assert(strpos($config, "define('APP_VERSION', '5.7.1')") !== false, 'generated configuration targets v5.7.1');
 $assert(strpos($config, "define('DB_PORT', 3306)") !== false, 'generated configuration includes database port');
 
 $encrypted = licora_installer_encrypt('installer-secret-test', str_repeat('2', 64));
@@ -146,10 +146,10 @@ $assert(openssl_pkey_get_public((string)file_get_contents($v2InstallerKeys['publ
 @unlink($v2InstallerKeys['private_tmp']);
 @unlink($v2InstallerKeys['public_tmp']);
 
-$assert(licora_installation_write_flag($tempRoot, '5.6.1'), 'installation flag written atomically');
+$assert(licora_installation_write_flag($tempRoot, '5.7.1'), 'installation flag written atomically');
 $flag = json_decode((string)file_get_contents($tempRoot . '/includes/.licora-installed'), true);
 $assert(($flag['product'] ?? '') === 'Licora', 'installation flag identifies Licora');
-$assert(($flag['version'] ?? '') === '5.6.1', 'installation flag records version');
+$assert(($flag['version'] ?? '') === '5.7.1', 'installation flag records version');
 $assert(!isset($flag['database_password']) && !isset($flag['encryption_key']), 'installation flag contains no secrets');
 
 $assert(

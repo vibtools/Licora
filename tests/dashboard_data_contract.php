@@ -52,13 +52,13 @@ $assert(strpos($endpoint, "'recent_activity' => \$snapshot['recent_activity']") 
 $assert(strpos($dashboard, 'Tracked API Activity') !== false, 'dashboard uses truthful API activity label');
 $assert(strpos($dashboard, 'Expiration Timeline') !== false, 'dashboard uses truthful expiration label');
 $assert(strpos($dashboard, 'Top Licenses — API v1 Verify') !== false, 'top licenses identify API v1 source');
-$assert(strpos($dashboard, 'Recent API v1 Verify Calls') !== false, 'recent calls identify API v1 source');
+$assert(strpos($dashboard, 'Recent Activity') !== false, 'Phase 2 recent activity panel consumes the source-separated Phase 1 contract');
 $assert(strpos($dashboard, '>Security</h6>') === false, 'hardcoded Security Active dashboard row removed');
 $assert(strpos($dashboard, '>API Server</h6>') === false, 'hardcoded API Server Running dashboard row removed');
 $assert(strpos($dashboard, "ENVIRONMENT === 'production' ? 'Live' : 'Dev'") === false, 'production environment is not labeled as live health');
 $assert(strpos($dashboard, "\$health['api_v2']['key_pair_ready']") !== false, 'API v2 Ready UI requires a verified signing key pair');
-$assert(strpos($dashboard, 'window.location.reload()') !== false, 'Phase 1 intentionally preserves baseline 30-second full reload for Phase 2');
-$assert(strpos($dashboard, 'dashboard.js') === false, 'Phase 2 dashboard polling controller is not introduced early');
+$assert(strpos($dashboard, 'window.location.reload()') === false, 'Phase 2 removes the former 30-second full-page reload');
+$assert(strpos($dashboard, 'dashboard.js') !== false, 'Phase 2 Dashboard controller consumes the frozen Phase 1 endpoint');
 
 if ($failures !== []) {
     fwrite(STDERR, "Dashboard data contract test failed:\n- " . implode("\n- ", $failures) . "\n");

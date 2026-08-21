@@ -7,7 +7,7 @@ require_once '../includes/dashboard.php';
 
 $auth = new Auth();
 if (!$auth->isAdminLoggedIn()) {
-    header("Location: login.php");
+    header('Location: login.php');
     exit();
 }
 
@@ -15,46 +15,58 @@ $dashboard = new DashboardReadModel();
 $dashboardSnapshot = $dashboard->snapshot();
 $licenseStats = $dashboardSnapshot['licenses'];
 $deviceStats = $dashboardSnapshot['devices'];
-$apiStats = $dashboardSnapshot['api_keys'];
 $apiActivity = $dashboardSnapshot['api_activity'];
 $expiration = $dashboardSnapshot['expiration'];
 $health = $dashboardSnapshot['health'];
-
-$chartV1 = $apiActivity['v1_tracked']['last_14_days'];
-$chartV2 = $apiActivity['v2_tracked']['last_14_days'];
 $topLicenses = $apiActivity['v1_tracked']['top_licenses'];
-$recentCalls = $apiActivity['v1_tracked']['recent_calls'];
 
-$apiDates = [];
-foreach (array_merge($chartV1, $chartV2) as $point) {
-    if (!empty($point['date'])) {
-        $apiDates[(string)$point['date']] = true;
-    }
+$recentActivity = [];
+foreach ($dashboardSnapshot['recent_activity']['v1_tracked'] as $call) {
+    $recentActivity[] = [
+        'timestamp' => strtotime((string)($call['created_at'] ?? '')) ?: 0,
+        'time' => (string)($call['created_at'] ?? ''),
+        'source' => 'API v1',
+        'action' => (string)($call['endpoint'] ?? 'verify'),
+        'context' => !empty($call['license_key']) ? substr((string)$call['license_key'], 0, 12) . '…' : 'No license',
+        'result' => (string)((int)($call['response_code'] ?? 0)),
+        'result_class' => (int)($call['response_code'] ?? 0) === 200 ? 'success' : (((int)($call['response_code'] ?? 0) >= 400 && (int)($call['response_code'] ?? 0) < 500) ? 'warning' : 'danger'),
+    ];
 }
-$apiLabels = array_keys($apiDates);
-sort($apiLabels);
-$seriesByDate = static function (array $series, array $labels): array {
-    $indexed = [];
-    foreach ($series as $point) {
-        $indexed[(string)($point['date'] ?? '')] = (int)($point['count'] ?? 0);
+foreach ($dashboardSnapshot['recent_activity']['v2_tracked'] as $event) {
+    $contextParts = [];
+    if (!empty($event['app_id'])) {
+        $contextParts[] = (string)$event['app_id'];
     }
-    return array_map(static fn(string $date): int => (int)($indexed[$date] ?? 0), $labels);
-};
-$apiV1Data = $seriesByDate($chartV1, $apiLabels);
-$apiV2Data = $seriesByDate($chartV2, $apiLabels);
+    if ($event['license_id'] !== null) {
+        $contextParts[] = 'License #' . (int)$event['license_id'];
+    }
+    $recentActivity[] = [
+        'timestamp' => strtotime((string)($event['created_at'] ?? '')) ?: 0,
+        'time' => (string)($event['created_at'] ?? ''),
+        'source' => 'API v2',
+        'action' => (string)($event['event_type'] ?? 'audit_event'),
+        'context' => $contextParts !== [] ? implode(' · ', $contextParts) : 'Audit event',
+        'result' => 'Recorded',
+        'result_class' => 'primary',
+    ];
+}
+usort($recentActivity, static fn(array $a, array $b): int => $b['timestamp'] <=> $a['timestamp']);
+$recentActivity = array_slice($recentActivity, 0, 12);
 
-$expiredSeries = $expiration['expired_last_30_days'];
-$expiringSeries = $expiration['expiring_next_30_days'];
-$expirationDates = [];
-foreach (array_merge($expiredSeries, $expiringSeries) as $point) {
-    if (!empty($point['date'])) {
-        $expirationDates[(string)$point['date']] = true;
-    }
-}
-$expirationLabels = array_keys($expirationDates);
-sort($expirationLabels);
-$expiredData = $seriesByDate($expiredSeries, $expirationLabels);
-$expiringData = $seriesByDate($expiringSeries, $expirationLabels);
+$v2Ready = !empty($health['api_v2']['schema_ready']) && !empty($health['api_v2']['key_pair_ready']);
+$initialPayload = [
+    'success' => true,
+    'generated_at' => $dashboardSnapshot['generated_at'],
+    'data' => [
+        'licenses' => $dashboardSnapshot['licenses'],
+        'devices' => $dashboardSnapshot['devices'],
+        'api_keys' => $dashboardSnapshot['api_keys'],
+        'api_activity' => $dashboardSnapshot['api_activity'],
+        'recent_activity' => $dashboardSnapshot['recent_activity'],
+        'expiration' => $dashboardSnapshot['expiration'],
+        'health' => $dashboardSnapshot['health'],
+    ],
+];
 ?>
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
@@ -67,265 +79,212 @@ $expiringData = $seriesByDate($expiringSeries, $expirationLabels);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/admin-ui.css">
 </head>
-<body class="admin-ui">
+<body class="admin-ui dashboard-page">
     <?php include 'includes/navbar.php'; ?>
 
-    <div class="container-fluid admin-shell">
-        <div class="page-hero d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-            <div><h2><i class="bi bi-speedometer2"></i> Dashboard</h2></div>
-            <a href="license.php?action=create" class="btn btn-light"><i class="bi bi-plus-circle"></i> Create License</a>
+    <main class="container-fluid admin-shell" id="licora-dashboard" data-dashboard-endpoint="ajax/dashboard-data.php" data-dashboard-poll-ms="30000">
+        <header class="page-hero dashboard-header">
+            <div>
+                <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
+                <p>License system overview</p>
+            </div>
+            <div class="dashboard-refresh-group">
+                <div class="dashboard-refresh-meta" aria-live="polite" aria-atomic="true">
+                    <span class="dashboard-refresh-label" data-dashboard-refresh-label>Last updated</span>
+                    <strong data-dashboard-updated-at>—</strong>
+                </div>
+                <button type="button" class="btn btn-outline-primary" data-dashboard-refresh aria-label="Refresh dashboard data">
+                    <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+                    <span data-dashboard-refresh-text>Refresh</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-state" data-dashboard-state role="status" aria-live="polite" hidden>
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            <span data-dashboard-state-text></span>
+            <a href="login.php" data-dashboard-signin hidden>Sign in</a>
         </div>
 
-        <!-- Statistics Cards -->
-        <div class="row g-3 mb-4">
-            <div class="col-xl col-md-6">
-                <div class="card stat-card text-white bg-license">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title">Total Licenses</h6>
-                                <h2 class="stat-number"><?php echo $licenseStats['total']; ?></h2>
-                                <small>Active: <?php echo $licenseStats['active']; ?></small>
-                            </div>
-                            <i class="bi bi-key stat-icon"></i>
-                        </div>
+        <section class="dashboard-health-strip" aria-label="System status">
+            <div class="dashboard-health-item <?php echo $health['database']['ok'] ? 'is-ok' : 'is-danger'; ?>" data-dashboard-health="database">
+                <span class="dashboard-health-dot" aria-hidden="true"></span>
+                <span>Database</span>
+                <strong data-dashboard-health-value="database"><?php echo Security::escape($health['database']['label']); ?></strong>
+            </div>
+            <div class="dashboard-health-item <?php echo $v2Ready ? 'is-ok' : 'is-warning'; ?>" data-dashboard-health="api_v2">
+                <span class="dashboard-health-dot" aria-hidden="true"></span>
+                <span>API v2</span>
+                <strong data-dashboard-health-value="api_v2"><?php echo $v2Ready ? 'Ready' : 'Needs setup'; ?></strong>
+            </div>
+            <div class="dashboard-health-item <?php echo $health['cron_scripts']['available'] ? 'is-ok' : 'is-danger'; ?>" data-dashboard-health="cron_scripts">
+                <span class="dashboard-health-dot" aria-hidden="true"></span>
+                <span>Cron Scripts</span>
+                <strong data-dashboard-health-value="cron_scripts"><?php echo $health['cron_scripts']['available'] ? 'Available' : 'Missing'; ?></strong>
+            </div>
+            <div class="dashboard-health-item <?php echo $health['php']['ok'] ? 'is-ok' : 'is-danger'; ?>" data-dashboard-health="php">
+                <span class="dashboard-health-dot" aria-hidden="true"></span>
+                <span>PHP</span>
+                <strong data-dashboard-health-value="php"><?php echo Security::escape($health['php']['version']); ?></strong>
+            </div>
+            <div class="dashboard-health-item is-neutral" data-dashboard-health="environment">
+                <span class="dashboard-health-dot" aria-hidden="true"></span>
+                <span>Environment</span>
+                <strong data-dashboard-health-value="environment"><?php echo Security::escape(ucfirst((string)$health['environment']['value'])); ?></strong>
+            </div>
+        </section>
+
+        <section class="dashboard-kpi-grid" aria-label="License overview">
+            <article class="dashboard-kpi-card">
+                <div class="dashboard-kpi-icon"><i class="bi bi-key" aria-hidden="true"></i></div>
+                <div class="dashboard-kpi-copy">
+                    <span class="dashboard-kpi-label">Total Licenses</span>
+                    <strong class="dashboard-kpi-value" data-dashboard-kpi="total_licenses"><?php echo (int)$licenseStats['total']; ?></strong>
+                    <span class="dashboard-kpi-meta">All license records</span>
+                </div>
+            </article>
+            <article class="dashboard-kpi-card">
+                <div class="dashboard-kpi-icon"><i class="bi bi-check2-circle" aria-hidden="true"></i></div>
+                <div class="dashboard-kpi-copy">
+                    <span class="dashboard-kpi-label">Active Licenses</span>
+                    <strong class="dashboard-kpi-value" data-dashboard-kpi="active_licenses"><?php echo (int)$licenseStats['active']; ?></strong>
+                    <span class="dashboard-kpi-meta">Expired: <span data-dashboard-kpi-meta="expired_licenses"><?php echo (int)$licenseStats['expired']; ?></span> · Suspended: <span data-dashboard-kpi-meta="suspended_licenses"><?php echo (int)$licenseStats['suspended']; ?></span></span>
+                </div>
+            </article>
+            <article class="dashboard-kpi-card">
+                <div class="dashboard-kpi-icon"><i class="bi bi-devices" aria-hidden="true"></i></div>
+                <div class="dashboard-kpi-copy">
+                    <span class="dashboard-kpi-label">Recently Seen Devices</span>
+                    <strong class="dashboard-kpi-value" data-dashboard-kpi="recent_devices"><?php echo (int)$deviceStats['recently_seen']; ?></strong>
+                    <span class="dashboard-kpi-meta">5 min · Active flagged: <span data-dashboard-kpi-meta="active_devices"><?php echo (int)$deviceStats['active_flagged']; ?></span> · Total: <span data-dashboard-kpi-meta="total_devices"><?php echo (int)$deviceStats['total_records']; ?></span></span>
+                </div>
+            </article>
+            <article class="dashboard-kpi-card">
+                <div class="dashboard-kpi-icon"><i class="bi bi-calendar2-week" aria-hidden="true"></i></div>
+                <div class="dashboard-kpi-copy">
+                    <span class="dashboard-kpi-label">Expiring Soon</span>
+                    <strong class="dashboard-kpi-value" data-dashboard-kpi="expiring_soon"><?php echo (int)$licenseStats['expiring_soon']; ?></strong>
+                    <span class="dashboard-kpi-meta">Next <?php echo (int)$licenseStats['expiring_soon_window_days']; ?> days</span>
+                </div>
+            </article>
+        </section>
+
+        <section class="dashboard-chart-grid" aria-label="Dashboard analytics">
+            <article class="card dashboard-panel dashboard-api-panel">
+                <div class="card-header">
+                    <div>
+                        <h5 class="mb-0">Tracked API Activity</h5>
+                        <small>API v1 Verify and API v2 Audit Events · last 14 days</small>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-xl col-md-6">
-                <div class="card stat-card text-white bg-device">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title">Recently Seen Devices</h6>
-                                <h2 class="stat-number"><?php echo $deviceStats['recently_seen']; ?></h2>
-                                <small>Active flagged: <?php echo $deviceStats['active_flagged']; ?> · Total: <?php echo $deviceStats['total_records']; ?></small>
-                            </div>
-                            <i class="bi bi-devices stat-icon"></i>
-                        </div>
+                <div class="card-body dashboard-chart-body">
+                    <canvas id="dailyApiChart" role="img" aria-label="Tracked API activity over the last 14 days">Tracked API activity chart</canvas>
+                </div>
+            </article>
+            <article class="card dashboard-panel dashboard-expiration-panel">
+                <div class="card-header">
+                    <div>
+                        <h5 class="mb-0">Expiration Timeline</h5>
+                        <small>Expired last 30 days · expiring next 30 days</small>
                     </div>
                 </div>
-            </div>
+                <div class="card-body dashboard-chart-body">
+                    <canvas id="expiredTrendChart" role="img" aria-label="License expiration timeline">License expiration timeline chart</canvas>
+                </div>
+            </article>
+        </section>
 
-
-            <div class="col-xl col-md-6">
-                <div class="card stat-card text-white bg-expired">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title">Expired Licenses</h6>
-                                <h2 class="stat-number"><?php echo $licenseStats['expired']; ?></h2>
-                                <small>Suspended: <?php echo $licenseStats['suspended']; ?></small>
-                            </div>
-                            <i class="bi bi-calendar-x stat-icon"></i>
-                        </div>
+        <section class="dashboard-operations-grid">
+            <article class="card dashboard-panel dashboard-activity-panel">
+                <div class="card-header">
+                    <div>
+                        <h5 class="mb-0"><i class="bi bi-activity" aria-hidden="true"></i> Recent Activity</h5>
+                        <small>Tracked API v1 calls and API v2 audit events</small>
+                    </div>
+                    <a href="logs.php" class="btn btn-sm btn-outline-primary">View logs</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive ui-scrollbar">
+                        <table class="table table-sm table-hover dashboard-activity-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Source</th>
+                                    <th>Activity</th>
+                                    <th>Context</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody data-dashboard-recent-activity>
+                                <?php if ($recentActivity === []): ?>
+                                <tr data-dashboard-empty-row><td colspan="5"><div class="dashboard-empty">No tracked activity yet.</div></td></tr>
+                                <?php else: ?>
+                                <?php foreach ($recentActivity as $activity): ?>
+                                <tr>
+                                    <td><?php echo $activity['time'] !== '' ? Security::escape(date('M j, H:i', strtotime($activity['time']))) : '—'; ?></td>
+                                    <td><span class="dashboard-source-badge"><?php echo Security::escape($activity['source']); ?></span></td>
+                                    <td><code><?php echo Security::escape($activity['action']); ?></code></td>
+                                    <td><?php echo Security::escape($activity['context']); ?></td>
+                                    <td><span class="badge bg-<?php echo Security::escape($activity['result_class']); ?>"><?php echo Security::escape($activity['result']); ?></span></td>
+                                </tr>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-                        <div class="col-xl col-md-6">
-                <div class="card stat-card text-white bg-api">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title">API Keys</h6>
-                                <h2 class="stat-number"><?php echo $apiStats['active']; ?></h2>
-                                <small>Tracked v1 requests: <?php echo number_format($apiStats['tracked_v1_requests']); ?></small>
-                            </div>
-                            <i class="bi bi-key stat-icon"></i>
-                        </div>
+            </article>
+
+            <aside class="card dashboard-panel dashboard-actions-panel">
+                <div class="card-header">
+                    <div>
+                        <h5 class="mb-0"><i class="bi bi-lightning-charge" aria-hidden="true"></i> Quick Actions</h5>
+                        <small>Existing admin workflows</small>
                     </div>
                 </div>
-            </div>
+                <div class="card-body dashboard-quick-actions">
+                    <a href="license.php?action=create" class="dashboard-action-link"><i class="bi bi-plus-circle" aria-hidden="true"></i><span><strong>Create License</strong><small>Issue a new license</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a href="device.php" class="dashboard-action-link"><i class="bi bi-devices" aria-hidden="true"></i><span><strong>Manage Devices</strong><small>Review device records</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a href="api_keys.php" class="dashboard-action-link"><i class="bi bi-key" aria-hidden="true"></i><span><strong>API Keys</strong><small>Manage API v1 keys</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a href="client_apps.php" class="dashboard-action-link"><i class="bi bi-boxes" aria-hidden="true"></i><span><strong>Client Apps</strong><small>Manage API v2 apps</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a href="health.php" class="dashboard-action-link"><i class="bi bi-heart-pulse" aria-hidden="true"></i><span><strong>System Health</strong><small>Open health diagnostics</small></span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                </div>
+            </aside>
+        </section>
 
-            <div class="col-xl col-md-6">
-                <div class="card stat-card text-white bg-log">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title">Environment</h6>
-                                <h2 class="stat-number"><?php echo Security::escape(ucfirst((string)$health['environment']['value'])); ?></h2>
-                                <small>Version: <?php echo APP_VERSION; ?></small>
-                            </div>
-                            <i class="bi bi-shield-check stat-icon"></i>
-                        </div>
-                    </div>
+        <section class="card dashboard-panel dashboard-top-licenses-panel">
+            <div class="card-header">
+                <div>
+                    <h5 class="mb-0">Top Licenses — API v1 Verify</h5>
+                    <small>Highest tracked API v1 verification volume</small>
                 </div>
             </div>
-        </div>
-
-
-        <div class="row g-3 mb-4">
-            <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Tracked API Activity</h5></div><div class="card-body"><canvas id="dailyApiChart" height="180"></canvas></div></div></div>
-            <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Expiration Timeline</h5></div><div class="card-body"><canvas id="expiredTrendChart" height="180"></canvas></div></div></div>
-            <div class="col-lg-4"><div class="card h-100"><div class="card-header"><h5 class="mb-0">Top Licenses — API v1 Verify</h5></div><div class="card-body"><ul class="list-group list-group-flush"><?php foreach ($topLicenses as $tl): ?><li class="list-group-item d-flex justify-content-between"><span><code><?php echo Security::escape(substr($tl['license_key'] ?? 'Unknown',0,18)); ?></code></span><span class="badge bg-primary"><?php echo (int)$tl['count']; ?></span></li><?php endforeach; ?></ul></div></div></div>
-        </div>
-
-        <!-- Quick Actions & Recent Activity -->
-        <div class="row">
-            <div class="col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <a href="license.php?action=create" class="btn btn-primary btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                                    <i class="bi bi-plus-circle fs-1 mb-2"></i>
-                                    <span>Create License</span>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="api_keys.php" class="btn btn-success btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                                    <i class="bi bi-key fs-1 mb-2"></i>
-                                    <span>API Keys</span>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="device.php" class="btn btn-info btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                                    <i class="bi bi-devices fs-1 mb-2"></i>
-                                    <span>Devices</span>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="logs.php" class="btn btn-warning btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                                    <i class="bi bi-clock-history fs-1 mb-2"></i>
-                                    <span>Activity Logs</span>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="audit.php" class="btn btn-outline-dark btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                                    <i class="bi bi-journal-text fs-1 mb-2"></i>
-                                    <span>Audit Trail</span>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="backup.php" class="btn btn-outline-dark btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                                    <i class="bi bi-download fs-1 mb-2"></i>
-                                    <span>Backup</span>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="health.php" class="btn btn-outline-dark btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                                    <i class="bi bi-heart-pulse fs-1 mb-2"></i>
-                                    <span>Health</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card-body p-0">
+                <div class="table-responsive ui-scrollbar">
+                    <table class="table table-sm table-hover mb-0 dashboard-top-licenses-table">
+                        <thead><tr><th>License</th><th class="text-end">Tracked Requests</th></tr></thead>
+                        <tbody data-dashboard-top-licenses>
+                            <?php if ($topLicenses === []): ?>
+                            <tr data-dashboard-empty-row><td colspan="2"><div class="dashboard-empty">No tracked API v1 license activity yet.</div></td></tr>
+                            <?php else: ?>
+                            <?php foreach ($topLicenses as $license): ?>
+                            <tr>
+                                <td><code><?php echo Security::escape(substr((string)($license['license_key'] ?? 'Unknown'), 0, 18)); ?></code></td>
+                                <td class="text-end"><span class="badge bg-primary"><?php echo (int)($license['count'] ?? 0); ?></span></td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </section>
+    </main>
 
-            <div class="col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="bi bi-activity"></i> Recent API v1 Verify Calls</h5>
-                        <a href="logs.php" class="btn btn-sm btn-outline-primary">View All</a>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive ui-scrollbar">
-                            <table class="table table-sm table-hover" id="recent-calls-table" data-ui-paginate="true" data-ui-page-size="10">
-                                <thead>
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>Endpoint</th>
-                                        <th>License</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (empty($recentCalls)): ?>
-                                    <tr>
-                                        <td colspan="4"><div class="empty-state py-4"><div class="empty-icon"><i class="bi bi-activity"></i></div><h6>No API calls yet</h6></div></td>
-                                    </tr>
-                                    <?php else: ?>
-                                    <?php foreach ($recentCalls as $call): ?>
-                                    <tr>
-                                        <td><?php echo date('H:i', strtotime($call['created_at'])); ?></td>
-                                        <td><code><?php echo htmlspecialchars($call['endpoint']); ?></code></td>
-                                        <td>
-                                            <?php if ($call['license_key']): ?>
-                                            <small><?php echo substr(htmlspecialchars($call['license_key']), 0, 8) . '...'; ?></small>
-                                            <?php else: ?>
-                                            <span class="text-muted">Test</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-<?php echo $call['response_code'] == 200 ? 'success' : ($call['response_code'] == 400 ? 'warning' : 'danger'); ?>">
-                                                <?php echo $call['response_code']; ?>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- System Status -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-server"></i> System Status</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="me-3"><div class="p-2 bg-<?php echo $health['database']['ok'] ? 'success' : 'danger'; ?> rounded-circle"><i class="bi bi-database text-white"></i></div></div>
-                                    <div><h6 class="mb-0">Database</h6><small class="text-muted"><?php echo Security::escape($health['database']['label']); ?></small></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="me-3"><div class="p-2 bg-<?php echo $health['php']['ok'] ? 'success' : 'danger'; ?> rounded-circle"><i class="bi bi-code-slash text-white"></i></div></div>
-                                    <div><h6 class="mb-0">PHP Runtime</h6><small class="text-muted"><?php echo Security::escape($health['php']['version']); ?></small></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="me-3"><div class="p-2 bg-<?php echo $health['cron_scripts']['available'] ? 'success' : 'danger'; ?> rounded-circle"><i class="bi bi-clock-history text-white"></i></div></div>
-                                    <div><h6 class="mb-0">Cron Scripts</h6><small class="text-muted"><?php echo $health['cron_scripts']['available'] ? 'Available' : 'Missing'; ?></small></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="d-flex align-items-center mb-3">
-                                    <?php $v2Ready = !empty($health['api_v2']['schema_ready']) && !empty($health['api_v2']['key_pair_ready']); ?>
-                                    <div class="me-3"><div class="p-2 bg-<?php echo $v2Ready ? 'success' : 'warning'; ?> rounded-circle"><i class="bi bi-shield-check text-white"></i></div></div>
-                                    <div><h6 class="mb-0">API v2</h6><small class="text-muted"><?php echo $v2Ready ? 'Ready' : 'Needs setup'; ?></small></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <script type="application/json" id="dashboard-initial-data"><?php echo json_encode($initialPayload, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/js/admin-ui.js"></script>
-    <script>
-        // Auto-refresh dashboard every 30 seconds
-        setTimeout(() => {
-            window.location.reload();
-        }, 30000);
-    </script>
-<script>
-const apiLabels=<?php echo json_encode($apiLabels); ?>;
-const apiV1Data=<?php echo json_encode($apiV1Data); ?>;
-const apiV2Data=<?php echo json_encode($apiV2Data); ?>;
-const expirationLabels=<?php echo json_encode($expirationLabels); ?>;
-const expiredData=<?php echo json_encode($expiredData); ?>;
-const expiringData=<?php echo json_encode($expiringData); ?>;
-if(document.getElementById('dailyApiChart')) new Chart(document.getElementById('dailyApiChart'),{type:'line',data:{labels:apiLabels,datasets:[{label:'API v1 Verify',data:apiV1Data},{label:'API v2 Audit Events',data:apiV2Data}]},options:{responsive:true}});
-if(document.getElementById('expiredTrendChart')) new Chart(document.getElementById('expiredTrendChart'),{type:'bar',data:{labels:expirationLabels,datasets:[{label:'Expired — Last 30 Days',data:expiredData},{label:'Expiring — Next 30 Days',data:expiringData}]},options:{responsive:true}});
-</script>
+    <script src="assets/js/dashboard.js"></script>
 </body>
 </html>

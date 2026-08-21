@@ -2,18 +2,17 @@
 
 ## Authority
 
-এই documentation program v5.5.1 থেকে শুরু হয়েছিল; বর্তমান corrective source authority হলো uploaded **Licora v5.6.0 Official Baseline Freeze**।
+এই documentation program v5.5.1 থেকে শুরু হয়েছিল; বর্তমান immutable source authority হলো uploaded **Licora v5.7.0 Official Baseline Freeze**।
 
-- Current baseline ZIP SHA-256: `ba99c6e4fd74c2b59d392c3010b3aefe493390b3b0b0c94bd3c211218f14d597`
-- Current baseline Git commit: `5c685636e955422bc70e3bf07694f55d9c7fb1dc`
-- Current baseline Git tree: `848801c1785ebba0b2523a34afcf6af3ee05d5d6`
-- Current baseline version: `5.6.0`
+- Current baseline ZIP SHA-256: `e198fda3a90f38ef0d15faeab3f0b2797b92ba98b542cb7f22ac8f01b3bda022`
+- Current baseline embedded Git HEAD: `4b430b77ccc303aebeadc2852bebd3f11f67452a`
+- Current baseline version: `5.7.0`
 - Original Phase-program baseline: `v5.5.1 / 2f48ef569e6c532ab0de974a418c644e4ea8423f`
-- Development implementation status: **v5.6.1 Phase 1 COMPLETE + VERIFIED — PR #8 Actions run 32423210356 PASS**
+- Development implementation status: **v5.7.1 Phase 2 corrective source + local verification PASS — remote CI/live acceptance gates pending**
 - Planned update phases: **2**
-- Current corrective target: **v5.6.1 — Phase 1 verified baseline; Phase 2 NOT STARTED**
+- Current target: **v5.7.1 — Phase 2 verification corrective candidate**
 
-এই document set Phase 1 runtime implementation এবং v5.6.1 corrective verification state record করে। v5.6.1 কোনো database migration, external API contract change, license/device enforcement change, Cron mutation change, updater protocol change বা Phase 2 polling/UI feature যোগ করে না।
+এই document set Phase 1 verified foundation, v5.7.0 Phase 2 source baseline এবং v5.7.1 corrective verification candidate record করে। Phase 2 Dashboard presentation/browser behavior পরিবর্তন করে, কিন্তু database schema, external API contracts, license/device enforcement, authentication/roles, Cron mutation behavior, updater protocol এবং shared sidebar/topbar architecture অপরিবর্তিত রাখে।
 
 ## Document Map
 

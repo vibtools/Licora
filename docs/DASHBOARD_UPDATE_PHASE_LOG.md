@@ -4,14 +4,15 @@
 
 | Field | Value |
 |---|---|
-| Baseline | `v5.6.0 / 5c68563` (current corrective baseline; phase program originated at v5.5.1) |
-| Target version | `v5.6.1` |
+| Official baseline | `Licora_v5.7.0_Baseline.zip` / SHA-256 `e198fda3a90f38ef0d15faeab3f0b2797b92ba98b542cb7f22ac8f01b3bda022` |
+| Baseline embedded Git HEAD | `4b430b77ccc303aebeadc2852bebd3f11f67452a` |
+| Target version | `v5.7.1` |
 | Total phases | `2` |
 | Completed phases | `1` |
 | Remaining phases | `1` |
-| Current phase | `Phase 2 — NOT STARTED` |
-| Runtime code changes | `Phase 1 complete and verified; Phase 2 unchanged/not started` |
-| Last confirmed action | PR #8 Actions run `32423210356` passed all 8 required checks at head `ab085ae1738ef49be506cb10ae2353799108a969` |
+| Current phase | `Phase 2 — v5.7.1 SOURCE + LOCAL VERIFIED; REMOTE/LIVE GATES PENDING` |
+| Runtime code changes | `Dashboard-only compact UI + reload-free AJAX controller; Phase 1 backend contract unchanged` |
+| Last confirmed baseline action | `Uploaded v5.7.0 Phase 2 source baseline frozen for corrective audit; GitHub v5.7.0 tag not published` |
 
 ---
 
@@ -88,72 +89,84 @@ DB-backed correctness is verified by PR #8 Actions run `32423210356`; no Phase 1
 
 # Phase 2 Log — Compact UI, Reload-Free Refresh & Production Gate
 
-**Status:** `NOT STARTED`
+**Status:** `v5.7.1 SOURCE + LOCAL VERIFIED — REMOTE CI / MANUAL LIVE GATES PENDING`
 
-## Planned Features / Changes
+## Approved Features / Changes
 
-- compact dashboard composition
-- compact Quick Actions
-- truthful status strip
-- dedicated dashboard JS controller
-- AJAX polling
-- in-place KPI/chart/activity updates
+- compact Dashboard composition and status strip
+- four primary KPI cards
+- compact Quick Actions over existing routes
+- dedicated `admin/assets/js/dashboard.js` controller
+- authenticated 30-second AJAX polling
+- in-place KPI/chart/activity/top-license updates
 - manual refresh + last-updated indicator
-- stale/error UI
-- accessibility behavior
-- browser/runtime tests
-- final regression + production smoke
+- stale-data and session-expiry UI
+- request-overlap protection
+- responsive/accessibility behavior
+- browser/runtime contract tests
 
-## Completion Record
+## Source Implementation Record
 
-Fill only after implementation and verification.
+- Started at: `2026-08-20`
+- Parent baseline: `Licora_v5.7.0_Baseline.zip / e198fda3a90f38ef0d15faeab3f0b2797b92ba98b542cb7f22ac8f01b3bda022`
+- Target: `v5.7.1`
+- Database migration: `NO`
+- Deleted files: `NONE`
+- Backend Dashboard data contract change: `NONE`
+- External API change: `NONE`
+- Shared sidebar/topbar change: `NONE`
+- New runtime controller: `admin/assets/js/dashboard.js`
+- New tests: `tests/dashboard_phase2_contract.php`, `tests/dashboard_browser_runtime.js`
+- Targeted Phase 2 contract test: `PASS`
+- Targeted Dashboard browser/runtime test: `PASS` after v5.7.1 corrective cases were added
+- Full v5.7.1 local verifier: `PASS — python3 scripts/verify-local.py`
+- Remote CI/MySQL gate: `PENDING — not yet pushed`
+- Manual production smoke: `PENDING`
 
-- Started at:
-- Completed at:
-- Commit:
-- Branch:
-- Files changed:
-- Automated tests:
-- DB tests:
-- Browser/runtime tests:
-- Manual production smoke:
-- Known deviations:
-- Remaining known issues:
+## Implemented Features
 
-## Verified Features Added
+- initial Dashboard remains server rendered for progressive enhancement
+- former `window.location.reload()` 30-second full-page refresh removed
+- existing authenticated GET-only Phase 1 snapshot endpoint is consumed unchanged
+- manual Refresh updates without navigation/reload
+- automatic polling retains the reviewed 30-second cadence
+- one request at a time; overlapping poll/manual attempts are skipped while a request is in flight
+- last successful values remain visible after network/server failure
+- stale warning and Retry state surface without replacing truth with zero/fake data
+- 401 pauses polling and surfaces the existing login path
+- Chart.js instances are reused and updated in place
+- API v1/API v2 source labels remain explicit
+- Quick Actions preserve existing admin routes and permissions
+- reduced-motion preference disables refresh-icon animation
 
-`[NONE — phase not started]`
+## v5.7.1 Corrective Verification Findings
+
+Manual forensic review of the v5.7.0 browser controller found four concrete client-side lifecycle defects:
+
+1. stale `Retry` text was overwritten to `Refresh` by final loading cleanup;
+2. `401 AUTH_REQUIRED` refresh-disabled/`Refresh paused` state was undone by final loading cleanup;
+3. a synchronous request transport throw could escape before the Promise chain and leave `inFlight`/loading stuck;
+4. `lastSuccessAt` advanced before render completed, so a render failure could report a failed snapshot as the last successful update.
+
+The v5.7.1 corrective source fixes only those four behaviors and extends the browser/runtime regression test. Phase 2 layout, backend data contract, polling cadence, API/schema/license/device/auth/Cron/updater behavior and shared shell remain unchanged.
 
 ## Phase 2 Exit Decision
 
-`[PENDING]`
+`INCOMPLETE — v5.7.1 SOURCE + LOCAL VERIFIED; REMOTE CI AND MANUAL LIVE SMOKE STILL REQUIRED`
 
 ---
 
 # Program Continuation Pointer
 
-After each development session, update this exact block:
-
 ```text
-LAST VERIFIED BASELINE/COMMIT:
-COMPLETED PHASES:
-CURRENT PHASE:
-LAST COMPLETED STEP:
-CURRENT WORKTREE STATE:
-KNOWN FAILURES:
-NEXT EXACT STEP:
-DO NOT REPEAT:
-```
-
-## Current Pointer
-
-```text
-LAST VERIFIED BASELINE/COMMIT: v5.6.1 / ab085ae1738ef49be506cb10ae2353799108a969
+LAST VERIFIED BASELINE: Licora_v5.7.0_Baseline.zip / e198fda3a90f38ef0d15faeab3f0b2797b92ba98b542cb7f22ac8f01b3bda022
+EMBEDDED GIT HEAD: 4b430b77ccc303aebeadc2852bebd3f11f67452a
+TARGET SOURCE: v5.7.1 Phase 2 corrective candidate
 COMPLETED PHASES: 1/2
-CURRENT PHASE: Phase 2 — NOT STARTED
-LAST COMPLETED STEP: PR #8 Actions run 32423210356 passed all 8 required checks, including MySQL integration and verified source artifact
-CURRENT WORKTREE STATE: Phase 1 verified on remote feature branch; completion documentation update pending commit
-KNOWN FAILURES: NONE remaining in Phase 1. Historical run 32420291770 failure is retained above as root-cause evidence.
-NEXT EXACT STEP: commit/push this completion-documentation delta, confirm the resulting PR CI is green, then merge PR #8 into main
-DO NOT REPEAT: Phase 1 implementation or already-passed verification unless a new concrete failure/code change requires it
+CURRENT PHASE: Phase 2 — v5.7.1 SOURCE + LOCAL VERIFIED; REMOTE/LIVE GATES PENDING
+LAST COMPLETED STEP: full v5.7.1 local verifier passed after corrective source/tests/version/docs alignment
+CURRENT WORKTREE STATE: isolated v5.7.1 corrective work copy; no GitHub write performed
+KNOWN FAILURES: NONE remaining in local v5.7.1 source verification; four v5.7.0 lifecycle defects are corrected and recorded
+NEXT EXACT STEP: finalize replace-ready v5.7.1 delta integrity evidence; then push only after explicit GitHub-write authorization and run remote CI/MySQL
+DO NOT REPEAT: completed Phase 1 gates or targeted corrective test unless new code/error/evidence requires it
 ```

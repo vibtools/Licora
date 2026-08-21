@@ -6,7 +6,36 @@ All notable public-release changes are recorded here. Historical project notes r
 
 ### Planned
 
-- Continue the reviewed Dashboard production program with Phase 2: compact UI and reload-free refresh.
+- No additional Dashboard scope is approved beyond the v5.7.1 Phase 2 corrective release candidate.
+
+## [5.7.1] - 2026-08-20
+
+### Fixed
+- Preserved the Dashboard `Retry` label after failed-refresh loading cleanup instead of resetting it to `Refresh`.
+- Preserved the `401 AUTH_REQUIRED` refresh lock and `Refresh paused` state after request cleanup.
+- Routed synchronous Dashboard request-transport exceptions through the normal stale/error lifecycle so the in-flight lock and loading state are always released.
+- Advanced the Dashboard last-success timestamp only after a snapshot completes rendering successfully.
+- Expanded Dashboard browser/runtime regression coverage for the corrected stale/auth/transport/render lifecycle.
+
+### Compatibility
+- No database migration, file deletion, backend Dashboard contract change, external API change, license/device enforcement change, authentication/role change, Cron mutation change, updater protocol change, shared shell change or new browser dependency.
+- Signed update compatibility accepts both published `v5.6.1` and an already-applied `v5.7.0` source baseline.
+
+## [5.7.0] - 2026-08-20 (source baseline; superseded by 5.7.1 corrective)
+
+### Changed
+- Rebuilt the Dashboard as a compact operations view while preserving the existing Licora light shell, sidebar, topbar and other admin pages.
+- Replaced the 30-second full-page Dashboard reload with authenticated 30-second AJAX polling against the existing read-only `admin/ajax/dashboard-data.php` contract.
+- Added manual refresh, last-updated feedback, stale-data handling, session-expiry handling and request-overlap protection without changing backend business truth.
+- Updated API and expiration charts in place, combined source-labelled API v1/v2 recent activity, and converted Quick Actions to compact links over existing routes.
+
+### Added
+- Added `admin/assets/js/dashboard.js` as the dedicated Dashboard refresh/controller layer.
+- Added Phase 2 source/DOM contract and browser-runtime tests covering polling, manual refresh, overlap prevention, stale behavior and auth expiry.
+
+### Compatibility
+- No database migration, file deletion, external API contract change, license/device enforcement change, authentication/role change, Cron mutation change, updater protocol change, installer schema change, sidebar/topbar redesign or shared application architecture change.
+- Signed update compatibility starts from the frozen official `v5.6.1` baseline.
 
 ## [5.6.1] - 2026-08-20
 

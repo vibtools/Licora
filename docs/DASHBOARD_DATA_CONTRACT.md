@@ -4,7 +4,7 @@
 
 এই document implementation-এর আগে metric meaning freeze করে, যাতে UI label এবং backend query পরে একে অপরের সঙ্গে conflict না করে।
 
-This contract is implemented by the Phase 1 read model and corrected in **Licora v5.6.1**. Phase 2 will consume it for reload-free browser refresh.
+This contract was implemented/corrected by Phase 1 and is frozen by the **Licora v5.6.1** baseline. **Licora v5.7.0 Phase 2 consumes it unchanged** for reload-free browser refresh; no backend response field or external API contract is added by Phase 2.
 
 ## Endpoint
 
@@ -232,3 +232,7 @@ Data maintenance remains in existing API/admin/cron paths.
 This contract must not modify existing external API v1/v2 JSON contracts.
 
 It is an internal authenticated admin endpoint only.
+
+## v5.7.1 consumer note
+
+v5.7.1 consumes this Phase 1 Dashboard response contract unchanged. The corrective work is limited to browser refresh state management and does not add, remove, rename or reinterpret a response field.
