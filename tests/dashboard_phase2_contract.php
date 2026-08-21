@@ -67,6 +67,10 @@ foreach (["\$method !== 'GET'", 'isAdminLoggedIn()', "'AUTH_REQUIRED'", "'DASHBO
     $assert(strpos($endpoint, $marker) !== false, 'Phase 1 endpoint contract remains frozen: ' . $marker);
 }
 
+$assert(strpos($dashboard, 'dashboard-kpi-icon"><i class="bi bi-laptop"') !== false, 'Recently Seen Devices KPI uses a Bootstrap Icons 1.8.1-compatible visible device icon');
+$assert(strpos($dashboard, 'dashboard-action-link"><i class="bi bi-laptop"') !== false, 'Manage Devices quick action uses a Bootstrap Icons 1.8.1-compatible visible device icon');
+$assert(strpos($dashboard, 'bi bi-devices') === false, 'unsupported bi-devices icon must not remain on Dashboard');
+
 if ($failures !== []) {
     fwrite(STDERR, "Dashboard Phase 2 contract test failed:\n- " . implode("\n- ", $failures) . "\n");
     exit(1);

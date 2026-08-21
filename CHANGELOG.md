@@ -6,7 +6,35 @@ All notable public-release changes are recorded here. Historical project notes r
 
 ### Planned
 
-- No additional Dashboard scope is approved beyond the v5.7.1 Phase 2 corrective release candidate.
+- No additional feature scope is approved beyond the verified v5.8.1 Developer Integration Guide correction.
+
+## [5.8.1] - 2026-08-20
+
+### Fixed
+- Corrected the pull-request CI candidate-package identity so the v5.8.1 ZIP and generated updater manifest use the same version instead of pairing a v5.8.x package with a stale v5.7.1 manifest version.
+- Replaced the unsupported Dashboard `bi-devices` icon with the Bootstrap Icons 1.8.1 `bi-laptop` icon for **Recently Seen Devices** and **Manage Devices**, restoring visible device glyphs without changing Dashboard behavior.
+- Expanded release-readiness and Dashboard contracts so future version/manifest drift and the missing Dashboard device icon are rejected automatically.
+- Extended the browser-dependency source guard to the Developer Guide page/controller; no Chrome launcher, installer or downloader exists in the Licora PHP source.
+
+### Verified
+- Re-audited the v5.8.0 Developer Integration Guide, ten approved Secure API v2 examples and PowerShell test tool against the existing API v2 proof/token contract.
+- No fake/demo API path, shared API v1 secret, database migration, file deletion or external API/backend behavior change is introduced.
+
+### Compatibility
+- Signed update compatibility accepts the published `v5.7.1` baseline and an already-applied `v5.8.0` source candidate.
+- API v1/v2 server behavior, license/device enforcement, authentication/roles, Dashboard data semantics, Cron and updater runtime/protocol remain unchanged.
+
+## [5.8.0] - 2026-08-20 (source baseline; superseded by v5.8.1 corrective)
+
+### Added
+- Added an authenticated compact Developer Guide under **API & Clients** with detected Secure API v2 endpoints, Quick Start, canonical device-proof documentation, stable error codes and production security rules.
+- Added downloadable Secure API v2 lifecycle examples for Python, PowerShell/CMD, C, C++, C#/.NET, Java, Flutter, React Native, PHP and Node.js.
+- Added a one-file PowerShell lifecycle test and copy/download interactions for developer onboarding.
+- Added automated Developer Guide route/security/example contract and syntax checks.
+
+### Compatibility
+- No database migration, file deletion, API v1/v2 protocol change, license/device enforcement change, authentication/role change, Dashboard change, Cron mutation or updater runtime/protocol change.
+- Signed update compatibility starts from the published v5.7.1 baseline.
 
 ## [5.7.1] - 2026-08-20
 

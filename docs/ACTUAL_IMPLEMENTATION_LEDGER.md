@@ -171,3 +171,21 @@ After every phase:
 3. preserve failed/pending items
 4. never erase historical state
 5. update exact continuation pointer in phase log
+
+## v5.8.0 Developer Integration Guide
+
+- New authenticated `admin/developer_guide.php` route linked under **API & Clients**.
+- New scoped `admin/assets/js/developer-guide.js` tab/copy controller.
+- New static downloadable reference clients under `admin/assets/examples/licora-v2/` for the ten approved targets.
+- New Developer Guide/example contract and syntax verification coverage.
+- No database migration/delete/API behavior/license-device/auth/Dashboard/Cron/updater runtime change.
+
+
+## v5.8.1 Developer Guide verification correction
+
+- Re-audited the complete v5.8.0 Developer Guide route, UI controller and ten approved Secure API v2 references against the canonical server proof/token contract.
+- Corrected CI candidate packaging so package version, release specification and generated manifest version are coherent at `5.8.1`.
+- Corrected only the two Dashboard device glyphs that used unsupported `bi-devices`; `bi-laptop` is used with the existing Bootstrap Icons 1.8.1 asset.
+- Added targeted release/Dashboard regression assertions and extended the Chrome-dependency source guard to the new guide surface.
+- No Chrome launcher/downloader is part of the Licora repository; the reported external Chrome download failure remains outside this PHP source unless its launcher/wrapper source is supplied.
+- No database migration/delete, API v1/v2 behavior change, license/device enforcement change, authentication change, Cron mutation or updater runtime/protocol change.

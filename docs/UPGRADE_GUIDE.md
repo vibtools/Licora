@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1 -> v5.7.0 -> v5.7.1
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1 -> v5.7.0 -> v5.7.1 -> v5.8.0 -> v5.8.1
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -219,3 +219,17 @@ v5.5.0 is a signed **no-migration** update from `v5.4.1`. It refines the VibTool
 5. Verify API v1/v2, license/device behavior, cron and updater regression gates.
 
 The signed release specification accepts exactly `5.4.1`, declares no migrations and deletes no files. Legacy stored-only Settings keys remain in the database but are no longer exposed as active controls.
+
+## v5.7.1 to v5.8.0 Developer Integration Guide
+
+v5.8.0 is a signed **no-migration** feature release over the published v5.7.1 baseline. It adds the authenticated Developer Guide route, sidebar entry, static downloadable API v2 reference clients and guide-specific tests/styles/scripts. API v1/v2 server behavior, database schema, license/device enforcement, Dashboard, authentication, Cron and updater runtime remain unchanged.
+
+
+## v5.7.1 / v5.8.0 to v5.8.1 Developer Guide verification correction
+
+v5.8.1 is a signed **no-migration** corrective target that accepts both the published `v5.7.1` baseline and an already-applied `v5.8.0` Developer Guide source candidate. It preserves the guide/examples and API v2 protocol, corrects CI package/manifest version coherence, and restores the two Dashboard device glyphs without changing Dashboard data or refresh behavior.
+
+1. Preserve deployment-private configuration, encryption/install markers, API v2 signing keys and updater runtime data.
+2. Use only an official signed v5.8.1 release after remote CI/release gates pass.
+3. Verify **API & Clients → Developer Guide**, example downloads, the PowerShell test tool, and the two Dashboard device icons.
+4. Confirm API v1/v2, license/device, Dashboard, authentication, Cron and updater regression gates remain green.

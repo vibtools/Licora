@@ -2,7 +2,7 @@
 
 ## Current release contract
 
-Licora uses semantic version tags. The current release candidate is `5.7.1`; runtime, installer, verifier, release notes, update release specification and GitHub workflow markers must agree and required CI must pass before a tag can publish.
+Licora uses semantic version tags. The current release candidate is `5.8.1`; runtime, installer, verifier, release notes, update release specification and GitHub workflow markers must agree and required CI must pass before a tag can publish.
 
 Every v5.3.0+ official release intended for the in-app updater consists of four updater-facing assets:
 
@@ -15,9 +15,57 @@ licora-update-manifest.sig
 
 The ZIP/checksum are generated from the exact Git ref by `scripts/package-release.sh`. `scripts/build-update-manifest.py` inventories the exact ZIP, records per-file SHA-256 values, package hash/size, commit identity, migration metadata, protected deletion intent and compatibility requirements. GitHub Actions signs the exact manifest bytes with the dedicated repository secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY`; the matching public key is tracked at `includes/updater/update-signing-public.pem`.
 
+## v5.8.1 release specification
+
+v5.8.1 is a no-migration verification/corrective release for the v5.8.0 Developer Integration Guide source candidate. It preserves the guide and API v2 reference clients while correcting CI package/manifest version coherence and the Dashboard device icon compatibility issue.
+
+```json
+{
+  "protocol_version": 1,
+  "application": "Licora",
+  "version": "5.8.1",
+  "channel": "stable",
+  "minimum_updater": "5.3.0",
+  "minimum_php": "8.0",
+  "upgrade_from": ["5.7.1", "5.8.0"],
+  "delete_files": [],
+  "migrations": []
+}
+```
+
+```bash
+bash scripts/package-release.sh v5.8.1 v5.8.1
+```
+
+Publication commands are recorded in `RELEASE_COMMANDS_v5.8.1.md`. Remote CI must prove the candidate ZIP version and generated signed-manifest version are identical before publication.
+
+## v5.8.0 release specification (source baseline; superseded by v5.8.1 corrective)
+
+v5.8.0 is a no-migration Developer Integration Guide feature release over the published v5.7.1 baseline. It adds only the authenticated guide/navigation surface, static/downloadable Secure API v2 reference clients, guide-specific UI behavior/tests and release/documentation identity.
+
+```json
+{
+  "protocol_version": 1,
+  "application": "Licora",
+  "version": "5.8.0",
+  "channel": "stable",
+  "minimum_updater": "5.3.0",
+  "minimum_php": "8.0",
+  "upgrade_from": ["5.7.1"],
+  "delete_files": [],
+  "migrations": []
+}
+```
+
+```bash
+bash scripts/package-release.sh v5.8.0 v5.8.0
+```
+
+Publication commands are recorded in `RELEASE_COMMANDS_v5.8.0.md`. The release preserves all existing API v1/v2, licensing/device, Dashboard, authentication, Cron and updater runtime contracts.
+
 ## v5.7.1 release specification
 
-v5.7.1 is a no-migration Dashboard Phase 2 corrective release candidate over the uploaded v5.7.0 source baseline. It also accepts the published v5.6.1 source so live installations can move directly to the corrected Phase 2 release without requiring an unpublished v5.7.0 tag.
+v5.7.1 is the published no-migration Dashboard Phase 2 corrective release over the uploaded v5.7.0 source baseline. It accepts the published v5.6.1 source and an already-applied v5.7.0 source baseline.
 
 ```json
 {
@@ -264,4 +312,4 @@ Release archives must exclude deployment-private/runtime material including `con
 
 Every future release intended for one-click installation must update `update/release-spec.json`, declare the exact direct source versions it supports in signed `upgrade_from`, ship every migration required for those supported direct paths, keep `minimum_updater` compatible, and publish the four assets above. A latest release that does not list the installed version in `upgrade_from` is deliberately blocked rather than silently skipping an intermediate migration. Never modify a published manifest/ZIP in place; create a new semantic version.
 
-See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model, [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) for the v5.4.0 presentation contract, and `RELEASE_COMMANDS_v5.7.1.md` for the current Windows-friendly command sequence.
+See [UPDATER.md](UPDATER.md) for the runtime trust/rollback model, [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md) for the v5.4.0 presentation contract, and `RELEASE_COMMANDS_v5.8.1.md` for the current Windows-friendly command sequence.

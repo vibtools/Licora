@@ -1,6 +1,6 @@
 # Installation
 
-Licora v5.7.1 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
+Licora v5.8.1 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
 
 ## Requirements
 
@@ -158,3 +158,11 @@ v5.7.0 adds no installation-time table, column, trigger or migration. Fresh inst
 ## v5.6.1 Dashboard Phase 1 corrected foundation
 
 v5.6.1 adds no installation-time table, column, trigger or migration. Fresh installations receive the corrected Dashboard read model and authenticated Dashboard data endpoint from source. The signed source-compatibility contract accepts v5.5.1 and an already-applied v5.6.0 baseline without schema changes.
+
+## v5.8.1 Developer Guide verification correction
+
+v5.8.1 adds no installation-time table, column, trigger, migration or private configuration. It preserves the Developer Guide introduced by the v5.8.0 source candidate while correcting release-candidate version coherence and the Dashboard device glyph compatibility issue.
+
+## v5.8.0 Developer Guide source baseline
+
+v5.8.0 adds no installation-time table, column, trigger, migration or private configuration. After upgrade, authenticated administrators can open **API & Clients → Developer Guide**. The shipped language examples are static reference/download files; they do not run automatically and do not add server dependencies.
