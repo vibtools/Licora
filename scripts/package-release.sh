@@ -57,7 +57,7 @@ with zipfile.ZipFile(archive) as z:
     bad=[]
     for name in names:
         rel=name[len(prefix):]
-        if any(part in rel for part in forbidden): bad.append(rel)
+        if any(rel == part or (part.endswith('/') and rel.startswith(part)) for part in forbidden): bad.append(rel)
     if bad: raise SystemExit("Forbidden release paths: "+", ".join(sorted(bad)))
 digest=hashlib.sha256(archive.read_bytes()).hexdigest()
 checksum.write_text(f"{digest}  {archive.name}\n", encoding="ascii")

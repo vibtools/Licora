@@ -73,4 +73,8 @@ The in-app updater is Super-Admin-only and does not accept arbitrary package URL
 
 The **private update signing key is not a Licora deployment secret** and must never be installed on a Licora server. It belongs only in secured release infrastructure / the GitHub Actions secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY`. The repository contains only the updater public verification key. API v2 signing keys and updater signing keys are separate cryptographic domains and must not be reused.
 
-Updater diagnostics are sanitized operational events; release/download/auth tokens and private key material must never be added to updater event messages.
+## Coolify Production Deployment Security
+
+When deploying Licora via Coolify Docker Compose, the system relies on Nginx rather than Apache `.htaccess` to restrict access to sensitive files. You **must** utilize the official `nginx/default.conf` provided in the repository to ensure that the `includes/`, `cron/`, and `scripts/` directories, as well as `.env`, `.pem`, and `.key` files, are completely inaccessible from the public internet.
+
+The official Docker environment intentionally disables the in-app updater (via the `LICORA_UPDATE_CHECK_INTERVAL=0` environment variable) to maintain immutable container security. Updates should be applied exclusively via Docker image rebuilds triggered by Git commits.

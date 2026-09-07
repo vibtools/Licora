@@ -238,6 +238,12 @@ Secure API v2, introduced in v5.2.0, hardened in v5.2.1, and given consistent Ad
 
 Fresh installations provision API v2 during the installer. In v5.2.2, the existing License app-scope selector and V2 Devices page use the same exact schema-discovery contract as API v2 runtime, preventing false-empty/false-provisioning states on compatible hosts. Existing cPanel/shared-hosting deployments can preserve private/runtime files, overwrite the source, then use **Admin → Client Apps → Initialize API v2** without shell access. CLI-capable deployments may instead run `php scripts/setup-v2.php`. Both paths reuse the same additive v5.2.0 schema and never silently replace existing signing key files. See [API v2](docs/API_V2.md), [security model](docs/API_V2_SECURITY.md), [client integration](docs/API_V2_CLIENT_INTEGRATION.md), and [migration](docs/API_V2_MIGRATION.md).
 
+## Coolify Production Deployment
+
+Licora is fully prepared for containerized production deployment via [Coolify](https://coolify.io). The official multi-container deployment stack leverages Docker Compose, hardens Nginx security, enforces read-only immutability, and supports seamless environment variable injection to safely bypass the legacy web installer.
+
+For a comprehensive setup guide, please refer to the [Coolify Production Guide](COOLIFY_PRODUCTION_GUIDE.md).
+
 ## Known limitations
 
 - The legacy `/api/check_license.php` endpoint remains unauthenticated for compatibility; new desktop/public clients should use Secure API v2.
