@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - keys_volume:/var/www/keys
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_URL=${APP_URL:-http://localhost}
+      - LICENSE_DB_HOST=db
+      - LICENSE_DB_PORT=3306
+      - LICENSE_DB_NAME=${LICENSE_DB_NAME:-licora}
+      - LICENSE_DB_USER=${LICENSE_DB_USER:-licora_user}
+      - LICENSE_DB_PASS=${LICENSE_DB_PASS:-licora_password}
+      - LICENSE_APP_KEY=${LICENSE_APP_KEY}
+      - LICENSE_ENCRYPTION_KEY=${LICENSE_ENCRYPTION_KEY}
+      - LICENSE_CSRF_SECRET=${LICENSE_CSRF_SECRET}
+      - LICENSE_JWT_SECRET=${LICENSE_JWT_SECRET}
+      - LICENSE_V2_SIGNING_PRIVATE_KEY_PATH=/var/www/keys/private.pem
+      - LICENSE_V2_SIGNING_PUBLIC_KEY_PATH=/var/www/keys/public.pem
+      # Disable updater safely
+      - LICORA_UPDATE_CHECK_INTERVAL=0
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    image: nginx:1.25-alpine
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/mysql
+      # Initialize the database automatically on first startup
+      - ./database.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      - MARIADB_DATABASE=${LICENSE_DB_NAME:-licora}
+      - MARIADB_USER=${LICENSE_DB_USER:-licora_user}
+      - MARIADB_PASSWORD=${LICENSE_DB_PASS:-licora_password}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-licora_root_secure}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cron:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - keys_volume:/var/www/keys
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - LICENSE_DB_HOST=db
+      - LICENSE_DB_PORT=3306
+      - LICENSE_DB_NAME=${LICENSE_DB_NAME:-licora}
+      - LICENSE_DB_USER=${LICENSE_DB_USER:-licora_user}
+      - LICENSE_DB_PASS=${LICENSE_DB_PASS:-licora_password}
+      - LICENSE_APP_KEY=${LICENSE_APP_KEY}
+      - LICENSE_ENCRYPTION_KEY=${LICENSE_ENCRYPTION_KEY}
+      - LICENSE_CSRF_SECRET=${LICENSE_CSRF_SECRET}
+      - LICENSE_JWT_SECRET=${LICENSE_JWT_SECRET}
+      - LICENSE_V2_SIGNING_PRIVATE_KEY_PATH=/var/www/keys/private.pem
+      - LICENSE_V2_SIGNING_PUBLIC_KEY_PATH=/var/www/keys/public.pem
+    # Override CMD to run cron in foreground
+    command: ["crond", "-f", "-d", "8"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:
+  keys_volume:

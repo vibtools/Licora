@@ -1,0 +1,14 @@
+.git
+.github
+.dockerignore
+Dockerfile
+docker-compose.yml
+audit/
+tests/
+.env
+includes/config.local.php
+includes/.licora-installed
+includes/.licora-encryption.key
+includes/.licora-v2-signing-private.pem
+includes/.licora-v2-signing-public.pem
+updater/update-signing-private.pem
