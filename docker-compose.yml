@@ -35,8 +35,8 @@ services:
       context: .
       dockerfile: docker/nginx.Dockerfile
     restart: unless-stopped
-    ports:
-      - "8000:80"
+    expose:
+      - "80"
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "-", "http://localhost/healthcheck.php"]
       interval: 15s
@@ -88,7 +88,7 @@ services:
       - LICENSE_JWT_SECRET=${LICENSE_JWT_SECRET}
       - LICENSE_V2_SIGNING_PRIVATE_KEY_PATH=/var/www/keys/private.pem
       - LICENSE_V2_SIGNING_PUBLIC_KEY_PATH=/var/www/keys/public.pem
-    command: ["crond", "-f", "-d", "8"]
+    command: ["/bin/sh", "-c", "crond -f -d 8"]
     depends_on:
       db:
         condition: service_healthy
