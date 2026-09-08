@@ -88,7 +88,7 @@ services:
       - LICENSE_JWT_SECRET=${LICENSE_JWT_SECRET}
       - LICENSE_V2_SIGNING_PRIVATE_KEY_PATH=/var/www/keys/private.pem
       - LICENSE_V2_SIGNING_PUBLIC_KEY_PATH=/var/www/keys/public.pem
-    command: ["/bin/sh", "-c", "crond -f -d 8"]
+    command: ["crond", "-f", "-l", "2"]
     depends_on:
       db:
         condition: service_healthy

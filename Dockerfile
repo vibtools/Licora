@@ -6,8 +6,7 @@ RUN apk add --no-cache \
     libzip-dev \
     curl-dev \
     oniguruma-dev \
-    bash \
-    dcron
+    bash
 
 # Install PHP extensions required by Licora
 RUN docker-php-ext-install \
