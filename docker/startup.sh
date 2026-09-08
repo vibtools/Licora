@@ -29,5 +29,8 @@ for VAR in $REQUIRED_VARS; do
 done
 echo "Environment verification passed."
 
+# Auto-initialize database if tables are missing
+php /var/www/html/docker/init-db.php
+
 # Execute the main container command
 exec "$@"
