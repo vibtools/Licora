@@ -31,13 +31,12 @@ services:
         condition: service_healthy
 
   web:
-    image: nginx:1.25-alpine
+    build:
+      context: .
+      dockerfile: docker/nginx.Dockerfile
     restart: unless-stopped
     ports:
       - "8000:80"
-    volumes:
-      - .:/var/www/html:ro
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "-", "http://localhost/healthcheck.php"]
       interval: 15s
@@ -48,14 +47,15 @@ services:
         condition: service_healthy
 
   db:
-    image: mariadb:10.11
+    build:
+      context: .
+      dockerfile: docker/mariadb.Dockerfile
     restart: unless-stopped
     # Do not expose the port to the host for security.
     expose:
       - "3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./database.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
       - MARIADB_DATABASE=${LICENSE_DB_NAME}
       - MARIADB_USER=${LICENSE_DB_USER}
