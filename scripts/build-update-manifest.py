@@ -29,6 +29,7 @@ def safe_rel(path: str) -> bool:
     return bool(path) and len(path)<=400 and '\x00' not in path and '\\' not in path and not path.startswith('/') and not re.match(r'^[A-Za-z]:',path) and all(p not in ('','.','..') for p in path.split('/'))
 
 def protected(path: str) -> bool:
+    if path == '.env.example': return False
     return path in PROTECTED_EXACT or path=='.env' or path.startswith('.env.') or any(path.startswith(p) for p in PROTECTED_PREFIXES)
 
 def critical_control(path: str) -> bool:

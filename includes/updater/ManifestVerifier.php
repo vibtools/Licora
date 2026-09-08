@@ -78,6 +78,7 @@ final class ManifestVerifier
     }
     public static function isProtected(string $path): bool
     {
+        if($path==='.env.example'){return false;}
         if(in_array($path,self::PROTECTED_EXACT,true)){return true;} if(str_starts_with($path,'includes/.licora-updater/')){return true;} if($path==='.env'||str_starts_with($path,'.env.')){return true;} foreach(['logs/','backups/','exports/','.git/'] as $prefix){if(str_starts_with($path,$prefix)){return true;}} return false;
     }
 
