@@ -15,5 +15,19 @@ if [ ! -f /var/www/keys/private.pem ]; then
     chmod 644 /var/www/keys/public.pem
 fi
 
+# Check for required environment variables at runtime instead of build-time
+echo "Verifying required environment variables..."
+REQUIRED_VARS="APP_ENV APP_URL LICENSE_DB_NAME LICENSE_DB_USER LICENSE_DB_PASS LICENSE_APP_KEY LICENSE_ENCRYPTION_KEY LICENSE_CSRF_SECRET LICENSE_JWT_SECRET"
+
+for VAR in $REQUIRED_VARS; do
+    # Use eval to get the value of the variable name stored in VAR
+    eval VAL=\$$VAR
+    if [ -z "$VAL" ]; then
+        echo "FATAL ERROR: Environment variable $VAR is required but missing or empty."
+        exit 1
+    fi
+done
+echo "Environment verification passed."
+
 # Execute the main container command
 exec "$@"

@@ -7,17 +7,17 @@ services:
     volumes:
       - keys_volume:/var/www/keys
     environment:
-      - APP_ENV=${APP_ENV?Required APP_ENV}
-      - APP_URL=${APP_URL?Required APP_URL}
+      - APP_ENV=${APP_ENV}
+      - APP_URL=${APP_URL}
       - LICENSE_DB_HOST=db
       - LICENSE_DB_PORT=3306
-      - LICENSE_DB_NAME=${LICENSE_DB_NAME?Required Database Name}
-      - LICENSE_DB_USER=${LICENSE_DB_USER?Required Database User}
-      - LICENSE_DB_PASS=${LICENSE_DB_PASS?Required Database Password}
-      - LICENSE_APP_KEY=${LICENSE_APP_KEY?Required APP_KEY}
-      - LICENSE_ENCRYPTION_KEY=${LICENSE_ENCRYPTION_KEY?Required ENCRYPTION_KEY}
-      - LICENSE_CSRF_SECRET=${LICENSE_CSRF_SECRET?Required CSRF_SECRET}
-      - LICENSE_JWT_SECRET=${LICENSE_JWT_SECRET?Required JWT_SECRET}
+      - LICENSE_DB_NAME=${LICENSE_DB_NAME}
+      - LICENSE_DB_USER=${LICENSE_DB_USER}
+      - LICENSE_DB_PASS=${LICENSE_DB_PASS}
+      - LICENSE_APP_KEY=${LICENSE_APP_KEY}
+      - LICENSE_ENCRYPTION_KEY=${LICENSE_ENCRYPTION_KEY}
+      - LICENSE_CSRF_SECRET=${LICENSE_CSRF_SECRET}
+      - LICENSE_JWT_SECRET=${LICENSE_JWT_SECRET}
       - LICENSE_V2_SIGNING_PRIVATE_KEY_PATH=/var/www/keys/private.pem
       - LICENSE_V2_SIGNING_PUBLIC_KEY_PATH=/var/www/keys/public.pem
       - LICORA_UPDATE_CHECK_INTERVAL=0
@@ -57,10 +57,10 @@ services:
       - db_data:/var/lib/mysql
       - ./database.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
-      - MARIADB_DATABASE=${LICENSE_DB_NAME?Required Database Name}
-      - MARIADB_USER=${LICENSE_DB_USER?Required Database User}
-      - MARIADB_PASSWORD=${LICENSE_DB_PASS?Required Database Password}
-      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD?Required MariaDB Root Password}
+      - MARIADB_DATABASE=${LICENSE_DB_NAME}
+      - MARIADB_USER=${LICENSE_DB_USER}
+      - MARIADB_PASSWORD=${LICENSE_DB_PASS}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
@@ -76,16 +76,16 @@ services:
     volumes:
       - keys_volume:/var/www/keys
     environment:
-      - APP_ENV=${APP_ENV?Required APP_ENV}
+      - APP_ENV=${APP_ENV}
       - LICENSE_DB_HOST=db
       - LICENSE_DB_PORT=3306
-      - LICENSE_DB_NAME=${LICENSE_DB_NAME?Required Database Name}
-      - LICENSE_DB_USER=${LICENSE_DB_USER?Required Database User}
-      - LICENSE_DB_PASS=${LICENSE_DB_PASS?Required Database Password}
-      - LICENSE_APP_KEY=${LICENSE_APP_KEY?Required APP_KEY}
-      - LICENSE_ENCRYPTION_KEY=${LICENSE_ENCRYPTION_KEY?Required ENCRYPTION_KEY}
-      - LICENSE_CSRF_SECRET=${LICENSE_CSRF_SECRET?Required CSRF_SECRET}
-      - LICENSE_JWT_SECRET=${LICENSE_JWT_SECRET?Required JWT_SECRET}
+      - LICENSE_DB_NAME=${LICENSE_DB_NAME}
+      - LICENSE_DB_USER=${LICENSE_DB_USER}
+      - LICENSE_DB_PASS=${LICENSE_DB_PASS}
+      - LICENSE_APP_KEY=${LICENSE_APP_KEY}
+      - LICENSE_ENCRYPTION_KEY=${LICENSE_ENCRYPTION_KEY}
+      - LICENSE_CSRF_SECRET=${LICENSE_CSRF_SECRET}
+      - LICENSE_JWT_SECRET=${LICENSE_JWT_SECRET}
       - LICENSE_V2_SIGNING_PRIVATE_KEY_PATH=/var/www/keys/private.pem
       - LICENSE_V2_SIGNING_PUBLIC_KEY_PATH=/var/www/keys/public.pem
     command: ["crond", "-f", "-d", "8"]
