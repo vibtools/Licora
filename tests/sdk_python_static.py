@@ -14,6 +14,8 @@ required = [
     "pyproject.toml",
     "requirements.txt",
     "README.md",
+    "PYPI_PUBLISHING.md",
+    "LICENSE",
     "licensing_public.py",
     "src/licora_sdk/__init__.py",
     "src/licora_sdk/client.py",
@@ -32,6 +34,20 @@ required = [
 for rel in required:
     if not (SDK / rel).is_file():
         raise SystemExit(f"missing Python SDK file: {rel}")
+
+pyproject = (SDK / "pyproject.toml").read_text(encoding="utf-8")
+for marker in (
+    'name = "licora"',
+    'license = "MIT"',
+    'license-files = ["LICENSE"]',
+    'Documentation = "https://github.com/vibtools/Licora/tree/main/SDK/python"',
+):
+    if marker not in pyproject:
+        raise SystemExit(f"missing PyPI package metadata: {marker}")
+project_version = re.search(r'^version = "([0-9]+\.[0-9]+\.[0-9]+)"$', pyproject, re.MULTILINE)
+package_init = (SDK / "src" / "licora_sdk" / "__init__.py").read_text(encoding="utf-8")
+if project_version is None or f'__version__ = "{project_version.group(1)}"' not in package_init:
+    raise SystemExit("Python distribution and import-package versions must match")
 
 for path in sorted(SDK.rglob("*.py")):
     ast.parse(path.read_text(encoding="utf-8"), filename=str(path))

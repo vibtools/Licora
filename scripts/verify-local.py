@@ -77,7 +77,7 @@ REQUIRED = [
     "docs/CONFIGURATION.md", "docs/ARCHITECTURE.md", "docs/RELEASE.md", "docs/INSTALLATION.md", "docs/UPGRADE_GUIDE.md", "docs/FEATURE_MATRIX.md", "docs/UPDATER.md", "docs/UI_DESIGN_SYSTEM.md",
     "DASHBOARD_PRODUCTION_UPDATE_INDEX.md", "docs/DASHBOARD_PRODUCTION_ROADMAP_2_PHASE.md", "docs/DASHBOARD_UPDATE_PHASE_LOG.md", "docs/ERROR_HANDLING_BASELINE_AND_TARGET.md", "docs/ACTUAL_IMPLEMENTATION_LEDGER.md", "docs/DASHBOARD_DATA_CONTRACT.md", "docs/DASHBOARD_PRODUCTION_VALIDATION_GATES.md", "docs/DASHBOARD_CHANGE_CONTROL.md", "audit/V5.5.1_DASHBOARD_PRODUCTION_READINESS_FORENSIC_REPORT.md",
     ".github/workflows/ci.yml", ".github/workflows/release.yml",
-    "SDK/README.md", "SDK/python/README.md", "SDK/python/pyproject.toml", "SDK/python/requirements.txt", "SDK/python/licensing_public.py",
+    "SDK/README.md", "SDK/python/README.md", "SDK/python/PYPI_PUBLISHING.md", "SDK/python/LICENSE", "SDK/python/pyproject.toml", "SDK/python/requirements.txt", "SDK/python/licensing_public.py",
     "SDK/python/examples/headless_app.py", "SDK/python/examples/tkinter_login.py", "SDK/python/tests/test_sdk.py",
     "SDK/python/src/licora_sdk/__init__.py", "SDK/python/src/licora_sdk/client.py", "SDK/python/src/licora_sdk/config.py", "SDK/python/src/licora_sdk/crypto.py",
     "SDK/python/src/licora_sdk/decorators.py", "SDK/python/src/licora_sdk/errors.py", "SDK/python/src/licora_sdk/manager.py", "SDK/python/src/licora_sdk/models.py",
@@ -394,6 +394,9 @@ for text, label in [(release_spec, "release spec"), (manifest_builder, "manifest
 for marker in ["tags:", "contents: write", "gh release create", "--verify-tag", "RELEASE_NOTES_${GITHUB_REF_NAME}.md", "scripts/package-release.sh", "LICORA_UPDATE_SIGNING_PRIVATE_KEY", "licora-update-manifest.json", "licora-update-manifest.sig", "openssl dgst -sha256 -sign", "scripts/verify-release-update.php", "tests/updater_db_integration.php"]:
     if marker not in release:
         fail(f"release automation marker missing: {marker}")
+for marker in ["python3 -m build", "python3 -m twine check", "Licora-Python-SDK-${python_sdk_version}.zip", "Licora-Admin-API-SDK-${admin_sdk_version}.zip", "release/python-dist/*", "sdk-artifacts.sha256"]:
+    if marker not in release:
+        fail(f"SDK release automation marker missing: {marker}")
 
 print("[9/12] PHP syntax")
 php = shutil.which("php")

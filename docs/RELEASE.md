@@ -15,6 +15,18 @@ licora-update-manifest.sig
 
 The ZIP/checksum are generated from the exact Git ref by `scripts/package-release.sh`. `scripts/build-update-manifest.py` inventories the exact ZIP, records per-file SHA-256 values, package hash/size, commit identity, migration metadata, protected deletion intent and compatibility requirements. GitHub Actions signs the exact manifest bytes with the dedicated repository secret `LICORA_UPDATE_SIGNING_PRIVATE_KEY`; the matching public key is tracked at `includes/updater/update-signing-public.pem`.
 
+The same GitHub Release also contains independent developer SDK assets:
+
+```text
+Licora-Python-SDK-A.B.C.zip
+Licora-Admin-API-SDK-D.E.F.zip
+licora-A.B.C-py3-none-any.whl
+licora-A.B.C.tar.gz
+sdk-artifacts.sha256
+```
+
+SDK versions are read from their own tracked metadata and are independent of the Licora website version. The Python wheel and source distribution are built with the standard PEP 517 backend, checked with Twine, installed and imported before publication. These additional assets are not referenced by `licora-update-manifest.json`; the in-app updater continues to consume only the original four updater-facing assets and its signed website package remains unchanged.
+
 ## v5.8.4 release specification
 
 v5.8.4 is a no-migration Python Secure API v2 SDK release over frozen v5.8.3. It adds only the optional client package, examples, documentation, tests and CI/release identity; server endpoint and database behavior remain unchanged.

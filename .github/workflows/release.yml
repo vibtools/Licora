@@ -116,17 +116,75 @@ jobs:
             --signature release/licora-update-manifest.sig
           rm -f "$private_key" "$RUNNER_TEMP/private-derived-public.der" "$RUNNER_TEMP/tracked-public.der"
 
+      - name: Build verified SDK release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python_sdk_version="$(sed -n 's/^version = "\([^"]*\)"/\1/p' SDK/python/pyproject.toml | head -n 1)"
+          admin_sdk_version="$(tr -d '\r\n' < SDK/admin-license-api/VERSION)"
+          [[ "$python_sdk_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          [[ "$admin_sdk_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+
+          python_zip="release/Licora-Python-SDK-${python_sdk_version}.zip"
+          admin_zip="release/Licora-Admin-API-SDK-${admin_sdk_version}.zip"
+          mkdir -p release/python-dist
+
+          python3 -m pip install "build>=1.2,<2" "twine>=6,<7"
+          python3 -m build --sdist --wheel --outdir release/python-dist SDK/python
+          python3 -m twine check release/python-dist/*
+          test "$(find release/python-dist -maxdepth 1 -type f | wc -l)" -eq 2
+
+          wheel="$(find release/python-dist -maxdepth 1 -type f -name "licora-${python_sdk_version}-*.whl" -print -quit)"
+          test -n "$wheel"
+          python3 -m pip install --force-reinstall --no-deps "$wheel"
+          python3 -c "import licora_sdk; assert licora_sdk.__version__ == '${python_sdk_version}'"
+
+          git archive --format=zip --prefix="Licora-Python-SDK-${python_sdk_version}/" \
+            "$GITHUB_REF_NAME:SDK/python" > "$python_zip"
+          git archive --format=zip --prefix="Licora-Admin-API-SDK-${admin_sdk_version}/" \
+            "$GITHUB_REF_NAME:SDK/admin-license-api" > "$admin_zip"
+
+          python3 - "$python_zip" "$admin_zip" "$python_sdk_version" "$admin_sdk_version" <<'PY'
+          import sys
+          import zipfile
+
+          checks = [
+              (sys.argv[1], f"Licora-Python-SDK-{sys.argv[3]}/", ["pyproject.toml", "README.md", "LICENSE", "src/licora_sdk/__init__.py"]),
+              (sys.argv[2], f"Licora-Admin-API-SDK-{sys.argv[4]}/", ["VERSION", "README.md", "AI_INSTRUCTIONS.md", "php/composer.json", "nodejs/package.json"]),
+          ]
+          for archive, prefix, required in checks:
+              with zipfile.ZipFile(archive) as package:
+                  names = package.namelist()
+              if not names or any(not name.startswith(prefix) for name in names):
+                  raise SystemExit(f"invalid SDK archive root: {archive}")
+              missing = [name for name in required if prefix + name not in names]
+              if missing:
+                  raise SystemExit(f"missing SDK archive files in {archive}: {', '.join(missing)}")
+          PY
+
+          : > release/sdk-artifacts.sha256
+          for artifact in "$python_zip" "$admin_zip" release/python-dist/*; do
+            digest="$(sha256sum "$artifact" | cut -d ' ' -f 1)"
+            printf '%s  %s\n' "$digest" "$(basename "$artifact")" >> release/sdk-artifacts.sha256
+          done
+
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           version="${GITHUB_REF_NAME#v}"
+          python_sdk_version="$(sed -n 's/^version = "\([^"]*\)"/\1/p' SDK/python/pyproject.toml | head -n 1)"
+          admin_sdk_version="$(tr -d '\r\n' < SDK/admin-license-api/VERSION)"
           gh release create "$GITHUB_REF_NAME" \
             "release/Licora-${version}.zip" \
             "release/Licora-${version}.zip.sha256" \
             "release/licora-update-manifest.json" \
             "release/licora-update-manifest.sig" \
+            "release/Licora-Python-SDK-${python_sdk_version}.zip" \
+            "release/Licora-Admin-API-SDK-${admin_sdk_version}.zip" \
+            release/python-dist/* \
+            "release/sdk-artifacts.sha256" \
             --verify-tag \
             --title "Licora ${GITHUB_REF_NAME}" \
             --notes-file "RELEASE_NOTES_${GITHUB_REF_NAME}.md" \

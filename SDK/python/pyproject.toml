@@ -1,15 +1,17 @@
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools>=77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "licora-python-sdk"
+name = "licora"
 version = "1.0.0"
 description = "Production Python client SDK for Licora Secure API v2"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
-authors = [{name = "VibTools"}]
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Vib Tools", email = "hello@vib.tools"}]
+keywords = ["licensing", "license-management", "desktop", "device-authentication", "licora"]
 dependencies = [
   "cryptography>=42,<47",
   "requests>=2.31,<3",
@@ -31,8 +33,10 @@ classifiers = [
 ]
 
 [project.urls]
+Homepage = "https://vib.tools"
 Documentation = "https://github.com/vibtools/Licora/tree/main/SDK/python"
 Repository = "https://github.com/vibtools/Licora"
+Issues = "https://github.com/vibtools/Licora/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

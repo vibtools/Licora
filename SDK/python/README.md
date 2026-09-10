@@ -20,7 +20,15 @@ The SDK never uses or stores a Licora API v1 key, Admin License API key, or serv
 
 ## 1. Install
 
-Copy `SDK/python` into your application repository, then install it in the application's virtual environment:
+After the `licora` distribution is published on PyPI:
+
+```bash
+python -m pip install licora
+```
+
+The PyPI distribution name is `licora`; the stable Python import namespace remains `licora_sdk`.
+
+Until publication, copy `SDK/python` into your application repository and install it in the application's virtual environment:
 
 ```bash
 python -m pip install ./SDK/python
@@ -134,4 +142,6 @@ Call `auth.close()` during application shutdown.
 - Windows stores the entire state as a DPAPI-protected atomic file for the current user. macOS/Linux use an available system keyring; the SDK refuses plaintext fallback.
 - `LicenseSnapshot` never exposes the license key, access token, refresh token, or device private key.
 
-See [`examples/tkinter_login.py`](examples/tkinter_login.py) for a complete GUI login flow and [`examples/headless_app.py`](examples/headless_app.py) for a service/CLI pattern.
+See [`examples/tkinter_login.py`](https://github.com/vibtools/Licora/blob/main/SDK/python/examples/tkinter_login.py) for a complete GUI login flow and [`examples/headless_app.py`](https://github.com/vibtools/Licora/blob/main/SDK/python/examples/headless_app.py) for a service/CLI pattern.
+
+Maintainers preparing a PyPI upload must follow [`PYPI_PUBLISHING.md`](https://github.com/vibtools/Licora/blob/main/SDK/python/PYPI_PUBLISHING.md). GitHub releases provide the verified wheel and source distribution; publishing credentials are never stored in this SDK or embedded in release artifacts.
