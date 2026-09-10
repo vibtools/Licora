@@ -126,7 +126,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.8.3` |
+| Application version | `APP_VERSION` | `5.8.4` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -148,6 +148,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Configuration](docs/CONFIGURATION.md)
 - [API reference](docs/API.md)
 - [Admin License Control API](docs/ADMIN_LICENSE_API.md)
+- [Python SDK](docs/PYTHON_SDK.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Database](docs/DATABASE.md)
 - [Feature matrix](docs/FEATURE_MATRIX.md)
@@ -158,6 +159,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Secure in-app updater](docs/UPDATER.md)
 - [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.8.4 release notes](RELEASE_NOTES_v5.8.4.md)
 - [v5.8.3 release notes](RELEASE_NOTES_v5.8.3.md)
 - [v5.8.2 release notes](RELEASE_NOTES_v5.8.2.md)
 - [v5.8.1 release notes](RELEASE_NOTES_v5.8.1.md)
@@ -182,6 +184,10 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
 
+
+## Production Python SDK (v5.8.4)
+
+The copy-ready SDK under [`SDK/python`](SDK/python) implements the complete Secure API v2 public-client lifecycle: P-256 device proof, pinned RS256 token verification, secure OS-backed state, activation/status/refresh/deactivation recovery, local license-expiry enforcement, asynchronous login/logout and background validation. Configure only public endpoint/application/signing-key values in `licensing_public.py`; no API v1 or Admin API secret belongs in a distributed application.
 
 ## Admin License Control API (v5.8.3)
 

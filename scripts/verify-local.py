@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local source verifier for Licora v5.8.3.
+"""Local source verifier for Licora v5.8.4.
 
 This verifier validates source and tests only. It never creates a Git tag, release,
 or GitHub artifact. Release packaging is intentionally owned by GitHub Actions and
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "5.8.3"
+VERSION = "5.8.4"
 
 V1_GIT_BLOBS = {
     "api/verify.php": "4dc549c2afea0772d3f2ffa8b330fd24b8b13ec2",
@@ -28,6 +28,7 @@ V1_GIT_BLOBS = {
 
 REQUIRED = [
     "README.md", "CHANGELOG.md", "SECURITY.md", "REPOSITORY_METADATA.md",
+    "RELEASE_NOTES_v5.8.4.md", "RELEASE_COMMANDS_v5.8.4.md", "BASELINE_v5.8.4.md",
     "RELEASE_NOTES_v5.8.3.md", "RELEASE_COMMANDS_v5.8.3.md", "BASELINE_v5.8.3.md",
     "RELEASE_NOTES_v5.8.2.md", "RELEASE_COMMANDS_v5.8.2.md", "BASELINE_v5.8.2.md",
     "RELEASE_NOTES_v5.8.1.md", "RELEASE_COMMANDS_v5.8.1.md", "BASELINE_v5.8.1.md",
@@ -52,6 +53,7 @@ REQUIRED = [
     "audit/V5.6.0_DASHBOARD_PHASE1_AUDIT.md",
     "audit/V5.5.1_UI_HOTFIX_AUDIT.md",
     "audit/V5.5.0_UI_FORENSIC_AUDIT.md", "audit/V5.5.0_SCOPE_VERIFICATION.md",
+    "audit/V5.8.4_PYTHON_SDK_AUDIT.md", "audit/V5.8.4_DELTA_MANIFEST.md",
     "audit/V5.8.3_ADMIN_LICENSE_API_AUDIT.md", "audit/V5.8.3_DELTA_MANIFEST.md",
     "migration-v5.2.0-api-v2.sql", "migration-v5.3.0-updater.sql", "migration-v5.8.3-admin-license-api.sql", "database.sql", "includes/.htaccess",
     "api/verify.php", "api/check_license.php",
@@ -70,11 +72,16 @@ REQUIRED = [
     "tests/updater_static.php", "tests/updater_manifest.php", "tests/updater_state_machine.php", "tests/updater_failure_recovery.php", "tests/updater_ui_contract.php", "tests/updater_db_integration.php", "tests/updater_dom_contract.php", "tests/updater_builder_contract.py", "tests/updater_browser_runtime.js", "tests/sidebar_submenu_runtime.js",
     "tests/ui_route_contract.php", "tests/ui_form_contract.php", "tests/ui_component_contract.php", "tests/ui_updater_contract.php", "tests/ui_v550_contract.php", "tests/ui_v551_contract.php",
     "tests/dashboard_data_contract.php", "tests/dashboard_phase2_contract.php", "tests/dashboard_db_integration.php", "tests/dashboard_browser_runtime.js",
-    "tests/developer_guide_contract.php", "tests/developer_examples_runtime.py",
-    "docs/API_V2.md", "docs/API_V2_SECURITY.md", "docs/API_V2_CLIENT_INTEGRATION.md", "docs/API_V2_MIGRATION.md", "docs/ADMIN_LICENSE_API.md",
+    "tests/developer_guide_contract.php", "tests/developer_examples_runtime.py", "tests/sdk_python_static.py",
+    "docs/API_V2.md", "docs/API_V2_SECURITY.md", "docs/API_V2_CLIENT_INTEGRATION.md", "docs/API_V2_MIGRATION.md", "docs/ADMIN_LICENSE_API.md", "docs/PYTHON_SDK.md",
     "docs/CONFIGURATION.md", "docs/ARCHITECTURE.md", "docs/RELEASE.md", "docs/INSTALLATION.md", "docs/UPGRADE_GUIDE.md", "docs/FEATURE_MATRIX.md", "docs/UPDATER.md", "docs/UI_DESIGN_SYSTEM.md",
     "DASHBOARD_PRODUCTION_UPDATE_INDEX.md", "docs/DASHBOARD_PRODUCTION_ROADMAP_2_PHASE.md", "docs/DASHBOARD_UPDATE_PHASE_LOG.md", "docs/ERROR_HANDLING_BASELINE_AND_TARGET.md", "docs/ACTUAL_IMPLEMENTATION_LEDGER.md", "docs/DASHBOARD_DATA_CONTRACT.md", "docs/DASHBOARD_PRODUCTION_VALIDATION_GATES.md", "docs/DASHBOARD_CHANGE_CONTROL.md", "audit/V5.5.1_DASHBOARD_PRODUCTION_READINESS_FORENSIC_REPORT.md",
     ".github/workflows/ci.yml", ".github/workflows/release.yml",
+    "SDK/README.md", "SDK/python/README.md", "SDK/python/pyproject.toml", "SDK/python/requirements.txt", "SDK/python/licensing_public.py",
+    "SDK/python/examples/headless_app.py", "SDK/python/examples/tkinter_login.py", "SDK/python/tests/test_sdk.py",
+    "SDK/python/src/licora_sdk/__init__.py", "SDK/python/src/licora_sdk/client.py", "SDK/python/src/licora_sdk/config.py", "SDK/python/src/licora_sdk/crypto.py",
+    "SDK/python/src/licora_sdk/decorators.py", "SDK/python/src/licora_sdk/errors.py", "SDK/python/src/licora_sdk/manager.py", "SDK/python/src/licora_sdk/models.py",
+    "SDK/python/src/licora_sdk/storage.py", "SDK/python/src/licora_sdk/worker.py", "SDK/python/src/licora_sdk/py.typed",
 ]
 
 TESTS = [
@@ -165,10 +172,10 @@ for rel, expected in V1_GIT_BLOBS.items():
 print("[3/12] Release/version consistency")
 config = read("includes/config.php")
 if f"env_value('APP_VERSION', '{VERSION}')" not in config:
-    fail("runtime APP_VERSION is not 5.8.3")
-for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.8.3.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
+    fail("runtime APP_VERSION is not 5.8.4")
+for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.8.4.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
     if VERSION not in read(rel):
-        fail(f"5.8.3 release marker missing from {rel}")
+        fail(f"5.8.4 release marker missing from {rel}")
 
 print("[4/12] API v2 protocol/security contract")
 v2_endpoint_text = "\n".join(read(f"api/v2/{name}.php") for name in ("activate", "refresh", "status", "deactivate"))
@@ -222,17 +229,17 @@ for table in ["update_jobs", "update_events", "app_migrations"]:
 if "-- Licora v5.3.0 Secure In-App Updater additive migration." not in read("database.sql"):
     fail("fresh-install database.sql does not contain updater additive schema")
 release_spec = read("update/release-spec.json")
-for marker in ['\"protocol_version\": 1', '\"version\": \"5.8.3\"', '\"minimum_updater\": \"5.3.0\"', '\"upgrade_from\"']:
+for marker in ['\"protocol_version\": 1', '\"version\": \"5.8.4\"', '\"minimum_updater\": \"5.3.0\"', '\"upgrade_from\"']:
     if marker not in release_spec:
         fail(f"updater release-spec marker missing: {marker}")
 if 'migration-v5.3.0-updater.sql' in release_spec:
-    fail('v5.8.3 release spec must not replay the v5.3.0 updater migration')
+    fail('v5.8.4 release spec must not replay the v5.3.0 updater migration')
 import json as _json
 _release_spec_data = _json.loads(release_spec)
-if _release_spec_data.get("upgrade_from") != ["5.8.2"]:
-    fail("v5.8.3 release spec must accept frozen v5.8.2 baseline")
-if len(_release_spec_data.get("migrations", [])) != 1 or _release_spec_data["migrations"][0].get("path") != "migration-v5.8.3-admin-license-api.sql":
-    fail("v5.8.3 release spec must declare exactly the Admin API migration")
+if _release_spec_data.get("upgrade_from") != ["5.8.3"]:
+    fail("v5.8.4 release spec must accept frozen v5.8.3 baseline")
+if _release_spec_data.get("migrations") != []:
+    fail("v5.8.4 release spec must not declare a database migration")
 admin_migration = read("migration-v5.8.3-admin-license-api.sql")
 for table in ["admin_api_keys", "admin_api_key_scopes", "admin_api_key_apps", "admin_api_license_orders", "admin_api_idempotency", "admin_api_nonces", "admin_api_logs"]:
     if f"CREATE TABLE IF NOT EXISTS {table}" not in admin_migration:
@@ -375,7 +382,7 @@ for text, label in [(ci, "CI"), (release, "release")]:
     require_action_minimum(text, "actions/setup-node", (6,), label)
     require_action_minimum(text, "shivammathur/setup-php", (2, 37, 2), label)
 require_action_minimum(ci, "actions/upload-artifact", (6,), "CI")
-for marker in ["mysql-integration", "windows-python-contract", "scripts/package-release.sh", "tests/updater_db_integration.php", "scripts/build-update-manifest.py", "tests/updater_builder_contract.py"]:
+for marker in ["mysql-integration", "windows-python-contract", "python-sdk", "pip install ./SDK/python", "tests/sdk_python_static.py", "scripts/package-release.sh", "tests/updater_db_integration.php", "scripts/build-update-manifest.py", "tests/updater_builder_contract.py"]:
     if marker not in ci:
         fail(f"CI automation marker missing: {marker}")
 release_spec = read("update/release-spec.json")
@@ -403,6 +410,7 @@ for rel in TESTS:
         fail(f"missing test: {rel}")
     run([php, rel])
 run([sys.executable, "tests/updater_builder_contract.py"])
+run([sys.executable, "tests/sdk_python_static.py"])
 
 print("[11/12] JavaScript syntax/runtime")
 node = shutil.which("node")
@@ -427,4 +435,4 @@ for marker in ["git archive", "scripts/verify-local.py", "sha256", ".licora-v2-s
     if marker not in packager:
         fail(f"release packaging marker missing: {marker}")
 
-print("Licora v5.8.3 local verification passed.")
+print("Licora v5.8.4 local verification passed.")

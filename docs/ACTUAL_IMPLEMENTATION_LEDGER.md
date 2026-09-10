@@ -4,6 +4,14 @@ This ledger preserves the original v5.5.1 state, the uploaded v5.6.0 corrective 
 
 Never mark a feature `ACTUAL WORKING` from roadmap text alone.
 
+## v5.8.4 Python SDK baseline
+
+| Area | Status | Actual behavior |
+|---|---|---|
+| Secure API v2 Python client | ACTUAL WORKING | Activation, status, rotating refresh and deactivation use exact signed request bodies and pinned server-token verification. |
+| Client session lifecycle | ACTUAL WORKING | Secure persistence, restore, serialized login/logout, asynchronous calls, transient degraded mode and background checks are implemented. |
+| Distributed shared secret | NOT IMPLEMENTED | The SDK accepts only public configuration and never embeds API v1 or Admin API keys. |
+
 ## v5.8.3 Admin License Control API baseline
 
 | Area | Status | Actual behavior |

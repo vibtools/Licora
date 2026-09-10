@@ -1,6 +1,6 @@
 # Installation
 
-Licora v5.8.3 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
+Licora v5.8.4 provides a first-run installer for fresh deployments while preserving the existing manual installation and upgrade paths.
 
 ## Requirements
 
@@ -162,6 +162,10 @@ v5.6.1 adds no installation-time table, column, trigger or migration. Fresh inst
 ## v5.8.3 Admin License Control API
 
 Fresh installs include the seven dedicated Admin License Control API tables in `database.sql`. Upgrades from v5.8.2 apply `migration-v5.8.3-admin-license-api.sql`. The migration is additive and requires the existing core license/admin tables and Secure API v2 client-app tables. After installation, create server-to-server keys under **Admin → Settings → Admin License API**; the raw key is shown once.
+
+## v5.8.4 Python SDK
+
+v5.8.4 adds no server dependency, configuration secret, database object or migration. The optional Python 3.10+ client package is shipped under `SDK/python`; copying or installing it does not change the Licora server. Configure its public-only `licensing_public.py` template for an existing active API v2 Client App.
 
 ## v5.8.2 global device icon compatibility hotfix
 

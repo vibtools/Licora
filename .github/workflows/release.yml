@@ -59,7 +59,9 @@ jobs:
           test -f "RELEASE_NOTES_${tag}.md"
 
       - name: Full source verification
-        run: python3 scripts/verify-local.py
+        run: |
+          python3 -m pip install ./SDK/python
+          python3 scripts/verify-local.py
 
       - name: API v2, Admin API, updater and dashboard database integration
         env:

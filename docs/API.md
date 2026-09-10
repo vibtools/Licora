@@ -4,6 +4,8 @@
 
 External order/checkout servers should use the dedicated v5.8.3 Admin License Control API documented in `ADMIN_LICENSE_API.md`. Its keys are created under **Admin → Settings → Admin License API**, are restricted to exact existing applications and granular license/device scopes, and require HMAC timestamp/nonce proofs. It intentionally has no endpoint for creating or managing API v2 applications. Never put an Admin API key in a desktop, mobile or browser client.
 
+Python desktop/client applications should use the optional v5.8.4 public-client SDK documented in `PYTHON_SDK.md`. It connects only to the existing Secure API v2 endpoints and must never receive an API v1 or Admin API key.
+
 ## Secure API v2 for desktop/public clients
 
 New desktop/public integrations should use the Secure API v2 endpoints documented in `API_V2.md`. API v2 does not use the shared API v1 `X-API-Key` credential. Existing API v1 integrations remain supported and unchanged. Licora v5.8.1 (introduced in the v5.8.0 source candidate) exposes an authenticated **Developer Guide** under API & Clients with downloadable Secure API v2 lifecycle references for supported developer runtimes.

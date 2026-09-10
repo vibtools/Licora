@@ -302,7 +302,7 @@ $stepTitles = [
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.8.3 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
+                <div class="alert alert-secondary"><strong>Product:</strong> Licora &nbsp; <strong>Version:</strong> 5.8.4 &nbsp; <strong>License:</strong> MIT &nbsp; <strong>Database:</strong> MySQL/MariaDB</div>
                 <form method="post">
                     <input type="hidden" name="installer_csrf_token" value="<?php echo installer_escape($_SESSION['licora_installer_csrf']); ?>">
                     <button class="btn btn-primary" <?php echo licora_installer_requirements_pass($requirements) ? '' : 'disabled'; ?>>Continue</button>
@@ -409,7 +409,7 @@ $stepTitles = [
                 <a class="btn btn-primary" href="?step=1">Restart</a>
             <?php endif; ?>
         </div>
-        <div class="card-footer text-center text-muted py-3"><small>Licora v5.8.3 &middot; Vib Tools &middot; MIT License</small></div>
+        <div class="card-footer text-center text-muted py-3"><small>Licora v5.8.4 &middot; Vib Tools &middot; MIT License</small></div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

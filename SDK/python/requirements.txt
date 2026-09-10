@@ -1,0 +1,3 @@
+cryptography>=42,<47
+requests>=2.31,<3
+keyring>=24,<27; platform_system != "Windows"

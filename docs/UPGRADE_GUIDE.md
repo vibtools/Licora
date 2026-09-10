@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1 -> v5.7.0 -> v5.7.1 -> v5.8.0 -> v5.8.1 -> v5.8.2 -> v5.8.3
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1 -> v5.7.0 -> v5.8.0 -> v5.8.1 -> v5.8.2 -> v5.8.3 -> v5.8.4
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -20,6 +20,10 @@ The v5.1.0 installer is for fresh installations only. Existing deployments are n
 8. Do not open the installer.
 9. Run `bash scripts/validate.sh`.
 10. Sign in and run admin, API, license, device, dashboard, cron, and settings regression checks.
+
+## v5.8.3 to v5.8.4 Python SDK
+
+v5.8.4 accepts only the frozen v5.8.3 signed source. It adds the optional `SDK/python` distribution, documentation and verification gates. The release has an empty migration and deletion list; existing server-side APIs and data are unchanged.
 
 ## No database migration
 

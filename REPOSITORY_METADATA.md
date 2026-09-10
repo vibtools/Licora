@@ -50,6 +50,17 @@ Licora v5.8.2 changes only the remaining unsupported Admin device icon class fro
 
 Licora v5.8.3 provides external order systems with dedicated, exact-app-scoped Admin API keys and audited license/device lifecycle operations. It intentionally provides no application-creation endpoint and preserves existing API v1/v2 client contracts. This version is the frozen baseline for subsequent development.
 
+## v5.8.4 production Python SDK candidate
+
+- **Intended tag:** `v5.8.4`
+- **Parent/frozen update source:** `v5.8.3`
+- **Title:** `Licora v5.8.4 — Production Python SDK`
+- **Release notes:** `RELEASE_NOTES_v5.8.4.md`
+- **Database migration:** none
+- **Delete list:** empty
+
+Licora v5.8.4 adds a copy-ready Python 3.10+ Secure API v2 client SDK with public-only configuration, P-256 request proof, pinned RS256 token verification, secure state and managed session/background validation. All server-side APIs, schema and application behavior remain frozen.
+
 ## v5.8.1 published Developer Integration Guide corrective release
 
 - **Tag:** `v5.8.1`

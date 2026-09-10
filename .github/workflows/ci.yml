@@ -102,9 +102,32 @@ jobs:
       - name: Verify builder portability
         run: python tests/updater_builder_contract.py
 
+  python-sdk:
+    name: Python SDK ${{ matrix.python-version }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.10', '3.13']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install SDK
+        run: python -m pip install ./SDK/python
+
+      - name: Verify SDK
+        run: python tests/sdk_python_static.py
+
   package:
     name: Build verified source artifact
-    needs: [validate, mysql-integration, windows-python-contract]
+    needs: [validate, mysql-integration, windows-python-contract, python-sdk]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -135,18 +158,18 @@ jobs:
         run: |
           short_sha="${GITHUB_SHA:0:12}"
           mkdir -p release
-          bash scripts/package-release.sh v5.8.3 "$GITHUB_SHA" "release/Licora-5.8.3-ci-${short_sha}.zip"
-          cp "release/Licora-5.8.3-ci-${short_sha}.zip" "release/Licora-5.8.3.zip"
-          python3 scripts/build-update-manifest.py --version 5.8.3 --ref "$GITHUB_SHA" --package "release/Licora-5.8.3.zip" --output release/licora-update-manifest.json
-          rm "release/Licora-5.8.3.zip"
+          bash scripts/package-release.sh v5.8.4 "$GITHUB_SHA" "release/Licora-5.8.4-ci-${short_sha}.zip"
+          cp "release/Licora-5.8.4-ci-${short_sha}.zip" "release/Licora-5.8.4.zip"
+          python3 scripts/build-update-manifest.py --version 5.8.4 --ref "$GITHUB_SHA" --package "release/Licora-5.8.4.zip" --output release/licora-update-manifest.json
+          rm "release/Licora-5.8.4.zip"
 
       - name: Upload CI release-candidate artifact
         uses: actions/upload-artifact@v7
         with:
-          name: Licora-5.8.3-${{ github.sha }}
+          name: Licora-5.8.4-${{ github.sha }}
           path: |
-            release/Licora-5.8.3-ci-*.zip
-            release/Licora-5.8.3-ci-*.zip.sha256
+            release/Licora-5.8.4-ci-*.zip
+            release/Licora-5.8.4-ci-*.zip.sha256
             release/licora-update-manifest.json
           if-no-files-found: error
           retention-days: 14

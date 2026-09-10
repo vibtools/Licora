@@ -6,7 +6,18 @@ All notable public-release changes are recorded here. Historical project notes r
 
 ### Planned
 
-- Future work starts from the frozen v5.8.3 Admin License Control API baseline.
+- Future work starts from the frozen v5.8.4 Python SDK baseline.
+
+## [5.8.4] - 2026-09-10
+
+### Added
+- Added a reusable Python 3.10+ Secure API v2 SDK with a public-only configuration template, P-256 device proofs, pinned RS256 access-token verification and exact Licora protocol validation.
+- Added fail-closed OS-backed session persistence, access/refresh recovery, device-revocation recovery, license-expiry enforcement, synchronized logout, asynchronous helpers and a managed background validation worker.
+- Added headless and Tkinter integration examples, package metadata, detailed integration documentation, unit/security tests and Linux/Windows Python CI coverage.
+
+### Compatibility
+- v5.8.3 is the only direct signed update source. There is no database migration or delete list.
+- Existing API v1/v2 endpoints, Admin License API, server cryptography, schema, installer, UI, Dashboard, Cron and updater runtime behavior remain unchanged.
 
 ## [5.8.3] - 2026-09-09
 
