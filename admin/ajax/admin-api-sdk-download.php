@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once '../includes/auth.php';
+require_once '../../includes/auth.php';
 
 $auth = new Auth();
 if (!$auth->isAdminLoggedIn()) { header('Location: login.php'); exit(); }
@@ -14,7 +14,7 @@ if (!class_exists('ZipArchive')) {
     exit();
 }
 
-$sourceRoot = realpath(__DIR__ . '/../SDK/admin-license-api');
+$sourceRoot = realpath(__DIR__ . '/../../SDK/admin-license-api');
 if (!is_string($sourceRoot) || !is_dir($sourceRoot)) {
     http_response_code(404);
     header('Content-Type: text/plain; charset=utf-8');

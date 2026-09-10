@@ -54,7 +54,7 @@ $endpoints = licora_ui_endpoints();
         </div>
         <div class="developer-guide-hero-actions">
             <a href="admin_api_keys.php" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Admin License API</a>
-            <a href="admin_api_sdk_download.php" class="btn btn-success"><i class="bi bi-file-earmark-zip"></i> Download Ready SDK</a>
+            <a href="ajax/admin-api-sdk-download.php" class="btn btn-success"><i class="bi bi-file-earmark-zip"></i> Download Ready SDK</a>
         </div>
     </div>
 

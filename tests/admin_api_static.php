@@ -15,7 +15,7 @@ foreach ([
     'api/admin/v1/licenses/list.php', 'api/admin/v1/licenses/action.php',
     'api/admin/v1/devices/list.php', 'api/admin/v1/devices/revoke.php',
     'api/admin/v1/apps/list.php', 'admin/admin_api_keys.php',
-    'admin/admin_api_docs.php', 'admin/admin_api_sdk_download.php',
+    'admin/admin_api_docs.php', 'admin/ajax/admin-api-sdk-download.php',
 ] as $path) {
     admin_api_ok(is_file($root . '/' . $path), 'required Admin API route exists: ' . $path);
 }
@@ -34,7 +34,7 @@ admin_api_ok(strpos($implementation, 'INSERT INTO v2_client_apps') === false, 'A
 admin_api_ok(strpos($implementation, 'DELETE FROM licenses') === false, 'license delete operation is recoverable soft-delete');
 
 $adminPage = (string)file_get_contents($root . '/admin/admin_api_keys.php');
-foreach (['Download Ready SDK', 'Documents', 'admin_api_sdk_download.php', 'admin_api_docs.php'] as $marker) {
+foreach (['Download Ready SDK', 'Documents', 'ajax/admin-api-sdk-download.php', 'admin_api_docs.php'] as $marker) {
     admin_api_ok(strpos($adminPage, $marker) !== false, 'Admin API page exposes SDK resource: ' . $marker);
 }
 
@@ -65,7 +65,7 @@ foreach (['X-Licora-Timestamp', 'X-Licora-Nonce', 'X-Licora-Signature', 'Idempot
 $docsPage = (string)file_get_contents($root . '/admin/admin_api_docs.php');
 admin_api_ok(strpos($docsPage, "'docs/API_REFERENCE.md'") !== false, 'documents page uses a fixed document allowlist');
 admin_api_ok(strpos($docsPage, 'Security::escape($document[\'content\'])') !== false, 'documents page escapes Markdown content');
-$downloadPage = (string)file_get_contents($root . '/admin/admin_api_sdk_download.php');
+$downloadPage = (string)file_get_contents($root . '/admin/ajax/admin-api-sdk-download.php');
 foreach (['isAdminLoggedIn', 'ZipArchive', 'realpath', 'Licora-Admin-API-SDK-v1.0.0/'] as $marker) {
     admin_api_ok(strpos($downloadPage, $marker) !== false, 'SDK download safety marker exists: ' . $marker);
 }
