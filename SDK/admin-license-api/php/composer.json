@@ -1,0 +1,17 @@
+{
+  "name": "vibtools/licora-admin-api-sdk",
+  "description": "Server-side PHP client for the Licora Admin License API",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.0",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "VibTools\\Licora\\AdminApi\\": "src/"
+    }
+  }
+}
+

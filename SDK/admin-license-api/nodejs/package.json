@@ -1,0 +1,14 @@
+{
+  "name": "@vibtools/licora-admin-api-sdk",
+  "version": "1.0.0",
+  "description": "Server-side Node.js client for the Licora Admin License API",
+  "type": "module",
+  "main": "src/licora-admin-client.mjs",
+  "exports": "./src/licora-admin-client.mjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "private": true
+}
+

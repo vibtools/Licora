@@ -2,6 +2,15 @@
 
 Licora v5.8.3 adds a dedicated server-to-server API for order systems. It creates and manages licenses for existing Secure API v2 client applications. It does **not** create, update or delete applications, and it does not accept API v1 keys or public API v2 device credentials.
 
+## Ready SDK and documentation
+
+The Admin License API page now provides two authenticated actions:
+
+- **Download Ready SDK** builds and downloads `Licora-Admin-API-SDK-v1.0.0.zip` from the maintained source package in `SDK/admin-license-api`.
+- **Documents** opens the bundled Markdown guides inside the Admin panel.
+
+The ZIP contains dependency-light PHP 8+ and Node.js 18+ clients, examples, configuration templates, signing/security references and `AI_INSTRUCTIONS.md`. The SDK performs request signing but does not change Admin API authorization, application ownership or scope enforcement.
+
 ## Setup
 
 1. Apply `migration-v5.8.3-admin-license-api.sql` when upgrading from v5.8.2. Fresh installs already contain the schema in `database.sql`.

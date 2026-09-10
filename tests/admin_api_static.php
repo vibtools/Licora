@@ -15,6 +15,7 @@ foreach ([
     'api/admin/v1/licenses/list.php', 'api/admin/v1/licenses/action.php',
     'api/admin/v1/devices/list.php', 'api/admin/v1/devices/revoke.php',
     'api/admin/v1/apps/list.php', 'admin/admin_api_keys.php',
+    'admin/admin_api_docs.php', 'admin/admin_api_sdk_download.php',
 ] as $path) {
     admin_api_ok(is_file($root . '/' . $path), 'required Admin API route exists: ' . $path);
 }
@@ -31,6 +32,43 @@ foreach (['Idempotency-Key', 'X_LICORA_TIMESTAMP', 'X_LICORA_NONCE', 'X_LICORA_S
 }
 admin_api_ok(strpos($implementation, 'INSERT INTO v2_client_apps') === false, 'Admin License API cannot create API v2 applications');
 admin_api_ok(strpos($implementation, 'DELETE FROM licenses') === false, 'license delete operation is recoverable soft-delete');
+
+$adminPage = (string)file_get_contents($root . '/admin/admin_api_keys.php');
+foreach (['Download Ready SDK', 'Documents', 'admin_api_sdk_download.php', 'admin_api_docs.php'] as $marker) {
+    admin_api_ok(strpos($adminPage, $marker) !== false, 'Admin API page exposes SDK resource: ' . $marker);
+}
+
+$sdkFiles = [
+    'README.md', 'AI_INSTRUCTIONS.md', 'LICENSE', 'VERSION',
+    'docs/AUTHENTICATION_AND_SIGNING.md', 'docs/API_REFERENCE.md', 'docs/SECURITY_AND_OPERATIONS.md',
+    'php/composer.json', 'php/config.example.php', 'php/README.md', 'php/src/LicoraAdminApiException.php',
+    'php/src/LicoraAdminClient.php', 'php/examples/manage-license.php',
+    'nodejs/package.json', 'nodejs/env.example', 'nodejs/README.md',
+    'nodejs/src/licora-admin-client.mjs', 'nodejs/examples/manage-license.mjs',
+];
+foreach ($sdkFiles as $path) {
+    admin_api_ok(is_file($root . '/SDK/admin-license-api/' . $path), 'downloadable Admin API SDK file exists: ' . $path);
+}
+
+$sdkClients = [
+    'PHP' => (string)file_get_contents($root . '/SDK/admin-license-api/php/src/LicoraAdminClient.php'),
+    'Node.js' => (string)file_get_contents($root . '/SDK/admin-license-api/nodejs/src/licora-admin-client.mjs'),
+];
+foreach (['X-Licora-Timestamp', 'X-Licora-Nonce', 'X-Licora-Signature', 'Idempotency-Key',
+    'createLicense', 'licenseStatus', 'listLicenses', 'activateLicense', 'suspendLicense',
+    'extendLicense', 'banLicense', 'deleteLicense', 'listDevices', 'revokeDevice'] as $marker) {
+    foreach ($sdkClients as $clientName => $sdkImplementation) {
+        admin_api_ok(strpos($sdkImplementation, $marker) !== false, $clientName . ' SDK contract marker exists: ' . $marker);
+    }
+}
+
+$docsPage = (string)file_get_contents($root . '/admin/admin_api_docs.php');
+admin_api_ok(strpos($docsPage, "'docs/API_REFERENCE.md'") !== false, 'documents page uses a fixed document allowlist');
+admin_api_ok(strpos($docsPage, 'Security::escape($document[\'content\'])') !== false, 'documents page escapes Markdown content');
+$downloadPage = (string)file_get_contents($root . '/admin/admin_api_sdk_download.php');
+foreach (['isAdminLoggedIn', 'ZipArchive', 'realpath', 'Licora-Admin-API-SDK-v1.0.0/'] as $marker) {
+    admin_api_ok(strpos($downloadPage, $marker) !== false, 'SDK download safety marker exists: ' . $marker);
+}
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_SERVER['REQUEST_URI'] = '/licora/api/admin/v1/licenses/create.php?source=checkout';
