@@ -43,6 +43,9 @@ us_ok(($migration['id'] ?? '') === 'v5.8.3.scoped-admin-license-api', 'bridge mi
 us_ok(($migration['path'] ?? '') === 'migration-v5.8.3-admin-license-api.sql', 'bridge migration path');
 us_ok(($migration['destructive'] ?? true) === false, 'bridge migration is non-destructive');
 us_ok(($migration['idempotent'] ?? false) === true, 'bridge migration is idempotent');
-us_ok(($migration['rollback_path'] ?? 'invalid') === null, 'additive bridge migration has no destructive rollback');
+us_ok(
+    array_key_exists('rollback_path', $migration) && $migration['rollback_path'] === null,
+    'additive bridge migration has no destructive rollback'
+);
 
 echo "Updater state-machine checks passed.\n";
