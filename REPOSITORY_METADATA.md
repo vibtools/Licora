@@ -39,6 +39,17 @@ Licora v5.1.0 adds a ten-step first-run installer, delimiter-aware schema execut
 
 Licora v5.8.2 changes only the remaining unsupported Admin device icon class from `bi-devices` to Bootstrap Icons 1.8.1-compatible `bi-laptop`, adds a regression gate for the unsupported class, and aligns release identity. Runtime API, database, licensing/device enforcement, Dashboard, Developer Guide, authentication, Cron and updater semantics remain unchanged.
 
+## v5.8.3 Admin License Control API baseline
+
+- **Intended tag:** `v5.8.3`
+- **Parent/frozen update source:** `v5.8.2` (`fbdb20227a1daa7de1a62b07bd218d446abe2bd4` source head)
+- **Title:** `Licora v5.8.3 — Scoped Admin License Control API`
+- **Release notes:** `RELEASE_NOTES_v5.8.3.md`
+- **Database migration:** `migration-v5.8.3-admin-license-api.sql` (additive/idempotent)
+- **Delete list:** empty
+
+Licora v5.8.3 provides external order systems with dedicated, exact-app-scoped Admin API keys and audited license/device lifecycle operations. It intentionally provides no application-creation endpoint and preserves existing API v1/v2 client contracts. This version is the frozen baseline for subsequent development.
+
 ## v5.8.1 published Developer Integration Guide corrective release
 
 - **Tag:** `v5.8.1`

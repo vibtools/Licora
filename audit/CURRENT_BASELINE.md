@@ -1,4 +1,4 @@
-# Current Baseline: Licora v5.8.2
+# Current Baseline: Licora v5.8.3
 
 ## 1. Current Architecture
 - **Language/Runtime:** PHP 8.0+
@@ -22,6 +22,9 @@
 - `install/`: Directory holding the installation wizard.
 - `database.sql`: The frozen base schema combined with additive migration SQL.
 - `config.sample.php`: Base configuration template.
+- `api/admin/v1/`: Dedicated, HMAC-authenticated server-to-server license/device control endpoints.
+- `includes/admin_api/`: Admin API request validation, authorization, ownership and lifecycle services.
+- `migration-v5.8.3-admin-license-api.sql`: Additive Admin API persistence migration.
 
 ## 3. Current Behavior
 - **Initialization:** An unconfigured application redirects to the installer. The installer sets up the database, creates the first admin user, generates cryptographic keys in the `includes/` directory, and locks itself.
@@ -29,6 +32,7 @@
   - V1 requests check rate limits via MySQL locks (`GET_LOCK`), then validate the provided API key against the database, check the license, log the usage, and return JSON.
   - V2 requests validate RSA signatures, process activation/deactivation, and issue ephemeral access tokens.
 - **Admin Flow:** Admins authenticate, triggering session variables. Rate limiting blocks brute-force login attempts (15-minute IP lock on 5 failures).
+- **Admin License API Flow:** Dedicated hashed keys are constrained by exact existing applications, granular scopes, optional IP/CIDR, rate and expiry policies. Signed timestamp/nonce requests create idempotent order-owned licenses or manage only those licenses/devices.
 - **Updater Flow:** The background script or admin panel triggers an update check. If available, it downloads a package, validates it, and replaces running code.
 
 ## 4. Features That Must Not Change

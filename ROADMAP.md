@@ -8,6 +8,13 @@
 
 Roadmap items are proposals and must be implemented through reviewed, backward-compatible changes.
 
+## Admin License Control API baseline (v5.8.3)
+
+- Scoped server-to-server license/order automation: COMPLETE in v5.8.3.
+- Dedicated key lifecycle, exact existing-app assignment, granular permissions, IP/rate/expiry controls, replay protection, idempotency, ownership isolation, audit logs and device/license controls: COMPLETE.
+- API v2 application creation/management through this API: deliberately out of scope and not implemented.
+- v5.8.3 is the frozen baseline for subsequent work; public API v1/v2 client behavior remains unchanged.
+
 ## Security hardening
 
 - Correct Authorization Bearer parsing and remove secret-adjacent development logs.

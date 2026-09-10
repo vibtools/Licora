@@ -6,7 +6,19 @@ All notable public-release changes are recorded here. Historical project notes r
 
 ### Planned
 
-- No additional feature scope is approved beyond the v5.8.2 global device-icon compatibility hotfix.
+- Future work starts from the frozen v5.8.3 Admin License Control API baseline.
+
+## [5.8.3] - 2026-09-09
+
+### Added
+- Added a dedicated HMAC-authenticated server-to-server Admin License Control API for creating, reading, listing, extending, activating, suspending, banning and soft-deleting licenses created from external orders.
+- Added exact existing-application assignment, granular per-key scopes, ownership isolation, one-time key display, rotation, suspension/permanent revocation, IP/CIDR allowlists, per-key hourly limits, expiry and request audit logs.
+- Added device listing/revocation and license ban/delete token revocation without adding any API endpoint that creates or manages API v2 applications.
+- Added replay-resistant timestamp/nonce request proofs, order/idempotency conflict protection, an additive seven-table migration, Admin Settings control page, API reference and MySQL/static regression coverage.
+
+### Compatibility
+- v5.8.2 is the only direct signed update source. Existing API v1/v2 endpoints, credentials and client protocols remain unchanged.
+- The migration is additive, deletes no files, changes no existing table definition and preserves all existing Admin, Dashboard, Cron and updater behavior.
 
 ## [5.8.2] - 2026-08-20
 

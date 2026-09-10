@@ -29,7 +29,7 @@ if (!function_exists('env_value')) {
 // Resolve release identity before private local configuration is loaded.
 // This prevents an installer-generated local configuration from pinning
 // future source upgrades while retaining the APP_VERSION environment override.
-if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.8.2'));
+if (!defined('APP_VERSION')) define('APP_VERSION', env_value('APP_VERSION', '5.8.3'));
 
 // Optional private local override. Keep this file outside public web root where possible.
 $localConfig = __DIR__ . '/config.local.php';
@@ -72,6 +72,11 @@ if (!defined('LICENSE_V2_CLOCK_SKEW')) define('LICENSE_V2_CLOCK_SKEW', (int)env_
 if (!defined('LICENSE_V2_SIGNING_KEY_ID')) define('LICENSE_V2_SIGNING_KEY_ID', env_value('LICENSE_V2_SIGNING_KEY_ID', 'primary-v1'));
 if (!defined('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH')) define('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH', env_value('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH', __DIR__ . '/.licora-v2-signing-private.pem'));
 if (!defined('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH')) define('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH', env_value('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH', __DIR__ . '/.licora-v2-signing-public.pem'));
+
+// Scoped server-to-server Admin License Control API configuration.
+if (!defined('ADMIN_API_REQUIRE_HTTPS')) define('ADMIN_API_REQUIRE_HTTPS', env_value('ADMIN_API_REQUIRE_HTTPS', '1'));
+if (!defined('ADMIN_API_MAX_BODY_BYTES')) define('ADMIN_API_MAX_BODY_BYTES', (int)env_value('ADMIN_API_MAX_BODY_BYTES', 65536));
+if (!defined('ADMIN_API_CLOCK_SKEW')) define('ADMIN_API_CLOCK_SKEW', (int)env_value('ADMIN_API_CLOCK_SKEW', 300));
 
 // Licora v5.3.0 Secure In-App Updater configuration.
 if (!defined('LICORA_UPDATE_REPOSITORY')) define('LICORA_UPDATE_REPOSITORY', env_value('LICORA_UPDATE_REPOSITORY', 'vibtools/Licora'));

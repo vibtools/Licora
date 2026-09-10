@@ -24,6 +24,7 @@ if (!function_exists('licora_ui_navigation_groups')) {
                 [
                     'file' => 'settings.php', 'label' => 'Settings', 'icon' => 'bi-gear',
                     'children' => [
+                        ['file' => 'admin_api_keys.php', 'label' => 'Admin License API', 'icon' => 'bi-shield-lock'],
                         ['file' => 'audit.php', 'label' => 'Audit Trail', 'icon' => 'bi-journal-text'],
                         ['file' => 'backup.php', 'label' => 'Backup & Export', 'icon' => 'bi-download'],
                         ['file' => 'health.php', 'label' => 'System Health', 'icon' => 'bi-heart-pulse'],

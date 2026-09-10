@@ -166,3 +166,7 @@ v5.7.1 keeps the v5.7.0 Dashboard architecture unchanged and tightens only contr
 ## Developer Guide architecture (v5.8.1; introduced in v5.8.0 source candidate)
 
 `admin/developer_guide.php` is an authenticated, read-only documentation surface inside the existing shared sidebar/topbar shell. The route reads static reference files from `admin/assets/examples/licora-v2/` for display and direct download, uses `admin/assets/js/developer-guide.js` only for language tabs/copy interactions, and uses scoped `.developer-guide-page` styles in the existing `admin-ui.css` compatibility entrypoint. It does not call licensing mutations, change API v2 server behavior or expose private server credentials. The existing authenticated Super-Admin public signing-key download remains the trusted key-distribution path.
+
+## Admin License Control API architecture (v5.8.3)
+
+The direct-script endpoints under `api/admin/v1/` share `includes/admin_api/bootstrap.php`, strict request parsing/proof logic, the dedicated key repository and an ownership-aware license service. The trust boundary is separate from public API v1/v2 credentials. Dedicated key hashes/scopes/apps/nonces/order mappings/audit events live only in additive `admin_api_*` tables; the service writes normal licenses with an exact existing `app_scope` so the unchanged public API v2 runtime continues to enforce the license. No endpoint writes `v2_client_apps`.

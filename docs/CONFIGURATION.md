@@ -22,7 +22,7 @@ Environment variables are preferred in managed hosting and containers. On shared
 | `DB_PASS` | `LICENSE_DB_PASS`, fallback `DB_PASS` | empty | Required when the database account has a password. |
 | `APP_NAME` | `APP_NAME` | `Licora` | Application label. |
 | `APP_URL` | `APP_URL` | `http://localhost` | Public application root, without a query string or fragment. |
-| `APP_VERSION` | `APP_VERSION` | `5.8.2` | Source release identity returned by the verification API. |
+| `APP_VERSION` | `APP_VERSION` | `5.8.3` | Source release identity returned by the verification API. |
 | `APP_TIMEZONE` | `APP_TIMEZONE` | `Asia/Dhaka` | PHP runtime timezone. |
 | `APP_LOCALE` | `APP_LOCALE` | `en` | Application locale metadata. |
 | `MAIL_FROM_NAME` | `MAIL_FROM_NAME` | `APP_NAME` | Mail display name. CR/LF characters are rejected by the installer. |
@@ -59,7 +59,7 @@ LICENSE_ALLOWED_ORIGIN=https://app.example.com
 
 ## Installer-generated private configuration
 
-A fresh v5.8.2 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
+A fresh v5.8.3 wizard installation writes `includes/config.local.php` atomically and then creates `includes/.licora-installed`. Preserve both files, together with `includes/.licora-encryption.key` when present, during backup or upgrade operations.
 
 Never commit or publish:
 
@@ -93,6 +93,16 @@ Fresh installation executes the existing `database.sql`, including tables, index
 | Signing public-key path | `LICENSE_V2_SIGNING_PUBLIC_KEY_PATH` | `includes/.licora-v2-signing-public.pem` |
 
 Signing key files are deployment material, not repository configuration. Existing deployments can generate/validate them either with `php scripts/setup-v2.php` or, when shell access is unavailable, through **Admin → Client Apps → Initialize API v2**. Both paths use the same additive provisioner and refuse partial or mismatched existing key pairs.
+
+## Admin License Control API configuration
+
+| Purpose | Environment/constant | Default |
+|---|---|---|
+| Require HTTPS | `ADMIN_API_REQUIRE_HTTPS` | `1` |
+| Maximum JSON body bytes | `ADMIN_API_MAX_BODY_BYTES` | `65536` |
+| Request clock skew seconds | `ADMIN_API_CLOCK_SKEW` | `300` |
+
+Per-key application assignments, scopes, IP/CIDR allowlists, hourly limits, expiry and lifecycle state are managed under **Admin → Settings → Admin License API**. Keep HTTPS required in production. `LICENSE_TRUST_PROXY_HEADERS` affects forwarded HTTPS detection for this API too and must be enabled only behind a trusted proxy that overwrites the forwarded-protocol header.
 
 Set `LICENSE_TRUST_PROXY_HEADERS=1` only when Licora is behind a trusted reverse proxy that overwrites the forwarded-protocol header. Never enable it for direct public traffic where clients can supply `X-Forwarded-Proto` themselves.
 

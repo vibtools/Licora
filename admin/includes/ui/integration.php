@@ -28,6 +28,13 @@ if (!function_exists('licora_ui_endpoints')) {
             'API v2 Refresh' => $root . 'api/v2/refresh.php',
             'API v2 Status' => $root . 'api/v2/status.php',
             'API v2 Deactivate' => $root . 'api/v2/deactivate.php',
+            'Admin API Create License' => $root . 'api/admin/v1/licenses/create.php',
+            'Admin API License Status' => $root . 'api/admin/v1/licenses/status.php',
+            'Admin API License List' => $root . 'api/admin/v1/licenses/list.php',
+            'Admin API License Action' => $root . 'api/admin/v1/licenses/action.php',
+            'Admin API Device List' => $root . 'api/admin/v1/devices/list.php',
+            'Admin API Device Revoke' => $root . 'api/admin/v1/devices/revoke.php',
+            'Admin API App List' => $root . 'api/admin/v1/apps/list.php',
         ];
     }
 }

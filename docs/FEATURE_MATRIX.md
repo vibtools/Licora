@@ -10,6 +10,7 @@
 | Secure API v2 | Implemented | Device-bound P-256 request proofs, RS256 server tokens, rotating refresh credentials, replay protection, matching signing-key validation, persistent refresh rate limits, and no desktop shared API key. |
 | API v2 client app management | Implemented | Admin Client Apps page controls App IDs, version floor, TTL and rate policy; it also provides authenticated cPanel-friendly v2 initialization when shell access is unavailable. v5.2.2 aligns admin schema discovery so active V2 apps remain visible to the existing License app-scope selector. |
 | API v2 device revocation | Implemented | Admin V2 Devices page lists activated credentials and revokes the credential and refresh tokens; v5.2.2 aligns its schema detection with API v2 runtime. |
+| Admin License Control API | Implemented in v5.8.3 | Dedicated server-to-server keys with HMAC request proofs, nonce replay protection, idempotent order creation, exact existing-app scopes, license ownership isolation, granular actions, device revoke, key lifecycle controls and request audit logs. No app-creation endpoint exists. |
 | API v1 Bearer/API-key authentication | Implemented | Existing reviewed v1 credential normalization remains supported; v1 is unchanged. |
 | Simple API | Implemented / legacy risk | No API key; retained for compatibility. |
 | Global IP rate limit | Implemented | `API_RATE_LIMIT`; one-hour window. |

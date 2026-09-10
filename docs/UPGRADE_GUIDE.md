@@ -3,7 +3,7 @@
 ## Supported path
 
 ```text
-v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1 -> v5.7.0 -> v5.7.1 -> v5.8.0 -> v5.8.1 -> v5.8.2
+v5.0.1 -> v5.0.1.1 -> v5.1.0 -> v5.2.0 -> v5.2.1 -> v5.2.2 -> v5.3.0 -> v5.4.0 -> v5.4.1 -> v5.5.0 -> v5.5.1 -> v5.6.0 -> v5.6.1 -> v5.7.0 -> v5.7.1 -> v5.8.0 -> v5.8.1 -> v5.8.2 -> v5.8.3
 ```
 
 The v5.1.0 installer is for fresh installations only. Existing deployments are never required to reinstall.
@@ -240,6 +240,15 @@ v5.8.2 is a signed **no-migration** UI compatibility hotfix over the published v
 
 1. Preserve deployment-private configuration, encryption/install markers, API v2 signing keys and updater runtime data.
 2. Install only the official signed v5.8.2 release after remote CI/release gates pass.
+
+## v5.8.2 to v5.8.3 scoped Admin License Control API
+
+v5.8.3 accepts only the frozen v5.8.2 signed source. The updater backs up source/database and applies `migration-v5.8.3-admin-license-api.sql` before installing the additive Admin API/UI files.
+
+1. Back up the v5.8.2 source and database.
+2. Install the verified signed v5.8.3 release through the Update Center, or deploy the exact source and apply the migration once manually.
+3. Open **Admin → Settings → Admin License API**, create a least-privilege key and store the one-time secret server-side.
+4. Keep public API v1/v2 clients unchanged; the new API accepts only dedicated Admin API tokens.
 3. Verify the Devices icon in the sidebar, Settings shortcut, Device Management header/empty state, License View Devices action, Backup Devices CSV action and About Device Control card.
 4. Confirm API v1/v2, licensing/device behavior, Dashboard, Developer Guide, authentication, Cron and updater regression gates remain green.
 

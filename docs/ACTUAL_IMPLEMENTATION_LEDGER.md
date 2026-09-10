@@ -4,6 +4,15 @@ This ledger preserves the original v5.5.1 state, the uploaded v5.6.0 corrective 
 
 Never mark a feature `ACTUAL WORKING` from roadmap text alone.
 
+## v5.8.3 Admin License Control API baseline
+
+| Area | Status | Actual behavior |
+|---|---|---|
+| External order license automation | ACTUAL WORKING | Idempotent create binds each order to one key-owned license and exact existing app. |
+| Admin API credential lifecycle | ACTUAL WORKING | Hashed dedicated keys, one-time secret, rotate/suspend/revoke, granular scope/app/IP/rate/expiry policy. |
+| License/device control | ACTUAL WORKING | Owned status/list/reveal/actions and device list/revoke; ban/delete revoke tokens; delete is soft. |
+| Admin API application creation | NOT IMPLEMENTED | Deliberately excluded; applications remain controlled only by the existing authenticated Client Apps page. |
+
 Status:
 - `ACTUAL WORKING`
 - `PARTIAL`

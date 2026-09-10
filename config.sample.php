@@ -6,7 +6,7 @@ if (!defined('DB_USER')) define('DB_USER', 'root');
 if (!defined('DB_PASS')) define('DB_PASS', '');
 if (!defined('APP_NAME')) define('APP_NAME', 'Licora');
 if (!defined('APP_URL')) define('APP_URL', 'http://localhost/licora');
-if (!defined('APP_VERSION')) define('APP_VERSION', '5.8.2');
+if (!defined('APP_VERSION')) define('APP_VERSION', '5.8.3');
 if (!defined('APP_TIMEZONE')) define('APP_TIMEZONE', 'Asia/Dhaka');
 if (!defined('APP_LOCALE')) define('APP_LOCALE', 'en');
 if (!defined('MAIL_FROM_NAME')) define('MAIL_FROM_NAME', 'Licora');
@@ -22,6 +22,9 @@ if (!defined('LICENSE_V2_CLOCK_SKEW')) define('LICENSE_V2_CLOCK_SKEW', 300);
 if (!defined('LICENSE_V2_SIGNING_KEY_ID')) define('LICENSE_V2_SIGNING_KEY_ID', 'primary-v1');
 if (!defined('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH')) define('LICENSE_V2_SIGNING_PRIVATE_KEY_PATH', __DIR__ . '/.licora-v2-signing-private.pem');
 if (!defined('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH')) define('LICENSE_V2_SIGNING_PUBLIC_KEY_PATH', __DIR__ . '/.licora-v2-signing-public.pem');
+if (!defined('ADMIN_API_REQUIRE_HTTPS')) define('ADMIN_API_REQUIRE_HTTPS', '1');
+if (!defined('ADMIN_API_MAX_BODY_BYTES')) define('ADMIN_API_MAX_BODY_BYTES', 65536);
+if (!defined('ADMIN_API_CLOCK_SKEW')) define('ADMIN_API_CLOCK_SKEW', 300);
 // Security boundary: the updater rejects any value other than the official repository.
 if (!defined('LICORA_UPDATE_REPOSITORY')) define('LICORA_UPDATE_REPOSITORY', 'vibtools/Licora');
 if (!defined('LICORA_UPDATE_CHECK_INTERVAL')) define('LICORA_UPDATE_CHECK_INTERVAL', 21600);

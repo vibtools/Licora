@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local source verifier for Licora v5.8.2.
+"""Local source verifier for Licora v5.8.3.
 
 This verifier validates source and tests only. It never creates a Git tag, release,
 or GitHub artifact. Release packaging is intentionally owned by GitHub Actions and
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "5.8.2"
+VERSION = "5.8.3"
 
 V1_GIT_BLOBS = {
     "api/verify.php": "4dc549c2afea0772d3f2ffa8b330fd24b8b13ec2",
@@ -28,6 +28,7 @@ V1_GIT_BLOBS = {
 
 REQUIRED = [
     "README.md", "CHANGELOG.md", "SECURITY.md", "REPOSITORY_METADATA.md",
+    "RELEASE_NOTES_v5.8.3.md", "RELEASE_COMMANDS_v5.8.3.md", "BASELINE_v5.8.3.md",
     "RELEASE_NOTES_v5.8.2.md", "RELEASE_COMMANDS_v5.8.2.md", "BASELINE_v5.8.2.md",
     "RELEASE_NOTES_v5.8.1.md", "RELEASE_COMMANDS_v5.8.1.md", "BASELINE_v5.8.1.md",
     "RELEASE_NOTES_v5.8.0.md", "RELEASE_COMMANDS_v5.8.0.md", "BASELINE_v5.8.0.md",
@@ -51,22 +52,26 @@ REQUIRED = [
     "audit/V5.6.0_DASHBOARD_PHASE1_AUDIT.md",
     "audit/V5.5.1_UI_HOTFIX_AUDIT.md",
     "audit/V5.5.0_UI_FORENSIC_AUDIT.md", "audit/V5.5.0_SCOPE_VERIFICATION.md",
-    "migration-v5.2.0-api-v2.sql", "migration-v5.3.0-updater.sql", "database.sql", "includes/.htaccess",
+    "audit/V5.8.3_ADMIN_LICENSE_API_AUDIT.md", "audit/V5.8.3_DELTA_MANIFEST.md",
+    "migration-v5.2.0-api-v2.sql", "migration-v5.3.0-updater.sql", "migration-v5.8.3-admin-license-api.sql", "database.sql", "includes/.htaccess",
     "api/verify.php", "api/check_license.php",
     "includes/dashboard.php", "admin/ajax/dashboard-data.php", "admin/assets/js/dashboard.js",
     "api/v2/activate.php", "api/v2/refresh.php", "api/v2/status.php", "api/v2/deactivate.php",
+    "api/admin/v1/licenses/create.php", "api/admin/v1/licenses/status.php", "api/admin/v1/licenses/list.php", "api/admin/v1/licenses/action.php",
+    "api/admin/v1/devices/list.php", "api/admin/v1/devices/revoke.php", "api/admin/v1/apps/list.php",
+    "includes/admin_api/AdminApiException.php", "includes/admin_api/AdminApi.php", "includes/admin_api/AdminApiRepository.php", "includes/admin_api/AdminLicenseService.php", "includes/admin_api/bootstrap.php",
     "includes/v2/V2Exception.php", "includes/v2/V2KeyManager.php", "includes/v2/V2TokenService.php",
     "includes/v2/V2DeviceProof.php", "includes/v2/ApiV2.php", "includes/v2/V2Repository.php", "includes/v2/V2Provisioner.php", "includes/v2/bootstrap.php",
-    "admin/client_apps.php", "admin/v2_devices.php", "admin/developer_guide.php", "admin/updates.php",
+    "admin/client_apps.php", "admin/v2_devices.php", "admin/developer_guide.php", "admin/admin_api_keys.php", "admin/updates.php",
     "admin/ajax/update-bootstrap.php", "admin/ajax/update-check.php", "admin/ajax/update-preflight.php", "admin/ajax/update-start.php", "admin/ajax/update-step.php", "admin/ajax/update-status.php", "admin/ajax/update-events.php", "admin/ajax/update-diagnostics.php", "admin/ajax/update-rollback.php",
     "admin/assets/js/licora-updater.js", "admin/assets/js/update-notifier.js", "admin/assets/css/licora-updater.css",
     "scripts/setup-v2.php", "scripts/verify-local.py", "scripts/validate.sh", "scripts/package-release.sh", "scripts/build-update-manifest.py", "scripts/verify-release-update.php", "update/release-spec.json",
-    "tests/api_v1_freeze.php", "tests/api_v2_crypto.php", "tests/api_v2_static.php", "tests/api_v2_db_integration.php", "tests/admin_v2_ui_db_integration.php",
+    "tests/api_v1_freeze.php", "tests/api_v2_crypto.php", "tests/api_v2_static.php", "tests/api_v2_db_integration.php", "tests/admin_api_static.php", "tests/admin_api_db_integration.php", "tests/admin_v2_ui_db_integration.php",
     "tests/updater_static.php", "tests/updater_manifest.php", "tests/updater_state_machine.php", "tests/updater_failure_recovery.php", "tests/updater_ui_contract.php", "tests/updater_db_integration.php", "tests/updater_dom_contract.php", "tests/updater_builder_contract.py", "tests/updater_browser_runtime.js", "tests/sidebar_submenu_runtime.js",
     "tests/ui_route_contract.php", "tests/ui_form_contract.php", "tests/ui_component_contract.php", "tests/ui_updater_contract.php", "tests/ui_v550_contract.php", "tests/ui_v551_contract.php",
     "tests/dashboard_data_contract.php", "tests/dashboard_phase2_contract.php", "tests/dashboard_db_integration.php", "tests/dashboard_browser_runtime.js",
     "tests/developer_guide_contract.php", "tests/developer_examples_runtime.py",
-    "docs/API_V2.md", "docs/API_V2_SECURITY.md", "docs/API_V2_CLIENT_INTEGRATION.md", "docs/API_V2_MIGRATION.md",
+    "docs/API_V2.md", "docs/API_V2_SECURITY.md", "docs/API_V2_CLIENT_INTEGRATION.md", "docs/API_V2_MIGRATION.md", "docs/ADMIN_LICENSE_API.md",
     "docs/CONFIGURATION.md", "docs/ARCHITECTURE.md", "docs/RELEASE.md", "docs/INSTALLATION.md", "docs/UPGRADE_GUIDE.md", "docs/FEATURE_MATRIX.md", "docs/UPDATER.md", "docs/UI_DESIGN_SYSTEM.md",
     "DASHBOARD_PRODUCTION_UPDATE_INDEX.md", "docs/DASHBOARD_PRODUCTION_ROADMAP_2_PHASE.md", "docs/DASHBOARD_UPDATE_PHASE_LOG.md", "docs/ERROR_HANDLING_BASELINE_AND_TARGET.md", "docs/ACTUAL_IMPLEMENTATION_LEDGER.md", "docs/DASHBOARD_DATA_CONTRACT.md", "docs/DASHBOARD_PRODUCTION_VALIDATION_GATES.md", "docs/DASHBOARD_CHANGE_CONTROL.md", "audit/V5.5.1_DASHBOARD_PRODUCTION_READINESS_FORENSIC_REPORT.md",
     ".github/workflows/ci.yml", ".github/workflows/release.yml",
@@ -81,6 +86,8 @@ TESTS = [
     "tests/api_v2_crypto.php",
     "tests/api_v2_static.php",
     "tests/api_v2_db_integration.php",
+    "tests/admin_api_static.php",
+    "tests/admin_api_db_integration.php",
     "tests/admin_v2_ui_db_integration.php",
     "tests/updater_static.php",
     "tests/updater_manifest.php",
@@ -158,10 +165,10 @@ for rel, expected in V1_GIT_BLOBS.items():
 print("[3/12] Release/version consistency")
 config = read("includes/config.php")
 if f"env_value('APP_VERSION', '{VERSION}')" not in config:
-    fail("runtime APP_VERSION is not 5.8.2")
-for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.8.2.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
+    fail("runtime APP_VERSION is not 5.8.3")
+for rel in ["config.sample.php", "install.php", "includes/installation.php", "RELEASE_NOTES_v5.8.3.md", "CHANGELOG.md", "REPOSITORY_METADATA.md"]:
     if VERSION not in read(rel):
-        fail(f"5.8.2 release marker missing from {rel}")
+        fail(f"5.8.3 release marker missing from {rel}")
 
 print("[4/12] API v2 protocol/security contract")
 v2_endpoint_text = "\n".join(read(f"api/v2/{name}.php") for name in ("activate", "refresh", "status", "deactivate"))
@@ -215,17 +222,25 @@ for table in ["update_jobs", "update_events", "app_migrations"]:
 if "-- Licora v5.3.0 Secure In-App Updater additive migration." not in read("database.sql"):
     fail("fresh-install database.sql does not contain updater additive schema")
 release_spec = read("update/release-spec.json")
-for marker in ['\"protocol_version\": 1', '\"version\": \"5.8.2\"', '\"minimum_updater\": \"5.3.0\"', '\"upgrade_from\"']:
+for marker in ['\"protocol_version\": 1', '\"version\": \"5.8.3\"', '\"minimum_updater\": \"5.3.0\"', '\"upgrade_from\"']:
     if marker not in release_spec:
         fail(f"updater release-spec marker missing: {marker}")
 if 'migration-v5.3.0-updater.sql' in release_spec:
-    fail('v5.8.2 device icon hotfix release spec must not replay the v5.3.0 updater migration')
+    fail('v5.8.3 release spec must not replay the v5.3.0 updater migration')
 import json as _json
 _release_spec_data = _json.loads(release_spec)
-if _release_spec_data.get("upgrade_from") != ["5.8.1"]:
-    fail("v5.8.2 release spec must accept published v5.8.1 baseline")
-if _release_spec_data.get("migrations") != []:
-    fail("v5.8.2 device icon hotfix must not declare a database migration")
+if _release_spec_data.get("upgrade_from") != ["5.8.2"]:
+    fail("v5.8.3 release spec must accept frozen v5.8.2 baseline")
+if len(_release_spec_data.get("migrations", [])) != 1 or _release_spec_data["migrations"][0].get("path") != "migration-v5.8.3-admin-license-api.sql":
+    fail("v5.8.3 release spec must declare exactly the Admin API migration")
+admin_migration = read("migration-v5.8.3-admin-license-api.sql")
+for table in ["admin_api_keys", "admin_api_key_scopes", "admin_api_key_apps", "admin_api_license_orders", "admin_api_idempotency", "admin_api_nonces", "admin_api_logs"]:
+    if f"CREATE TABLE IF NOT EXISTS {table}" not in admin_migration:
+        fail(f"missing Admin License API table: {table}")
+if "-- Licora v5.8.3 scoped Admin License Control API additive migration." not in read("database.sql"):
+    fail("fresh-install database.sql does not contain Admin License API schema")
+if re.search(r"\b(?:DROP|TRUNCATE|RENAME)\b", re.sub(r"--[^\n]*", "", admin_migration), re.I):
+    fail("destructive statement found in Admin License API migration")
 
 print("[6/12] Signing-key and secret hygiene")
 for rel in [
@@ -287,6 +302,9 @@ sidebar = read("admin/includes/ui/sidebar.php")
 for marker in ["client_apps.php", "v2_devices.php", "developer_guide.php", "Client Apps", "V2 Devices", "Developer Guide"]:
     if marker not in navigation:
         fail(f"API v2 sidebar navigation marker missing: {marker}")
+for marker in ["admin_api_keys.php", "Admin License API"]:
+    if marker not in navigation:
+        fail(f"Admin License API settings navigation marker missing: {marker}")
 license_ui = read("admin/license.php")
 for marker in ["$v2AppOptions", "$v2AllowedAppIds", "API v2 Client App", "bulk_v2_app_scope", "Selected API v2 client application is not active or does not exist"]:
     if marker not in license_ui:
@@ -409,4 +427,4 @@ for marker in ["git archive", "scripts/verify-local.py", "sha256", ".licora-v2-s
     if marker not in packager:
         fail(f"release packaging marker missing: {marker}")
 
-print("Licora v5.8.2 local verification passed.")
+print("Licora v5.8.3 local verification passed.")

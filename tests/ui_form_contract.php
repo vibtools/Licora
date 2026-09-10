@@ -9,6 +9,7 @@ $contracts=[
  'admin/api_keys.php'=>['name="create_api_key"','name="api_key_name"','name="app_name"','name="scope_label"','name="csrf_token"','id="api-keys-table"'],
  'admin/client_apps.php'=>['name="app_id"','name="display_name"','name="access_token_ttl"','name="refresh_token_ttl"','name="rate_limit_per_hour"','name="csrf_token"'],
  'admin/v2_devices.php'=>['name="device_credential_id"','name="revoke_device"','name="csrf_token"'],
+ 'admin/admin_api_keys.php'=>['name="create_admin_api_key"','name="update_admin_api_key"','name="admin_api_key_action"','name="rate_limit_per_hour"','name="allowed_ips"','name="scopes[]"','name="apps[]"','name="csrf_token"','id="admin-api-keys-table"'],
  'admin/settings.php'=>['name="update_settings"','name="default_license_hours"','name="default_device_limit"','name="license_min_hours"','name="license_max_hours"','name="log_retention_days"','name="csrf_token"','id="settings-form"'],
  'admin/admins.php'=>['name="create_admin"','name="update_admin"','name="delete_admin"','name="username"','name="role"','name="csrf_token"','id="admins-table"'],
  'admin/login.php'=>['name="username"','name="password"','name="csrf_token"'],

@@ -77,6 +77,7 @@ $v2Keys = licora_ui_v2_key_status();
         <a href="license.php" class="btn btn-outline-secondary"><i class="bi bi-key"></i> Licenses</a>
         <a href="device.php" class="btn btn-outline-secondary"><i class="bi bi-laptop"></i> Devices</a>
         <a href="api_keys.php" class="btn btn-outline-secondary"><i class="bi bi-key-fill"></i> API Keys</a>
+        <a href="admin_api_keys.php" class="btn btn-outline-secondary"><i class="bi bi-shield-lock"></i> Admin License API</a>
         <a href="logs.php" class="btn btn-outline-secondary"><i class="bi bi-clock-history"></i> Logs</a>
         <a href="audit.php" class="btn btn-outline-secondary"><i class="bi bi-journal-text"></i> Audit</a>
         <a href="backup.php" class="btn btn-outline-secondary"><i class="bi bi-download"></i> Backup</a>
@@ -113,6 +114,8 @@ $v2Keys = licora_ui_v2_key_status();
                     <div class="ui-info-row"><span class="ui-info-label">API v2 Clock Skew</span><code class="ui-info-value"><?php echo (int)LICENSE_V2_CLOCK_SKEW; ?> seconds</code><span></span></div>
                     <div class="ui-info-row"><span class="ui-info-label">API v2 Max Body</span><code class="ui-info-value"><?php echo (int)LICENSE_V2_MAX_BODY_BYTES; ?> bytes</code><span></span></div>
                     <div class="ui-info-row"><span class="ui-info-label">API v2 HTTPS</span><code class="ui-info-value"><?php echo filter_var(LICENSE_V2_REQUIRE_HTTPS, FILTER_VALIDATE_BOOLEAN) ? 'Required' : 'Not required'; ?></code><span></span></div>
+                    <div class="ui-info-row"><span class="ui-info-label">Admin API HTTPS</span><code class="ui-info-value"><?php echo filter_var(ADMIN_API_REQUIRE_HTTPS, FILTER_VALIDATE_BOOLEAN) ? 'Required' : 'Not required'; ?></code><span></span></div>
+                    <div class="ui-info-row"><span class="ui-info-label">Admin API Clock Skew</span><code class="ui-info-value"><?php echo (int)ADMIN_API_CLOCK_SKEW; ?> seconds</code><span></span></div>
                 </div></div>
             </section>
 

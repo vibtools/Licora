@@ -1,13 +1,21 @@
 {
   "protocol_version": 1,
   "application": "Licora",
-  "version": "5.8.2",
+  "version": "5.8.3",
   "channel": "stable",
   "minimum_updater": "5.3.0",
   "minimum_php": "8.0",
   "upgrade_from": [
-    "5.8.1"
+    "5.8.2"
   ],
   "delete_files": [],
-  "migrations": []
+  "migrations": [
+    {
+      "id": "v5.8.3.scoped-admin-license-api",
+      "path": "migration-v5.8.3-admin-license-api.sql",
+      "destructive": false,
+      "idempotent": true,
+      "rollback_path": null
+    }
+  ]
 }

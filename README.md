@@ -33,6 +33,7 @@ Licora is maintained by **Vib Tools**. Vib Tools is a professional tools and dig
 - CSRF tokens for admin mutations, prepared SQL statements, password hashing, rate limiting, and session hardening.
 - Scheduled cleanup and expiring-license reporting through CLI cron scripts.
 - Super-Admin-only Secure Update Center with signed GitHub release manifests, preflight, staged installation, persistent live logs, migration tracking, and rollback protection.
+- Scoped server-to-server Admin License Control API for order-confirmation automation, exact app selection, validity/device limits, status/actions, key rotation and audited device revocation.
 
 ## Screenshots
 
@@ -125,7 +126,7 @@ The application accepts deployment-specific values through environment variables
 | Database password | `LICENSE_DB_PASS` | empty |
 | Application name | `APP_NAME` | `Licora` |
 | Application URL | `APP_URL` | `http://localhost` |
-| Application version | `APP_VERSION` | `5.8.2` |
+| Application version | `APP_VERSION` | `5.8.3` |
 | Environment | `APP_ENV` | `production` |
 | Encryption key | `LICENSE_ENCRYPTION_KEY` | empty fallback |
 | API limit | `API_RATE_LIMIT` | `1000` |
@@ -146,6 +147,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Installation](docs/INSTALLATION.md)
 - [Configuration](docs/CONFIGURATION.md)
 - [API reference](docs/API.md)
+- [Admin License Control API](docs/ADMIN_LICENSE_API.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Database](docs/DATABASE.md)
 - [Feature matrix](docs/FEATURE_MATRIX.md)
@@ -156,6 +158,7 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Secure in-app updater](docs/UPDATER.md)
 - [UI design system](docs/UI_DESIGN_SYSTEM.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [v5.8.3 release notes](RELEASE_NOTES_v5.8.3.md)
 - [v5.8.2 release notes](RELEASE_NOTES_v5.8.2.md)
 - [v5.8.1 release notes](RELEASE_NOTES_v5.8.1.md)
 - [v5.8.0 source-candidate notes](RELEASE_NOTES_v5.8.0.md)
@@ -179,6 +182,10 @@ The validation script checks PHP syntax, security behavior, compatibility invari
 - [Dependency review](audit/DEPENDENCY_REPORT.md)
 
 
+
+## Admin License Control API (v5.8.3)
+
+Licora v5.8.3 adds an isolated, least-privilege server-to-server API for external order websites. Admins create a dedicated key under **Settings → Admin License API**, restrict it to exact existing API v2 applications and granular license/device scopes, and can rotate, suspend or permanently revoke it. Requests use HTTPS, bearer authentication, HMAC-SHA256 proofs, timestamp/nonce replay protection and idempotent order creation. The feature does not expose an application-creation endpoint and does not change public API v1/v2 client behavior.
 
 ## Device icon compatibility hotfix (v5.8.2)
 
