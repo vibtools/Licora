@@ -37,6 +37,17 @@ $adminPage = (string)file_get_contents($root . '/admin/admin_api_keys.php');
 foreach (['Download Ready SDK', 'Documents', 'ajax/admin-api-sdk-download.php', 'admin_api_docs.php'] as $marker) {
     admin_api_ok(strpos($adminPage, $marker) !== false, 'Admin API page exposes SDK resource: ' . $marker);
 }
+foreach ([
+    'initialize_admin_api_schema', 'AdminHelpers::requireDelete()', 'Security::requireCSRFToken',
+    "GET_LOCK('licora_admin_api_schema_v583', 10)", "RELEASE_LOCK('licora_admin_api_schema_v583')",
+    'UpdateSchema::splitSql', 'count($statements) !== 7',
+] as $marker) {
+    admin_api_ok(strpos($adminPage, $marker) !== false, 'Admin API schema initializer safety marker exists: ' . $marker);
+}
+admin_api_ok(
+    strpos($adminPage, 'CREATE\\s+TABLE\\s+IF\\s+NOT\\s+EXISTS\\s+admin_api_') !== false,
+    'Admin API schema initializer accepts only additive Admin API table creation'
+);
 
 $sdkFiles = [
     'README.md', 'AI_INSTRUCTIONS.md', 'LICENSE', 'VERSION',

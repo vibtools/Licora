@@ -13,11 +13,21 @@ The ZIP contains dependency-light PHP 8+ and Node.js 18+ clients, examples, conf
 
 ## Setup
 
-1. Apply `migration-v5.8.3-admin-license-api.sql` when upgrading from v5.8.2. Fresh installs already contain the schema in `database.sql`.
-2. Create or verify the target application under **Admin → API & Clients → Client Apps**.
-3. Open **Admin → Settings → Admin License API**.
-4. Create a key, select its exact allowed applications and least-privilege scopes, then copy the secret shown once.
-5. Store the secret only in the order website's server-side secret manager. Never expose it to a browser, desktop application or mobile application.
+1. Open **Admin → Settings → Admin License API**. If database setup is required, a super administrator can click **Initialize Admin API**. The CSRF-protected action accepts only the seven audited `CREATE TABLE IF NOT EXISTS admin_api_…` statements from `migration-v5.8.3-admin-license-api.sql`; it does not alter an existing table.
+2. Fresh installs already contain the schema in `database.sql`. The initializer is intended for source upgrades and container deployments where the application image has PHP/PDO but no MySQL command-line client.
+3. Create or verify the target application under **Admin → API & Clients → Client Apps**.
+4. Return to **Admin → Settings → Admin License API**.
+5. Create a key, select its exact allowed applications and least-privilege scopes, then copy the secret shown once.
+6. Store the secret only in the order website's server-side secret manager. Never expose it to a browser, desktop application or mobile application.
+
+If UI initialization is unavailable, run this from the Licora **app container** rather than executing the SQL filename as a command:
+
+```bash
+cd /var/www/html
+php -r 'require "includes/database.php"; require "includes/updater/UpdateSchema.php"; $db = Database::getInstance(); foreach (UpdateSchema::splitSql((string) file_get_contents("migration-v5.8.3-admin-license-api.sql")) as $statement) { $db->exec($statement); } echo "Admin API migration completed.\n";'
+```
+
+This fallback uses Licora's configured `LICENSE_DB_*` connection values. It does not require `mysql` or `mariadb` to be installed in the app container.
 
 Keys support active/suspended/permanently-revoked states, rotation, optional IPv4/IPv6 CIDR allowlists, per-key hourly rate limits and optional expiry. A rotated key invalidates its previous secret immediately.
 

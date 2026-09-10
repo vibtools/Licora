@@ -8,14 +8,16 @@ require_once '../includes/database.php';
 require_once '../includes/admin_api/AdminApiException.php';
 require_once '../includes/admin_api/AdminApi.php';
 require_once '../includes/admin_api/AdminApiRepository.php';
+require_once '../includes/updater/UpdateSchema.php';
 require_once 'includes/ui/integration.php';
 
 $auth = new Auth();
 if (!$auth->isAdminLoggedIn()) { header('Location: login.php'); exit(); }
 
 $db = Database::getInstance();
-$message = '';
-$error = '';
+$message = (string)($_SESSION['admin_api_schema_message'] ?? '');
+$error = (string)($_SESSION['admin_api_schema_error'] ?? '');
+unset($_SESSION['admin_api_schema_message'], $_SESSION['admin_api_schema_error']);
 $allowedScopes = [
     'license:create' => 'Create licenses', 'license:read' => 'Read license status/list',
     'license:reveal' => 'Reveal license keys', 'license:extend' => 'Extend validity',
@@ -23,10 +25,53 @@ $allowedScopes = [
     'license:ban' => 'Ban licenses and revoke devices', 'license:delete' => 'Soft-delete licenses and revoke devices',
     'device:read' => 'List license devices', 'device:revoke' => 'Revoke devices',
 ];
-$schemaReady = true;
-foreach (AdminApiRepository::requiredTables() as $table) {
-    if (!AdminHelpers::tableExists($table)) { $schemaReady = false; break; }
+function admin_api_schema_ready(): bool
+{
+    foreach (AdminApiRepository::requiredTables() as $table) {
+        if (!AdminHelpers::tableExists($table)) { return false; }
+    }
+    return true;
 }
+
+function admin_api_initialize_schema(PDO $db): void
+{
+    foreach (['admin_users', 'licenses', 'v2_client_apps'] as $table) {
+        if (!AdminHelpers::tableExists($table)) {
+            throw new RuntimeException('Licora base schema is incomplete.');
+        }
+    }
+
+    $migrationPath = dirname(__DIR__) . '/migration-v5.8.3-admin-license-api.sql';
+    if (!is_readable($migrationPath)) {
+        throw new RuntimeException('Admin API migration file is unavailable.');
+    }
+    $statements = UpdateSchema::splitSql((string)file_get_contents($migrationPath));
+    if (count($statements) !== 7) {
+        throw new RuntimeException('Admin API migration statement count is invalid.');
+    }
+    foreach ($statements as $statement) {
+        if (!preg_match('/^CREATE\s+TABLE\s+IF\s+NOT\s+EXISTS\s+admin_api_[A-Za-z0-9_]+\s*\(/i', ltrim($statement))) {
+            throw new RuntimeException('Admin API migration contains an unsupported statement.');
+        }
+    }
+
+    $lock = $db->query("SELECT GET_LOCK('licora_admin_api_schema_v583', 10)");
+    if ((int)$lock->fetchColumn() !== 1) {
+        throw new RuntimeException('Admin API schema initialization is already running.');
+    }
+    try {
+        foreach ($statements as $statement) { $db->exec($statement); }
+    } finally {
+        try { $db->query("SELECT RELEASE_LOCK('licora_admin_api_schema_v583')"); }
+        catch (Throwable $exception) { error_log('Admin API schema lock release failed: ' . $exception->getMessage()); }
+    }
+
+    if (!admin_api_schema_ready()) {
+        throw new RuntimeException('Admin API schema initialization did not complete.');
+    }
+}
+
+$schemaReady = admin_api_schema_ready();
 
 function admin_api_normalize_ips(string $value): string
 {
@@ -69,6 +114,24 @@ function admin_api_replace_assignments(PDO $db, int $keyId, array $scopes, array
     foreach ($apps as $appId) { $appInsert->execute([':id' => $keyId, ':app_id' => $appId]); }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['initialize_admin_api_schema'])) {
+    AdminHelpers::requireDelete();
+    Security::requireCSRFToken($_POST['csrf_token'] ?? '');
+    try {
+        admin_api_initialize_schema($db);
+        AdminHelpers::audit('admin_api_schema', null, 'admin_api_schema_initialized', [
+            'migration' => 'v5.8.3.scoped-admin-license-api',
+            'source' => 'admin_ui',
+        ]);
+        $_SESSION['admin_api_schema_message'] = 'Admin API database setup completed successfully.';
+    } catch (Throwable $exception) {
+        error_log('Admin API schema initialization failed: ' . $exception->getMessage());
+        $_SESSION['admin_api_schema_error'] = 'Automatic setup failed. Confirm that the database user can create tables and foreign keys, then try again.';
+    }
+    header('Location: admin_api_keys.php');
+    exit();
+}
+
 $apps = [];
 if ($schemaReady) {
     try { $apps = $db->query('SELECT app_id, display_name, is_active FROM v2_client_apps ORDER BY display_name, app_id')->fetchAll(); }
@@ -80,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     AdminHelpers::requireManage();
     Security::requireCSRFToken($_POST['csrf_token'] ?? '');
     if (!$schemaReady) {
-        $error = 'Run migration-v5.8.3-admin-license-api.sql before managing Admin API keys.';
+        $error = 'Initialize the Admin API database before managing keys.';
     } else {
         try {
             if (isset($_POST['create_admin_api_key'])) {
@@ -195,7 +258,7 @@ $endpoints = licora_ui_endpoints();
 <body class="admin-ui"><?php include 'includes/navbar.php'; ?>
 <div class="container-fluid admin-shell">
 <div class="page-hero d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-2"><div><h2><i class="bi bi-shield-lock"></i> Admin License API</h2><p class="text-muted mb-0">Scoped server-to-server license automation. Existing public API v1/v2 credentials are not accepted.</p></div><div class="d-flex flex-wrap gap-2"><a href="ajax/admin-api-sdk-download.php" class="btn btn-success"><i class="bi bi-file-earmark-zip"></i> Download Ready SDK</a><a href="admin_api_docs.php" class="btn btn-outline-secondary"><i class="bi bi-book"></i> Documents</a><?php if ($schemaReady && AdminHelpers::canManage()): ?><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createKeyModal"><i class="bi bi-plus-circle"></i> Create Admin API Key</button><?php endif; ?></div></div>
-<?php if (!$schemaReady): ?><div class="alert alert-warning"><strong>Migration required.</strong> Run <code>migration-v5.8.3-admin-license-api.sql</code>. No existing table is changed.</div><?php endif; ?>
+<?php if (!$schemaReady): ?><div class="alert alert-warning d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3"><div><strong>Database setup required.</strong> This is a SQL migration, not a terminal command. It creates only the seven missing Admin API tables and does not alter existing tables.</div><?php if (AdminHelpers::canDelete()): ?><form method="POST" class="m-0" data-no-spinner><input type="hidden" name="csrf_token" value="<?php echo Security::escape($csrf); ?>"><button class="btn btn-warning text-nowrap" type="submit" name="initialize_admin_api_schema" value="1"><i class="bi bi-database-check"></i> Initialize Admin API</button></form><?php endif; ?></div><?php endif; ?>
 <?php if ($message): ?><div class="alert alert-success"><?php echo Security::escape($message); ?></div><?php endif; ?>
 <?php if ($error): ?><div class="alert alert-danger"><?php echo Security::escape($error); ?></div><?php endif; ?>
 <?php if ($newKey): ?><div class="alert alert-success"><h5>Copy this secret now</h5><p>The full secret is shown only once. Store it in the order website's server-side secret store.</p><div class="input-group"><input id="admin-api-secret" class="form-control font-monospace" readonly value="<?php echo Security::escape($newKey['token']); ?>"><button class="btn btn-success" type="button" data-copy="<?php echo Security::escape($newKey['token']); ?>"><i class="bi bi-clipboard"></i> Copy</button></div></div><?php endif; ?>

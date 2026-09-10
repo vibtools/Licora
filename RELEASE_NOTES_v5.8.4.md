@@ -7,6 +7,7 @@ Licora v5.8.4 is the final combined release over the last published v5.8.2 basel
 - Dedicated, least-privilege Admin API keys with application assignment, granular scopes, lifecycle controls, CIDR allowlists, request limits and expiry.
 - Replay-resistant HMAC-SHA256 Admin API requests, idempotent external-order license creation, license lifecycle operations and device revocation.
 - Admin API documentation plus ready-to-use PHP and Node.js integration SDKs.
+- Super-admin-only, CSRF-protected Admin API database initialization from the Admin UI for container deployments without a MySQL CLI.
 - Python 3.10+ Secure API v2 SDK with P-256 device proofs, pinned RS256 token verification, OS-backed persistence, async helpers and background validation.
 - Public Vib Tools license landing page covering activation, responsible use, device changes, sharing restrictions and support contacts.
 - GitHub Release downloads for the Python SDK source, Python wheel/sdist, Admin API SDK and a SHA-256 SDK checksum manifest.

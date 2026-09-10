@@ -16,6 +16,7 @@ All notable public-release changes are recorded here. Historical project notes r
 - Added headless and Tkinter integration examples, package metadata, detailed integration documentation, unit/security tests and Linux/Windows Python CI coverage.
 - Carried the unpublished v5.8.3 scoped Admin License Control API, Admin UI and additive seven-table schema into the final public release.
 - Added a compact public license guide and independently downloadable Python/Admin SDK release assets with SHA-256 checksums.
+- Added super-admin-only, CSRF-protected Admin API schema initialization for PHP/PDO containers without a MySQL CLI.
 
 ### Compatibility
 - Signed direct-update sources are v5.8.2 and v5.8.3. The additive/idempotent v5.8.3 Admin API migration is applied for v5.8.2 and safely skipped when already recorded; the delete list is empty.
