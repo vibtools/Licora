@@ -141,7 +141,7 @@ jobs:
           rm "release/Licora-5.8.3.zip"
 
       - name: Upload CI release-candidate artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: Licora-5.8.3-${{ github.sha }}
           path: |
