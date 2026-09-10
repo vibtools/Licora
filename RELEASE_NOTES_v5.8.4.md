@@ -1,22 +1,22 @@
-# Licora v5.8.4 — Production Python SDK
+# Licora v5.8.4 — Admin Automation and Production SDKs
 
-Licora v5.8.4 adds a ready-to-use Python 3.10+ SDK for existing Secure API v2 Client Apps. Copy or install `SDK/python`, configure only public deployment/App/signing-key values in `licensing_public.py`, and use the high-level `LicoraAuth` module for license login, restore, validation, background checks and logout.
+Licora v5.8.4 is the final combined release over the last published v5.8.2 baseline. It adds the scoped Admin License Control API, the production Python Secure API v2 client SDK, a compact public license guide and independently downloadable developer SDK packages.
 
 ## Added
 
-- Exact P-256 request proof for activation, status, refresh and deactivation.
-- Pinned RSA-3072/RS256 access-token verification with exact issuer, audience, App ID, device identity, timestamp, JTI and protocol checks.
-- Windows DPAPI and macOS/Linux system-keyring persistence with no plaintext fallback.
-- Serialized login/validation/logout, one-shot refresh rotation, device recovery, local license-expiry cap, asynchronous helpers and background validation.
-- Secret-free immutable status snapshots, a license guard decorator, headless/Tkinter examples and full integration documentation.
-- Python 3.10/3.13 tests on Linux and Windows in the required CI dependency chain.
+- Dedicated, least-privilege Admin API keys with application assignment, granular scopes, lifecycle controls, CIDR allowlists, request limits and expiry.
+- Replay-resistant HMAC-SHA256 Admin API requests, idempotent external-order license creation, license lifecycle operations and device revocation.
+- Admin API documentation plus ready-to-use PHP and Node.js integration SDKs.
+- Python 3.10+ Secure API v2 SDK with P-256 device proofs, pinned RS256 token verification, OS-backed persistence, async helpers and background validation.
+- Public Vib Tools license landing page covering activation, responsible use, device changes, sharing restrictions and support contacts.
+- GitHub Release downloads for the Python SDK source, Python wheel/sdist, Admin API SDK and a SHA-256 SDK checksum manifest.
 
 ## Compatibility and upgrade
 
-- Direct signed source: v5.8.3 only.
-- Database migration: none.
+- Direct signed sources: v5.8.2 and v5.8.3.
+- v5.8.2 installations apply `migration-v5.8.3-admin-license-api.sql`.
+- v5.8.3 source installations safely skip the same already-recorded idempotent migration.
 - Deleted files: none.
-- Server dependencies: none.
-- Existing API v1/v2, Admin API, schema, license/device policy, UI, Dashboard, Cron and updater behavior are unchanged.
+- Existing API v1/v2 client contracts, license/device enforcement, authentication/roles, Dashboard, Cron and updater runtime protocol remain compatible.
 
-The SDK contains no API v1 key, Admin API key or private server signing key. A user license key is accepted only at runtime and is protected by the configured OS-backed state store.
+The Python client SDK contains no API v1 key, Admin API key or private server signing key. Admin SDK secrets remain server-side environment configuration and are never shipped as embedded credentials.

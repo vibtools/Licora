@@ -9,6 +9,7 @@ The repository includes historical additive SQL files:
 5. `migration-v5-hotfix.sql` — additional binding compatibility.
 6. `migration-v5.2.0-api-v2.sql` — additive Secure API v2 tables.
 7. `migration-v5.3.0-updater.sql` — additive updater job/event/migration-ledger tables and updater settings.
+8. `migration-v5.8.3-admin-license-api.sql` — additive scoped Admin License Control API key, scope, app, order, idempotency, nonce, and audit tables.
 
 `database.sql` already incorporates the historical schema and additive changes for a new installation. Existing deployments should inspect their current columns before selecting migrations.
 
@@ -35,3 +36,7 @@ No database migration is introduced by v5.4.1. The signed release specification 
 ## v5.4.0
 
 No database migration is introduced by v5.4.0. The signed release manifest contains an empty `migrations` list and upgrades directly from v5.3.0. The historical v5.3.0 updater migration remains part of the fresh-install schema and migration history.
+
+## v5.8.4 direct-upgrade bridge
+
+The final v5.8.4 signed manifest accepts the last published v5.8.2 release and the unpublished/frozen v5.8.3 source baseline. It carries `migration-v5.8.3-admin-license-api.sql` with ID `v5.8.3.scoped-admin-license-api`. The migration is additive and idempotent: v5.8.2 applies it, while a v5.8.3 installation with the same recorded ID and checksum skips it. No file or existing table definition is removed.

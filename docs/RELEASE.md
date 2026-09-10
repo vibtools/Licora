@@ -29,7 +29,7 @@ SDK versions are read from their own tracked metadata and are independent of the
 
 ## v5.8.4 release specification
 
-v5.8.4 is a no-migration Python Secure API v2 SDK release over frozen v5.8.3. It adds only the optional client package, examples, documentation, tests and CI/release identity; server endpoint and database behavior remain unchanged.
+v5.8.4 is the final combined release over the last published v5.8.2 baseline. It includes the additive v5.8.3 Admin License Control API work, the optional Python Secure API v2 SDK, the public license guide and independent SDK release assets. Existing v5.8.3 source deployments are also accepted. The Admin API migration is additive and idempotent: v5.8.2 installations apply it, while installations that already recorded the same v5.8.3 migration safely skip it.
 
 ```json
 {
@@ -39,9 +39,15 @@ v5.8.4 is a no-migration Python Secure API v2 SDK release over frozen v5.8.3. It
   "channel": "stable",
   "minimum_updater": "5.3.0",
   "minimum_php": "8.0",
-  "upgrade_from": ["5.8.3"],
+  "upgrade_from": ["5.8.2", "5.8.3"],
   "delete_files": [],
-  "migrations": []
+  "migrations": [{
+    "id": "v5.8.3.scoped-admin-license-api",
+    "path": "migration-v5.8.3-admin-license-api.sql",
+    "destructive": false,
+    "idempotent": true,
+    "rollback_path": null
+  }]
 }
 ```
 
@@ -49,11 +55,11 @@ v5.8.4 is a no-migration Python Secure API v2 SDK release over frozen v5.8.3. It
 bash scripts/package-release.sh v5.8.4 v5.8.4
 ```
 
-Publication commands are recorded in `RELEASE_COMMANDS_v5.8.4.md`. Linux and Windows SDK jobs must install the package and pass its exact protocol, crypto, persistence and lifecycle tests before publication.
+Publication commands are recorded in `RELEASE_COMMANDS_v5.8.4.md`. Linux and Windows SDK jobs must install the package and pass its exact protocol, crypto, persistence and lifecycle tests before publication. MySQL integration must also prove the bridged Admin API migration and schema contract.
 
-## v5.8.3 release specification
+## v5.8.3 source specification (unpublished)
 
-v5.8.3 is an additive Admin License Control API release over frozen v5.8.2. It adds only dedicated server-to-server key/API/UI/schema/docs/tests and leaves API v1/v2 client protocols unchanged.
+v5.8.3 was the additive Admin License Control API source baseline over frozen v5.8.2, but it was not tagged or published. Its migration and functionality are carried into the final v5.8.4 release, which supports direct update from v5.8.2.
 
 ```json
 {

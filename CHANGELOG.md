@@ -14,12 +14,14 @@ All notable public-release changes are recorded here. Historical project notes r
 - Added a reusable Python 3.10+ Secure API v2 SDK with a public-only configuration template, P-256 device proofs, pinned RS256 access-token verification and exact Licora protocol validation.
 - Added fail-closed OS-backed session persistence, access/refresh recovery, device-revocation recovery, license-expiry enforcement, synchronized logout, asynchronous helpers and a managed background validation worker.
 - Added headless and Tkinter integration examples, package metadata, detailed integration documentation, unit/security tests and Linux/Windows Python CI coverage.
+- Carried the unpublished v5.8.3 scoped Admin License Control API, Admin UI and additive seven-table schema into the final public release.
+- Added a compact public license guide and independently downloadable Python/Admin SDK release assets with SHA-256 checksums.
 
 ### Compatibility
-- v5.8.3 is the only direct signed update source. There is no database migration or delete list.
+- Signed direct-update sources are v5.8.2 and v5.8.3. The additive/idempotent v5.8.3 Admin API migration is applied for v5.8.2 and safely skipped when already recorded; the delete list is empty.
 - Existing API v1/v2 endpoints, Admin License API, server cryptography, schema, installer, UI, Dashboard, Cron and updater runtime behavior remain unchanged.
 
-## [5.8.3] - 2026-09-09
+## [5.8.3] - 2026-09-09 (source baseline; published within v5.8.4)
 
 ### Added
 - Added a dedicated HMAC-authenticated server-to-server Admin License Control API for creating, reading, listing, extending, activating, suspending, banning and soft-deleting licenses created from external orders.

@@ -236,10 +236,17 @@ if 'migration-v5.3.0-updater.sql' in release_spec:
     fail('v5.8.4 release spec must not replay the v5.3.0 updater migration')
 import json as _json
 _release_spec_data = _json.loads(release_spec)
-if _release_spec_data.get("upgrade_from") != ["5.8.3"]:
-    fail("v5.8.4 release spec must accept frozen v5.8.3 baseline")
-if _release_spec_data.get("migrations") != []:
-    fail("v5.8.4 release spec must not declare a database migration")
+if _release_spec_data.get("upgrade_from") != ["5.8.2", "5.8.3"]:
+    fail("v5.8.4 release spec must accept published v5.8.2 and frozen v5.8.3 baselines")
+expected_admin_migration = [{
+    "id": "v5.8.3.scoped-admin-license-api",
+    "path": "migration-v5.8.3-admin-license-api.sql",
+    "destructive": False,
+    "idempotent": True,
+    "rollback_path": None,
+}]
+if _release_spec_data.get("migrations") != expected_admin_migration:
+    fail("v5.8.4 release spec must bridge the additive v5.8.3 Admin API migration")
 admin_migration = read("migration-v5.8.3-admin-license-api.sql")
 for table in ["admin_api_keys", "admin_api_key_scopes", "admin_api_key_apps", "admin_api_license_orders", "admin_api_idempotency", "admin_api_nonces", "admin_api_logs"]:
     if f"CREATE TABLE IF NOT EXISTS {table}" not in admin_migration:
